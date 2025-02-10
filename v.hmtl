@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viral Video Algoritması</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        canvas {
+            border: 1px solid black;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Viral Video Algoritması</h1>
+    <p>Bu şema, bir videonun viral olmasını sağlayan faktörleri göstermektedir.</p>
+
+    <canvas id="viralCanvas" width="800" height="500"></canvas>
+
+    <script>
+        const canvas = document.getElementById("viralCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // Dikdörtgen Çizim Fonksiyonu
+        function drawBox(x, y, text) {
+            ctx.fillStyle = "#ADD8E6"; // Açık Mavi
+            ctx.fillRect(x, y, 180, 50);
+            ctx.strokeStyle = "black";
+            ctx.strokeRect(x, y, 180, 50);
+            ctx.fillStyle = "black";
+            ctx.font = "14px Arial";
+            ctx.fillText(text, x + 10, y + 30);
+        }
+
+        // Ok Çizim Fonksiyonu
+        function drawArrow(x1, y1, x2, y2) {
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x2 - 5, y2 - 5);
+            ctx.lineTo(x2, y2);
+            ctx.lineTo(x2 - 5, y2 + 5);
+            ctx.stroke();
+        }
+
+        // Şematik Çizim
+        drawBox(310, 30, "Hedef Kitle Analizi");
+        drawArrow(400, 80, 400, 100);
+
+        drawBox(310, 100, "İçerik Türü Seçimi");
+        drawArrow(400, 150, 400, 170);
+
+        drawBox(310, 170, "İlk 3 Saniyenin Önemi");
+        drawArrow(400, 220, 400, 240);
+
+        drawBox(310, 240, "İçerik Optimizasyonu");
+        drawArrow(400, 290, 400, 310);
+
+        drawBox(310, 310, "Sosyal Medya Yayılımı");
+        drawArrow(400, 360, 400, 380);
+
+        drawBox(310, 380, "Viral Video");
+
+    </script>
+
+</body>
+</html>
