@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Viral Video Algoritması – Akıl Yürütme ile Açıklama</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      line-height: 1.6;
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    .explanation {
+      max-width: 800px;
+      margin: auto;
+      text-align: left;
+    }
+    canvas {
+      border: 2px solid #000;
+      display: block;
+      margin: 20px auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Viral Video Algoritması</h1>
+  
+  <!-- Metinsel Açıklama Bölümü -->
+  <div class="explanation">
+    <p>
+      Bu dosya, bir videonun neden viral olduğunu analiz eden ve sizin de viral olma potansiyeline sahip bir video üretmenize yardımcı olacak bir algoritmayı adım adım açıklamaktadır. 
+      Algoritmanın temel mantığı; izleyici kitlesi, içerik türü, video başlangıcındaki etki, optimizasyon, etkileşim ve paylaşım gibi faktörlerin birbirini nasıl desteklediğini anlamaktır.
+    </p>
+    
+    <h2>Algoritmanın Adımları ve Akıl Yürütme Süreci</h2>
+    <ol>
+      <li>
+        <strong>Hedef Kitle Analizi:</strong>
+        <br>
+        Videonuzun kimler tarafından izleneceğini belirlemek, onların yaş, ilgi alanları, alışkanlıkları ve hangi platformda daha aktif olduklarını anlamak ilk adımdır.
+      </li>
+      <li>
+        <strong>İçerik Türü Seçimi:</strong>
+        <br>
+        Hedef kitleye uygun içerik türü belirlenir. Eğlenceli, bilgilendirici, duygusal veya şaşırtıcı içerik türlerinden hangisinin kitleniz üzerinde daha etkili olacağına karar verilir.
+      </li>
+      <li>
+        <strong>İlk 3 Saniyede Etki Bırakma:</strong>
+        <br>
+        İzleyicinin dikkatini çekmek için video başlangıcında güçlü bir giriş yapılmalıdır. Bu aşama, videonun izlenme süresini ve izleyici bağlılığını artırır.
+      </li>
+      <li>
+        <strong>Video Optimizasyonu:</strong>
+        <br>
+        Çarpıcı bir başlık, dikkat çekici bir thumbnail, doğru etiketler ve açıklamalar kullanılarak video optimize edilir. Böylece platform algoritmaları videonuzu daha fazla önerebilir.
+      </li>
+      <li>
+        <strong>Etkileşim &amp; Paylaşım Teşviki:</strong>
+        <br>
+        İzleyiciler yorum yapmaya, beğenmeye ve videoyu paylaşmaya teşvik edilir. Bu etkileşimler videonuzun organik olarak yayılmasına yardımcı olur.
+      </li>
+      <li>
+        <strong>Algoritma Desteği:</strong>
+        <br>
+        Video izlenme süresi ve etkileşim oranları yüksek olduğunda, platformların algoritmaları videonuzu daha fazla kişiye önerir hale gelir.
+      </li>
+      <li>
+        <strong>Sosyal Medyada Yayılma:</strong>
+        <br>
+        Video, farklı sosyal medya platformlarında paylaşılır ve trend konularla ilişkilendirilir. Bu aşama, videonuzun daha geniş kitlelere ulaşmasını sağlar.
+      </li>
+      <li>
+        <strong>Viral Video:</strong>
+        <br>
+        Tüm bu adımların başarılı bir şekilde uygulanması sonucunda video, organik olarak yayılır, popüler hale gelir ve viral olur.
+      </li>
+    </ol>
+    <p>
+      Aşağıdaki şemada, yukarıda açıklanan adımlar arasındaki akış ve ilişki, görsel olarak sunulmaktadır.
+    </p>
+  </div>
+  
+  <!-- Canvas ile Şematik Gösterim -->
+  <canvas id="viralCanvas" width="1200" height="800"></canvas>
+  
+  <script>
+    // Canvas ve 2D çizim context'ini tanımlıyoruz.
+    const canvas = document.getElementById("viralCanvas");
+    const ctx = canvas.getContext("2d");
+
+    /**
+     * drawBox fonksiyonu:
+     * Belirtilen koordinatlarda, renkte ve boyutta bir dikdörtgen (kutucuk) çizer ve içine metni yazar.
+     *
+     * @param {number} x - Kutunun sol üst köşesinin x koordinatı.
+     * @param {number} y - Kutunun sol üst köşesinin y koordinatı.
+     * @param {string} text - Kutu içinde gösterilecek metin.
+     * @param {string} color - Kutunun dolgu rengi.
+     * @param {number} width - Kutunun genişliği.
+     * @param {number} height - Kutunun yüksekliği.
+     */
+    function drawBox(x, y, text, color="#ADD8E6", width=250, height=60) {
+      ctx.fillStyle = color;
+      ctx.fillRect(x, y, width, height);
+      ctx.strokeStyle = "black";
+      ctx.strokeRect(x, y, width, height);
+      ctx.fillStyle = "black";
+      ctx.font = "14px Arial";
+      // Metnin konumunu basitçe ayarlıyoruz.
+      // Eğer metin birden fazla satır içeriyorsa, "\n" karakteri ile bölünebilir.
+      const lines = text.split("\n");
+      for (let i = 0; i < lines.length; i++) {
+        ctx.fillText(lines[i], x + 10, y + 20 + i * 18);
+      }
+    }
+
+    /**
+     * drawArrow fonksiyonu:
+     * İki nokta arasına bir ok çizer. Okun ucu, hedef noktada belirgin hale getirilir.
+     *
+     * @param {number} x1 - Başlangıç noktasının x koordinatı.
+     * @param {number} y1 - Başlangıç noktasının y koordinatı.
+     * @param {number} x2 - Bitiş noktasının x koordinatı.
+     * @param {number} y2 - Bitiş noktasının y koordinatı.
+     */
+    function drawArrow(x1, y1, x2, y2) {
+      // Ana çizgiyi çiz
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+
+      // Ok başı için açı hesaplaması
+      let angle = Math.atan2(y2 - y1, x2 - x1);
+      const headLength = 10; // Ok başının uzunluğu
+
+      // Ok başı çizimi
+      ctx.beginPath();
+      ctx.moveTo(x2, y2);
+      ctx.lineTo(x2 - headLength * Math.cos(angle - Math.PI / 6),
+                 y2 - headLength * Math.sin(angle - Math.PI / 6));
+      ctx.lineTo(x2 - headLength * Math.cos(angle + Math.PI / 6),
+                 y2 - headLength * Math.sin(angle + Math.PI / 6));
+      ctx.lineTo(x2, y2);
+      ctx.lineTo(x2 - headLength * Math.cos(angle - Math.PI / 6),
+                 y2 - headLength * Math.sin(angle - Math.PI / 6));
+      ctx.fillStyle = "black";
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    // Şematik Akışın Çizimi:
+    // Her adımın konumunu, rengi ve metnini belirterek sırasıyla çiziyoruz.
+    
+    // 1. Hedef Kitle Analizi
+    drawBox(475, 30, "1. Hedef Kitle Analizi\n(Kim izleyecek?)", "#FFD700");
+    drawArrow(600, 90, 600, 110); // 1'den 2'ye ok
+
+    // 2. İçerik Türü Seçimi
+    drawBox(475, 110, "2. İçerik Türü Seçimi\n(Ne anlatacağız?)", "#87CEEB");
+    drawArrow(600, 170, 600, 190); // 2'den 3'e ok
+
+    // 3. İlk 3 Saniyede Etki Bırakma
+    drawBox(475, 190, "3. İlk 3 Saniyede Etki Bırakma\n(Hızlı & etkileyici giriş)", "#FF6347");
+    drawArrow(600, 250, 600, 270); // 3'ten 4'e ok
+
+    // 4. Video Optimizasyonu
+    drawBox(475, 270, "4. Video Optimizasyonu\n(Başlık, Thumbnail, Açıklama)", "#87CEFA");
+    drawArrow(600, 330, 600, 350); // 4'ten 5'e ok
+
+    // 5. Etkileşim & Paylaşım Teşviki
+    drawBox(475, 350, "5. Etkileşim & Paylaşım Teşviki\n(Yorum, Beğeni, Paylaşım)", "#32CD32");
+    drawArrow(600, 410, 600, 430); // 5'ten 6'ya ok
+
+    // 6. Algoritma Desteği
+    drawBox(475, 430, "6. Algoritma Desteği\n(İzlenme süresi, Etkileşim)", "#FF8C00");
+    drawArrow(600, 490, 600, 510); // 6'dan 7'ye ok
+
+    // 7. Sosyal Medyada Yayılma
+    drawBox(475, 510, "7. Sosyal Medyada Yayılma\n(Platformlar arası paylaşım)", "#6A5ACD");
+    drawArrow(600, 570, 600, 590); // 7'den 8'e ok
+
+    // 8. Viral Video
+    drawBox(475, 590, "8. Viral Video\n(Hedefe Ulaşıldı!)", "#FF4500");
+
+    // Ek Notlar:
+    // Her adım, bir sonraki adımın temelini oluşturur.
+    // - Hedef kitle analizi: Doğru izleyiciye ulaşmak için kritik.
+    // - İçerik türü ve ilk 3 saniye: İzleyicinin ilgisini hemen çekmek için gereklidir.
+    // - Video optimizasyonu: Algoritmaların videoyu önermesi için şart.
+    // - Etkileşim, paylaşım ve sosyal medya yayılımı: Videonun organik büyümesini sağlar.
+    // - Tüm adımların birleşimi, videonun viral olma potansiyelini maksimuma çıkarır.
+  </script>
+</body>
+</html>
