@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VTuber Head Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 25px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section label {
+            font-weight: bold;
+        }
+        .section input[type="radio"] {
+            margin-right: 10px;
+        }
+        .btn-custom {
+            padding: 12px 30px;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+        .copy-btn {
+            padding: 12px 30px;
+            background-color: #28a745;
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .copy-btn:hover {
+            background-color: #218838;
+        }
+        .output-textarea {
+            width: 100%;
+            height: 250px;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            resize: vertical;
+        }
+        .dark-mode {
+            background-color: #343a40;
+            color: white;
+        }
+        .light-mode {
+            background-color: #ffffff;
+            color: black;
+        }
+        .section input[type="radio"] {
+            margin-right: 10px;
+        }
+        .form-check-inline {
+            margin-right: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container light-mode">
+    <h1>VTuber Head & Face Generator</h1>
+
+    <!-- Theme Toggle -->
+    <div class="mb-4">
+        <label for="themeToggle">Choose Theme:</label>
+        <select class="form-select" id="themeToggle">
+            <option value="light" selected>Light</option>
+            <option value="dark">Dark</option>
+        </select>
+    </div>
+
+    <!-- Head Shape Section -->
+    <div class="section">
+        <label>Head Shape:</label><br>
+        <input type="radio" name="headShape" value="Round"> Round
+        <input type="radio" name="headShape" value="Oval"> Oval
+        <input type="radio" name="headShape" value="Heart-shaped"> Heart-shaped
+        <input type="radio" name="headShape" value="Angular"> Angular
+    </div>
+
+    <!-- Eye Shape Section -->
+    <div class="section">
+        <label>Eye Shape:</label><br>
+        <input type="radio" name="eyeShape" value="Large"> Large
+        <input type="radio" name="eyeShape" value="Almond-shaped"> Almond-shaped
+        <input type="radio" name="eyeShape" value="Round"> Round
+        <input type="radio" name="eyeShape" value="Narrow"> Narrow
+    </div>
+
+    <!-- Eye Color Section -->
+    <div class="section">
+        <label>Eye Color:</label><br>
+        <input type="radio" name="eyeColor" value="Blue"> Blue
+        <input type="radio" name="eyeColor" value="Green"> Green
+        <input type="radio" name="eyeColor" value="Pink"> Pink
+        <input type="radio" name="eyeColor" value="Purple"> Purple
+    </div>
+
+    <!-- Eyebrow Shape Section -->
+    <div class="section">
+        <label>Eyebrow Shape:</label><br>
+        <input type="radio" name="eyebrowShape" value="Thin"> Thin
+        <input type="radio" name="eyebrowShape" value="Thick"> Thick
+        <input type="radio" name="eyebrowShape" value="Arched"> Arched
+        <input type="radio" name="eyebrowShape" value="Straight"> Straight
+    </div>
+
+    <!-- Mouth Shape for Speaking -->
+    <div class="section">
+        <label>Mouth Shape (Speaking):</label><br>
+        <input type="radio" name="mouthShape" value="Closed"> Closed
+        <input type="radio" name="mouthShape" value="Small Smile"> Small Smile
+        <input type="radio" name="mouthShape" value="Open Mouth"> Open Mouth
+        <input type="radio" name="mouthShape" value="Wide Open"> Wide Open
+        <input type="radio" name="mouthShape" value="Frown"> Frown
+    </div>
+
+    <!-- Hair Length Section -->
+    <div class="section">
+        <label>Hair Length:</label><br>
+        <input type="radio" name="hairLength" value="Short"> Short
+        <input type="radio" name="hairLength" value="Medium"> Medium
+        <input type="radio" name="hairLength" value="Long"> Long
+        <input type="radio" name="hairLength" value="Super Long"> Super Long
+    </div>
+
+    <!-- Hair Color Section -->
+    <div class="section">
+        <label>Hair Color:</label><br>
+        <input type="radio" name="hairColor" value="Pastel Pink"> Pastel Pink
+        <input type="radio" name="hairColor" value="Purple"> Purple
+        <input type="radio" name="hairColor" value="Blue"> Blue
+        <input type="radio" name="hairColor" value="Green"> Green
+        <input type="radio" name="hairColor" value="Neon"> Neon
+    </div>
+
+    <!-- Facial Expression Section -->
+    <div class="section">
+        <label>Facial Expression:</label><br>
+        <input type="radio" name="expression" value="Happy"> Happy
+        <input type="radio" name="expression" value="Sad"> Sad
+        <input type="radio" name="expression" value="Angry"> Angry
+        <input type="radio" name="expression" value="Surprised"> Surprised
+        <input type="radio" name="expression" value="Shy"> Shy
+        <input type="radio" name="expression" value="Neutral" checked> Neutral
+    </div>
+
+    <!-- Generate Button -->
+    <div class="d-flex justify-content-between">
+        <button class="btn-custom" onclick="generateCommand()">Generate Command</button>
+        <button class="copy-btn" onclick="copyToClipboard()">Copy</button>
+    </div>
+
+    <!-- Command Output -->
+    <h3 class="mt-4">Generated Command:</h3>
+    <textarea id="commandOutput" class="output-textarea" readonly></textarea>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function generateCommand() {
+        let command = 'VTuber character with:\n';
+
+        // Head & Face Features
+        command += `- Head Shape: ${getSelectedValue('headShape')}\n`;
+        command += `- Eye Shape: ${getSelectedValue('eyeShape')}\n`;
+        command += `- Eye Color: ${getSelectedValue('eyeColor')}\n`;
+        command += `- Eyebrow Shape: ${getSelectedValue('eyebrowShape')}\n`;
+        command += `- Mouth Shape (Speaking): ${getSelectedValue('mouthShape')}\n`;
+        command += `- Hair Length: ${getSelectedValue('hairLength')}\n`;
+        command += `- Hair Color: ${getSelectedValue('hairColor')}\n`;
+        command += `- Facial Expression: ${getSelectedValue('expression')}\n`;
+
+        // Final Image Generation Command
+        command += `\nCreate an e-girl face and head that fits the features above, with the head facing forward.`;
+
+        // Output the command to the textarea
+        document.getElementById('commandOutput').value = command;
+    }
+
+    function getSelectedValue(name) {
+        let selected = document.querySelector(`input[name="${name}"]:checked`);
+        return selected ? selected.value : 'None';
+    }
+
+    // Copy to clipboard functionality
+    function copyToClipboard() {
+        let textarea = document.getElementById('commandOutput');
+        textarea.select();
+        document.execCommand('copy');
+    }
+
+    // Theme toggle functionality
+    document.getElementById('themeToggle').addEventListener('change', function() {
+        if (this.value === 'dark') {
+            document.body.classList.add('dark-mode');
+            document.body.classList.remove('light-mode');
+        } else {
+            document.body.classList.add('light-mode');
+            document.body.classList.remove('dark-mode');
+        }
+    });
+
+    // Set default theme
+    document.body.classList.add('light-mode');
+</script>
+
+</body>
+</html>
