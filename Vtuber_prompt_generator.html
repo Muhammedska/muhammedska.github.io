@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VTuber Character Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f8f9fa;
+        }
+        h1 {
+            color: #007bff;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section label {
+            font-weight: bold;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>VTuber Character Generator</h1>
+
+        <!-- 1. General Physical Features -->
+        <div class="section">
+            <label>Head Shape:</label><br>
+            <input type="radio" name="headShape" value="Round"> Round
+            <input type="radio" name="headShape" value="Oval"> Oval
+            <input type="radio" name="headShape" value="Slightly Angular"> Slightly Angular
+        </div>
+
+        <div class="section">
+            <label>Body Type:</label><br>
+            <input type="radio" name="bodyType" value="Thin"> Thin
+            <input type="radio" name="bodyType" value="Delicate"> Delicate
+            <input type="radio" name="bodyType" value="Long-limbed"> Long-limbed
+            <input type="radio" name="bodyType" value="Athletic"> Athletic
+        </div>
+
+        <div class="section">
+            <label>Height:</label><br>
+            <input type="radio" name="height" value="Short"> Short
+            <input type="radio" name="height" value="Medium"> Medium
+            <input type="radio" name="height" value="Tall"> Tall
+        </div>
+
+        <!-- 2. Face & Eyes -->
+        <div class="section">
+            <label>Eye Shape:</label><br>
+            <input type="radio" name="eyeShape" value="Big"> Big
+            <input type="radio" name="eyeShape" value="Almond-shaped"> Almond-shaped
+            <input type="radio" name="eyeShape" value="Round"> Round
+        </div>
+
+        <div class="section">
+            <label>Eye Color:</label><br>
+            <input type="radio" name="eyeColor" value="Blue"> Blue
+            <input type="radio" name="eyeColor" value="Green"> Green
+            <input type="radio" name="eyeColor" value="Pink"> Pink
+            <input type="radio" name="eyeColor" value="Purple"> Purple
+            <input type="radio" name="eyeColor" value="Other"> Other
+        </div>
+
+        <div class="section">
+            <label>Eyebrow Shape:</label><br>
+            <input type="radio" name="eyebrowShape" value="Thin"> Thin
+            <input type="radio" name="eyebrowShape" value="Thick"> Thick
+            <input type="radio" name="eyebrowShape" value="Arched"> Arched
+            <input type="radio" name="eyebrowShape" value="Straight"> Straight
+        </div>
+
+        <div class="section">
+            <label>Eyelash Type:</label><br>
+            <input type="radio" name="eyelashType" value="Long & Thick"> Long & Thick
+            <input type="radio" name="eyelashType" value="Medium"> Medium
+            <input type="radio" name="eyelashType" value="Short & Sparse"> Short & Sparse
+        </div>
+
+        <!-- 3. Hair Style & Color -->
+        <div class="section">
+            <label>Hair Length:</label><br>
+            <input type="radio" name="hairLength" value="Short"> Short
+            <input type="radio" name="hairLength" value="Medium"> Medium
+            <input type="radio" name="hairLength" value="Long"> Long
+        </div>
+
+        <div class="section">
+            <label>Hair Style:</label><br>
+            <input type="radio" name="hairStyle" value="Straight"> Straight
+            <input type="radio" name="hairStyle" value="Wavy"> Wavy
+            <input type="radio" name="hairStyle" value="Curly"> Curly
+            <input type="radio" name="hairStyle" value="Braided"> Braided
+            <input type="radio" name="hairStyle" value="Ponytail"> Ponytail
+            <input type="radio" name="hairStyle" value="Twin Tails"> Twin Tails
+        </div>
+
+        <div class="section">
+            <label>Hair Color:</label><br>
+            <input type="radio" name="hairColor" value="Pastel Pink"> Pastel Pink
+            <input type="radio" name="hairColor" value="Purple"> Purple
+            <input type="radio" name="hairColor" value="Blue"> Blue
+            <input type="radio" name="hairColor" value="Green"> Green
+            <input type="radio" name="hairColor" value="Neon"> Neon
+            <input type="radio" name="hairColor" value="Natural"> Natural
+            <input type="radio" name="hairColor" value="Gradient"> Gradient
+        </div>
+
+        <div class="section">
+            <label>Hair Accessories:</label><br>
+            <input type="radio" name="hairAccessories" value="Hairpins"> Hairpins
+            <input type="radio" name="hairAccessories" value="Ribbons"> Ribbons
+            <input type="radio" name="hairAccessories" value="Crowns"> Crowns
+            <input type="radio" name="hairAccessories" value="None"> None
+        </div>
+
+        <!-- 4. Outfit & Accessories -->
+        <div class="section">
+            <label>Style:</label><br>
+            <input type="radio" name="style" value="School Uniform"> School Uniform
+            <input type="radio" name="style" value="Gothic"> Gothic
+            <input type="radio" name="style" value="Pastel Dress"> Pastel Dress
+            <input type="radio" name="style" value="Sporty"> Sporty
+            <input type="radio" name="style" value="Cyberpunk"> Cyberpunk
+        </div>
+
+        <div class="section">
+            <label>Main Colors:</label><br>
+            <input type="radio" name="mainColors" value="Pastel"> Pastel
+            <input type="radio" name="mainColors" value="Black & White"> Black & White
+            <input type="radio" name="mainColors" value="Vibrant Mix"> Vibrant Mix
+        </div>
+
+        <div class="section">
+            <label>Additional Accessories:</label><br>
+            <input type="radio" name="accessories" value="Headphones"> Headphones
+            <input type="radio" name="accessories" value="Necklaces"> Necklaces
+            <input type="radio" name="accessories" value="Bracelets"> Bracelets
+            <input type="radio" name="accessories" value="Bags"> Bags
+        </div>
+
+        <!-- 5. Button & Output -->
+        <button onclick="generateSchema()">Generate Schema</button>
+
+        <h3>Generated Schema:</h3>
+        <textarea id="schemaOutput" readonly></textarea>
+    </div>
+
+    <script>
+        function generateSchema() {
+            let schema = '';
+            
+            // General Physical Features
+            schema += `Head Shape: ${getSelectedValue('headShape')}\n`;
+            schema += `Body Type: ${getSelectedValue('bodyType')}\n`;
+            schema += `Height: ${getSelectedValue('height')}\n`;
+            
+            // Face & Eyes
+            schema += `Eye Shape: ${getSelectedValue('eyeShape')}\n`;
+            schema += `Eye Color: ${getSelectedValue('eyeColor')}\n`;
+            schema += `Eyebrow Shape: ${getSelectedValue('eyebrowShape')}\n`;
+            schema += `Eyelash Type: ${getSelectedValue('eyelashType')}\n`;
+            
+            // Hair Style & Color
+            schema += `Hair Length: ${getSelectedValue('hairLength')}\n`;
+            schema += `Hair Style: ${getSelectedValue('hairStyle')}\n`;
+            schema += `Hair Color: ${getSelectedValue('hairColor')}\n`;
+            schema += `Hair Accessories: ${getSelectedValue('hairAccessories')}\n`;
+            
+            // Outfit & Accessories
+            schema += `Style: ${getSelectedValue('style')}\n`;
+            schema += `Main Colors: ${getSelectedValue('mainColors')}\n`;
+            schema += `Additional Accessories: ${getSelectedValue('accessories')}\n`;
+
+            document.getElementById('schemaOutput').value = schema;
+        }
+
+        function getSelectedValue(name) {
+            let selected = document.querySelector(`input[name="${name}"]:checked`);
+            return selected ? selected.value : 'None';
+        }
+    </script>
+
+</body>
+</html>
