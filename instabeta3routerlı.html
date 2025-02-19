@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Instagram Reels Benzeri Uygulama</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    /* Genel ayarlar */
+    body {
+      background-color: #121212; /* Karanlık tema */
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      height: 100%;
+    }
+    /* Sayfa flex düzeninde: navbar üstte, router altta, orta alan esneyen kısım */
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+    /* Reels alanı: navbar ile router arasında kalan kısım */
+    #reels-container {
+      flex-grow: 1;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Reels öğelerini barındıran wrapper */
+    #reels-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      transition: transform 0.5s ease-in-out;
+    }
+    /* Her reel, reels-container alanını tamamen kaplar; metin ortalanır */
+    .reel-item {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    /* Yatay swipe overlay mesajı */
+    .overlay {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.7);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1.5rem;
+      display: none;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+  <!-- Üst Navbar -->
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Reels Uygulaması</a>
+    </div>
+  </nav>
+
+  <!-- Reels Alanı (Navbar ve Router arasında kalan kısım) -->
+  <div id="reels-container">
+    <div id="reels-wrapper">
+      <!-- JSON verisindeki metinler dinamik olarak buraya eklenecek -->
+    </div>
+  </div>
+
+  <!-- Alt Router Bölümü -->
+  <div id="router" class="bg-dark text-light text-center py-2">
+    <div class="container">
+      <span class="mx-2">Ana Sayfa</span>
+      <span class="mx-2">Arama</span>
+      <span class="mx-2">Profil</span>
+    </div>
+  </div>
+
+  <!-- Yatay swipe overlay mesajı -->
+  <div id="horizontal-overlay" class="overlay"></div>
+
+  <!-- Örnek JSON Verisi -->
+  <script>
+    const reelsData = [
+      { text: "Reel 1: Merhaba, bu ilk mesaj." },
+      { text: "Reel 2: İkinci mesaj burada." },
+      { text: "Reel 3: Üçüncü mesajı izliyorsunuz." },
+      { text: "Reel 4: Dördüncü mesaj, devam ediyor." },
+      { text: "Reel 5: Beşinci mesaj, son!" }
+    ];
+  </script>
+
+  <script>
+    // --------------------------
+    // Değişkenler ve Reel Yükleme
+    // --------------------------
+    let currentIndex = 0; // Şu anda görüntülenen reel indeksi
+    const reelsWrapper = document.getElementById("reels-wrapper");
+
+    // JSON verisindeki her metin için tam ekran (container boyutunda) bir reel oluşturur.
+    function loadReels() {
+      reelsData.forEach(item => {
+        const reelDiv = document.createElement("div");
+        reelDiv.className = "reel-item";
+        reelDiv.innerText = item.text;
+        reelsWrapper.appendChild(reelDiv);
+      });
+    }
+    loadReels();
+
+    // --------------------------
+    // Reel Pozisyonunun Güncellenmesi
+    // --------------------------
+    // Reels container'ın yüksekliğine göre, wrapper'ı dikeyde kaydırır.
+    function updateReelPosition() {
+      const containerHeight = document.getElementById("reels-container").clientHeight;
+      const translateY = -currentIndex * containerHeight;
+      reelsWrapper.style.transform = `translateY(${translateY}px)`;
+    }
+
+    // --------------------------
+    // Dokunma (Swipe) İşlemleri
+    // --------------------------
+    let touchStartX = 0,
+        touchStartY = 0,
+        touchEndX = 0,
+        touchEndY = 0;
+    const minSwipeDistance = 50; // Minimum swipe mesafesi (px)
+
+    // Reels container üzerinde dokunma olaylarını dinliyoruz.
+    const swipeContainer = document.getElementById("reels-container");
+    swipeContainer.addEventListener("touchstart", e => {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    });
+
+    swipeContainer.addEventListener("touchend", e => {
+      touchEndX = e.changedTouches[0].screenX;
+      touchEndY = e.changedTouches[0].screenY;
+      handleGesture();
+    });
+
+    // Dokunma hareketlerini değerlendir: Yatay mı, dikey mi?
+    function handleGesture() {
+      const deltaX = touchEndX - touchStartX;
+      const deltaY = touchEndY - touchStartY;
+
+      // Yatay swipe: yatay mesafe dikeyden büyük ve eşik aşılmışsa
+      if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
+        if (deltaX < 0) {
+          // Sol swipe: overlay mesajı sağdan ("Yorumlar")
+          showHorizontalOverlay("right");
+        } else {
+          // Sağ swipe: overlay mesajı soldan ("Profil")
+          showHorizontalOverlay("left");
+        }
+      }
+      // Dikey swipe: dikey mesafe eşik aşılmışsa
+      else if (Math.abs(deltaY) > minSwipeDistance) {
+        // Instagram mantığı: yukarı swipe = SONRAKİ, aşağı swipe = ÖNCEKİ reel
+        if (deltaY < 0) {
+          // Yukarı swipe: sonraki reel
+          if (currentIndex < reelsData.length - 1) {
+            currentIndex++;
+            updateReelPosition();
+          }
+        } else {
+          // Aşağı swipe: önceki reel
+          if (currentIndex > 0) {
+            currentIndex--;
+            updateReelPosition();
+          }
+        }
+      }
+    }
+
+    // --------------------------
+    // Yatay Swipe Overlay Mesajı
+    // --------------------------
+    function showHorizontalOverlay(direction) {
+      const overlay = document.getElementById("horizontal-overlay");
+      if (direction === "left") {
+        // Sağ swipe: sol tarafta "Profil" mesajı
+        overlay.innerText = "Profil";
+        overlay.style.left = "10px";
+        overlay.style.right = "";
+      } else if (direction === "right") {
+        // Sol swipe: sağ tarafta "Yorumlar" mesajı
+        overlay.innerText = "Yorumlar";
+        overlay.style.right = "10px";
+        overlay.style.left = "";
+      }
+      overlay.style.display = "block";
+      // 2 saniye sonra overlay gizlenir.
+      setTimeout(() => {
+        overlay.style.display = "none";
+      }, 2000);
+    }
+
+    // Pencere boyutu değiştiğinde reel pozisyonunu güncelle.
+    window.addEventListener("resize", updateReelPosition);
+  </script>
+
+  <!-- Bootstrap JS (Opsiyonel) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
