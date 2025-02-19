@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Instagram Reels Benzeri Uygulama</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #121212; /* Karanlık tema */
+      color: #fff;
+      overflow: hidden; /* Sayfanın kaydırılmasını engeller */
+    }
+    /* Reels kapsayıcısı ekranı kaplar */
+    #reels-container {
+      position: relative;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+    /* İçerideki reel'ler bir wrapper ile taşınacak */
+    #reels-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      transition: transform 0.5s ease-in-out;
+    }
+    /* Her reel item tam ekran kaplayacak şekilde */
+    .reel-item {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+  <div id="reels-container">
+    <div id="reels-wrapper">
+      <!-- JSON verisindeki metinler buraya eklenecek -->
+    </div>
+  </div>
+  
+  <!-- JSON verisi (örnek) -->
+  <script>
+    const reelsData = [
+      { "text": "Reel 1: Merhaba, bu ilk mesaj." },
+      { "text": "Reel 2: İkinci mesaj burada." },
+      { "text": "Reel 3: Üçüncü mesajı izliyorsunuz." },
+      { "text": "Reel 4: Dördüncü mesaj, devam ediyor." },
+      { "text": "Reel 5: Beşinci mesaj, son!" }
+    ];
+  </script>
+  
+  <script>
+    // --- Değişkenler ve Reel Yükleme ---
+    let currentIndex = 0; // Gösterilen reel'in indeksi
+    const reelsWrapper = document.getElementById('reels-wrapper');
+    
+    // JSON verisindeki her bir metni içeren reel item'larını oluşturuyoruz.
+    function loadReels() {
+      reelsData.forEach(item => {
+        const reelDiv = document.createElement('div');
+        reelDiv.className = 'reel-item';
+        reelDiv.innerText = item.text;
+        reelsWrapper.appendChild(reelDiv);
+      });
+    }
+    
+    loadReels();
+    
+    // --- Swipe (Kaydırma) İşlemleri ---
+    let touchStartY = 0;  // Dokunmaya başlandığında Y koordinatı
+    let touchEndY = 0;    // Dokunma bitiminde Y koordinatı
+    const minSwipeDistance = 50; // Hareketin algılanabilmesi için gereken minimum mesafe (piksel)
+    
+    // Kaydırma hareketini değerlendiren fonksiyon
+    function handleGesture() {
+      const deltaY = touchEndY - touchStartY; // Kaydırmanın mesafesi
+      
+      if (Math.abs(deltaY) > minSwipeDistance) {
+        if (deltaY < 0) {
+          // Parmak yukarı doğru hareket etti (aşağıdan yukarı swipe)
+          // Verilen yönergeye göre: önceki reel'e git
+          if (currentIndex > 0) {
+            currentIndex--;
+            updateReelPosition();
+          }
+        } else {
+          // Parmak aşağı doğru hareket etti (yukarıdan aşağı swipe)
+          // Yönergeye göre: sonraki reel'e git
+          if (currentIndex < reelsData.length - 1) {
+            currentIndex++;
+            updateReelPosition();
+          }
+        }
+      }
+    }
+    
+    // Wrapper'ı güncelleyerek gösterilen reel'in konumunu ayarlıyoruz.
+    function updateReelPosition() {
+      const translateY = -currentIndex * window.innerHeight;
+      reelsWrapper.style.transform = `translateY(${translateY}px)`;
+    }
+    
+    // --- Dokunma Olayları ---
+    const container = document.getElementById('reels-container');
+    
+    // Dokunma başladığında başlangıç Y koordinatını kaydediyoruz.
+    container.addEventListener('touchstart', e => {
+      touchStartY = e.changedTouches[0].screenY;
+    });
+    
+    // Dokunma bittiğinde bitiş Y koordinatını alıp swipe hareketini değerlendiriyoruz.
+    container.addEventListener('touchend', e => {
+      touchEndY = e.changedTouches[0].screenY;
+      handleGesture();
+    });
+    
+    // Pencere boyutu değiştiğinde reel pozisyonunu güncelliyoruz.
+    window.addEventListener('resize', updateReelPosition);
+  </script>
+  
+  <!-- Bootstrap JS (Opsiyonel) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
