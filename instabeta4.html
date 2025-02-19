@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tek Metin Reels Uygulaması</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    /* Genel ayarlar */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #121212;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+    }
+    /* Üst navbar sabit konumda */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+    }
+    /* Alt router sabit konumda */
+    #router {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      z-index: 100;
+      background-color: #000;
+    }
+    /* Reels alanı: Navbar ve router arasında kalan esnek alan */
+    #reels-container {
+      flex-grow: 1;
+      /* Navbar ve router yüksekliğine göre margin veriyoruz.
+         (Varsayılan Bootstrap navbar yüksekliği yaklaşık 56px) */
+      margin-top: 56px;
+      margin-bottom: 56px;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Reel'leri içeren wrapper; swipe ile dikey kaydırma burada yapılır */
+    #reels-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      transition: transform 0.5s ease-in-out;
+    }
+    /* Her reel, container'ın tamamını kaplar; metin hem yatay hem dikey ortalanır */
+    .reel-item {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+  <!-- Üst Navbar -->
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Reels Uygulaması</a>
+    </div>
+  </nav>
+
+  <!-- Reels Alanı (Navbar ile Router arasında kalan kısım) -->
+  <div id="reels-container">
+    <div id="reels-wrapper">
+      <!-- JSON verisindeki metinler dinamik olarak buraya eklenecek -->
+    </div>
+  </div>
+
+  <!-- Alt Router Bölümü -->
+  <div id="router" class="text-center py-2">
+    <span class="mx-2">Ana Sayfa</span>
+    <span class="mx-2">Arama</span>
+    <span class="mx-2">Profil</span>
+  </div>
+
+  <!-- Örnek JSON Verisi -->
+  <script>
+    const reelsData = [
+      { text: "Reel 1: İlk metin içeriği" },
+      { text: "Reel 2: İkinci metin içeriği" },
+      { text: "Reel 3: Üçüncü metin içeriği" },
+      { text: "Reel 4: Dördüncü metin içeriği" },
+      { text: "Reel 5: Beşinci metin içeriği" }
+    ];
+  </script>
+
+  <script>
+    // --------------------------
+    // Değişkenler ve Reel Yükleme
+    // --------------------------
+    let currentIndex = 0;
+    const reelsWrapper = document.getElementById("reels-wrapper");
+
+    // JSON verisindeki her metni, tam ekran bir reel item olarak ekler
+    function loadReels() {
+      reelsData.forEach(item => {
+        const reelDiv = document.createElement("div");
+        reelDiv.className = "reel-item";
+        reelDiv.innerText = item.text;
+        reelsWrapper.appendChild(reelDiv);
+      });
+    }
+    loadReels();
+
+    // --------------------------
+    // Reel Pozisyonunun Güncellenmesi
+    // --------------------------
+    // Reels container'ın yüksekliğine göre, wrapper'ı dikeyde kaydırır.
+    function updateReelPosition() {
+      const containerHeight = document.getElementById("reels-container").clientHeight;
+      reelsWrapper.style.transform = `translateY(${-currentIndex * containerHeight}px)`;
+    }
+
+    // --------------------------
+    // Dokunma (Swipe) İşlemleri
+    // --------------------------
+    let touchStartY = 0, touchEndY = 0;
+    const minSwipeDistance = 50;
+    const container = document.getElementById("reels-container");
+
+    container.addEventListener("touchstart", e => {
+      touchStartY = e.changedTouches[0].screenY;
+    });
+
+    container.addEventListener("touchend", e => {
+      touchEndY = e.changedTouches[0].screenY;
+      handleSwipe();
+    });
+
+    // Swipe hareketinde metni değiştirme: yukarı swipe sonraki, aşağı swipe önceki metin getirir.
+    function handleSwipe() {
+      const deltaY = touchEndY - touchStartY;
+      if (Math.abs(deltaY) > minSwipeDistance) {
+        if (deltaY < 0 && currentIndex < reelsData.length - 1) {
+          // Yukarı swipe: sonraki metin
+          currentIndex++;
+        } else if (deltaY > 0 && currentIndex > 0) {
+          // Aşağı swipe: önceki metin
+          currentIndex--;
+        }
+        updateReelPosition();
+      }
+    }
+
+    // Pencere boyutu değiştiğinde reel pozisyonunu güncelle
+    window.addEventListener("resize", updateReelPosition);
+  </script>
+
+  <!-- Bootstrap JS (Opsiyonel) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
