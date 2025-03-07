@@ -9,6 +9,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
+        /* Rastgele pastel & dark tonlu arka plan */
         body {
             font-family: 'Press Start 2P', cursive;
             text-align: center;
@@ -19,81 +20,79 @@
             height: 100vh;
             margin: 0;
             overflow: hidden;
+            background: linear-gradient(120deg, var(--color1), var(--color2));
             transition: background 1s ease-in-out;
+        }
+
+        :root {
+            --color1: hsl(calc(360 * var(--rand1)), 70%, 40%);
+            --color2: hsl(calc(360 * var(--rand2)), 70%, 20%);
+            --rand1: calc(random());
+            --rand2: calc(random());
         }
 
         .container {
             background: rgba(0, 0, 0, 0.8);
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            max-width: 400px;
         }
 
         .title {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: bold;
             margin-bottom: 10px;
         }
 
         .subtitle {
-            font-size: 16px;
+            font-size: 14px;
             margin-bottom: 20px;
         }
 
         .input-group {
-            max-width: 400px;
+            max-width: 300px;
             margin: auto;
+        }
+
+        .result-box {
+            margin-top: 20px;
+            font-size: 14px;
+            font-weight: bold;
         }
 
         button {
             font-family: 'Press Start 2P', cursive;
-        }
-
-        .gif {
-            max-width: 300px;
-            border: 5px solid #e0e0e0;
-            display: none;
-        }
-
-        .material-icons {
-            vertical-align: middle;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1 class="title"><span class="material-icons">calculate</span> Asal Sayı Testi</h1>
-        <p class="subtitle">Bir sayı gir ve asal olup olmadığını öğren!</p>
+        <p class="subtitle">Bir sayı gir ve sana özel yorumumuzu al!</p>
 
         <div class="input-group mb-3">
-            <input type="number" id="numberInput" class="form-control" placeholder="Bir sayı gir..." aria-label="Bir sayı gir">
-            <button class="btn btn-primary" onclick="checkPrime()">Kontrol Et</button>
+            <input type="number" id="numberInput" class="form-control" placeholder="Bir sayı gir..." aria-label="Bir sayı gir" oninput="dynamicProcess()">
         </div>
 
-        <div id="result" class="mt-3"></div>
-        <img id="gif" class="gif mt-3" src="" alt="">
+        <div id="result" class="result-box"></div>
     </div>
 
     <script>
-        // Pixel-art temalı arka planlar (Minecraft, Dead Cells, Stardew Valley)
-        const backgrounds = [
-            "https://i.imgur.com/qGk5J2H.jpg", // Minecraft
-            "https://i.imgur.com/2XqR3GD.jpg", // Dead Cells
-            "https://i.imgur.com/u3y6lfj.jpg"  // Stardew Valley
-        ];
+        // Rastgele arka plan için JS kullanımı
+        function randomColor() {
+            return `hsl(${Math.floor(Math.random() * 360)}, 70%, ${Math.random() > 0.5 ? "30%" : "50%"})`;
+        }
 
-        // Rastgele bir arka plan seç
-        document.body.style.background = `url(${backgrounds[Math.floor(Math.random() * backgrounds.length)]}) no-repeat center center fixed`;
-        document.body.style.backgroundSize = "cover";
+        document.body.style.background = `linear-gradient(120deg, ${randomColor()}, ${randomColor()})`;
 
-        function checkPrime() {
+        // Dinamik işleme fonksiyonu
+        function dynamicProcess() {
             const number = parseInt(document.getElementById("numberInput").value);
             const resultDiv = document.getElementById("result");
-            const gif = document.getElementById("gif");
 
             if (isNaN(number) || number < 1) {
-                resultDiv.innerHTML = "<p class='text-danger'>Lütfen pozitif bir sayı girin!</p>";
-                gif.style.display = "none";
+                resultDiv.innerHTML = "<p class='text-danger'>Lütfen geçerli bir sayı gir!</p>";
                 return;
             }
 
@@ -105,27 +104,25 @@
                 }
             }
 
-            const primeGifs = [
-                "https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif",
-                "https://media.giphy.com/media/l0HlRf0mTqJzibRIs/giphy.gif",
-                "https://media.giphy.com/media/l0HlFz3TzNve7R68Y/giphy.gif"
+            const primeMessages = [
+                "Vay be! Tam bir asal kralsın! 👑",
+                "Matematik tanrıları seni seçti! 📖✨",
+                "Asaletin sayılar dünyasında bile var! 🎩",
+                "Bu sayı kesinlikle partilere davet edilmez! 🎉"
             ];
 
-            const notPrimeGifs = [
-                "https://media.giphy.com/media/26FLdmIp6wJr91JAI/giphy.gif",
-                "https://media.giphy.com/media/3o7abldj0b3rxrZUxW/giphy.gif",
-                "https://media.giphy.com/media/xT5LMQFByXkhP6QjzW/giphy.gif"
+            const notPrimeMessages = [
+                "Bu sayı asal değil... Ama sen yine de değerlisin! ❤️",
+                "Üzgünüm dostum, bu sayı biraz sıradan çıktı... 😅",
+                "Matematikçilerin en çok üzüldüğü sayı olabilir. 😭",
+                "Bu sayı asal değil, ama belki ruhu asal olabilir? 🤔"
             ];
 
-            if (isPrime) {
-                resultDiv.innerHTML = `<p class='text-success'><b>${number}</b> asal sayıdır! 🎉</p>`;
-                gif.src = primeGifs[Math.floor(Math.random() * primeGifs.length)];
-            } else {
-                resultDiv.innerHTML = `<p class='text-danger'><b>${number}</b> asal sayı değildir! 😅</p>`;
-                gif.src = notPrimeGifs[Math.floor(Math.random() * notPrimeGifs.length)];
-            }
+            let message = isPrime 
+                ? primeMessages[Math.floor(Math.random() * primeMessages.length)] 
+                : notPrimeMessages[Math.floor(Math.random() * notPrimeMessages.length)];
 
-            gif.style.display = "block";
+            resultDiv.innerHTML = `<p class='${isPrime ? "text-success" : "text-danger"}'>${message}</p>`;
         }
     </script>
 </body>
