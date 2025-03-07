@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Asal Sayı Testi</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        #overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+            z-index: 10;
+            width: 400px;
+        }
+
+        .input-group {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="overlay">
+        <h1><span class="material-icons">calculate</span> Asal Sayı Testi</h1>
+        <p>Bir sayı gir ve sonucu 3D olarak gör!</p>
+        <div class="input-group">
+            <input type="number" id="numberInput" class="form-control" placeholder="Bir sayı gir..." aria-label="Bir sayı gir" oninput="update3DText()">
+        </div>
+    </div>
+
+    <script>
+        // Three.js sahne oluşturma
+        let scene = new THREE.Scene();
+        let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        let renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Partikül efekti için nokta materyali
+        let particles = new THREE.Group();
+        scene.add(particles);
+
+        for (let i = 0; i < 200; i++) {
+            let geometry = new THREE.SphereGeometry(0.05, 8, 8);
+            let material = new THREE.MeshBasicMaterial({ color: Math.random() * 0xffffff });
+            let particle = new THREE.Mesh(geometry, material);
+            particle.position.set(Math.random() * 10 - 5, Math.random() * 10 - 5, Math.random() * 10 - 5);
+            particles.add(particle);
+        }
+
+        // 3D metin ayarları
+        let textMesh;
+        let loader = new THREE.FontLoader();
+        loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+            textMesh = new THREE.Mesh(
+                new THREE.TextGeometry("Bir sayı gir!", {
+                    font: font,
+                    size: 1,
+                    height: 0.3,
+                    curveSegments: 12,
+                    bevelEnabled: true,
+                    bevelThickness: 0.03,
+                    bevelSize: 0.02,
+                    bevelSegments: 5
+                }),
+                new THREE.MeshStandardMaterial({ color: 0xffffff })
+            );
+            textMesh.position.set(-2, 0, 0);
+            scene.add(textMesh);
+        });
+
+        // Işık ekleyelim
+        let light = new THREE.PointLight(0xffffff, 1, 100);
+        light.position.set(5, 5, 5);
+        scene.add(light);
+
+        // Kamera pozisyonu
+        camera.position.z = 5;
+
+        // Animasyon fonksiyonu
+        function animate() {
+            requestAnimationFrame(animate);
+            particles.rotation.x += 0.001;
+            particles.rotation.y += 0.001;
+            if (textMesh) textMesh.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Asal sayıyı kontrol etme fonksiyonu
+        function isPrime(num) {
+            if (num < 2) return false;
+            for (let i = 2; i <= Math.sqrt(num); i++) {
+                if (num % i === 0) return false;
+            }
+            return true;
+        }
+
+        // Girilen sayıya göre 3D metni güncelleme
+        function update3DText() {
+            const num = parseInt(document.getElementById("numberInput").value);
+            if (isNaN(num)) return;
+
+            let message = num + " ";
+            let color;
+
+            if (isPrime(num)) {
+                message += "asal! 🚀";
+                color = 0x00ff00; // Yeşil
+            } else {
+                message += "asal değil... 😢";
+                color = 0xff0000; // Kırmızı
+            }
+
+            // Eski metni kaldır ve yeni metni oluştur
+            scene.remove(textMesh);
+            loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+                textMesh = new THREE.Mesh(
+                    new THREE.TextGeometry(message, {
+                        font: font,
+                        size: 1,
+                        height: 0.3,
+                        curveSegments: 12,
+                        bevelEnabled: true,
+                        bevelThickness: 0.03,
+                        bevelSize: 0.02,
+                        bevelSegments: 5
+                    }),
+                    new THREE.MeshStandardMaterial({ color: color })
+                );
+                textMesh.position.set(-2, 0, 0);
+                scene.add(textMesh);
+            });
+        }
+
+        // Ekran boyutu değiştiğinde yeniden ayarla
+        window.addEventListener("resize", function () {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+    </script>
+</body>
+</html>
