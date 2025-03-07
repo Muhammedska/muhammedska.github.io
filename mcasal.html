@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Retro Asal Sayı Testi</title>
+    <title>Cyberpunk 3D Asal Sayı Testi</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/GLTFLoader.js"></script>
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
@@ -16,10 +17,25 @@
             padding: 0;
             overflow: hidden;
             font-family: 'Press Start 2P', cursive;
-            background: black;
+            background: linear-gradient(to right, #7EC8E3, #F6E8EA, #FFADAD);
             color: white;
         }
 
+        /* 🎨 Minecraft Stili Arkaplan */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://www.minecraftbackgrounds.com/images/wallpapers/minecraft-blocks.png');
+            background-size: cover;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        /* 🕹 Cyberpunk UI */
         #overlay {
             position: absolute;
             top: 50%;
@@ -32,8 +48,9 @@
             color: cyan;
             z-index: 10;
             width: 400px;
-            border: 2px solid magenta;
+            border: 3px solid magenta;
             box-shadow: 0 0 20px cyan;
+            animation: animate__pulse infinite 2s;
         }
 
         .input-group {
@@ -58,17 +75,19 @@
 
         button {
             cursor: pointer;
+            animation: animate__bounce infinite 3s;
         }
     </style>
 </head>
 <body>
     <div id="overlay">
-        <h1>🕹️ 3D Retro Asal Sayı Testi</h1>
-        <p>Bir sayı gir ve sonucu havalı 3D efektlerle gör!</p>
+        <h1 class="animate__animated animate__flash">🚀 3D Cyberpunk Asal Sayı Testi</h1>
+        <p>Bir sayı gir ve sonucu 3D animasyonla gör!</p>
         <div class="input-group">
             <input type="number" id="numberInput" placeholder="Sayı gir..." oninput="update3DText()">
             <button onclick="update3DText()">Test Et!</button>
         </div>
+        <div id="result3D"></div>
     </div>
 
     <script>
@@ -78,11 +97,10 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        let textMesh, dancingCat;
+        let textMesh;
         let loader = new THREE.FontLoader();
-        let gltfLoader = new THREE.GLTFLoader();
-
-        // 3D Neon Işıklar
+        
+        // 🎇 Cyberpunk Işıklar
         let light1 = new THREE.PointLight(0x00ffff, 2, 50);
         light1.position.set(5, 5, 5);
         scene.add(light1);
@@ -91,26 +109,18 @@
         light2.position.set(-5, -5, 5);
         scene.add(light2);
 
-        // Dans eden kedi ekle
-        gltfLoader.load("https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/Duck/glTF/Duck.gltf", function (gltf) {
-            dancingCat = gltf.scene;
-            dancingCat.scale.set(2, 2, 2);
-            dancingCat.position.set(0, -1, 0);
-            scene.add(dancingCat);
-        });
-
         // Kamerayı ayarla
         camera.position.z = 5;
 
-        // Animasyon döngüsü
+        // Animasyon fonksiyonu
         function animate() {
             requestAnimationFrame(animate);
             if (textMesh) textMesh.rotation.y += 0.02;
-            if (dancingCat) dancingCat.rotation.y += 0.03;
             renderer.render(scene, camera);
         }
         animate();
 
+        // Asal sayıyı kontrol etme fonksiyonu
         function isPrime(num) {
             if (num < 2) return false;
             for (let i = 2; i <= Math.sqrt(num); i++) {
@@ -125,13 +135,16 @@
 
             let message = num + " ";
             let color;
+            let animationClass;
 
             if (isPrime(num)) {
                 message += "ASAL 🚀🔥";
                 color = 0x00ff00;
+                animationClass = "animate__tada";
             } else {
                 message += "ASAL DEĞİL 😢";
                 color = 0xff0000;
+                animationClass = "animate__shakeX";
             }
 
             // Önceki metni kaldır
@@ -154,11 +167,9 @@
                 scene.add(textMesh);
             });
 
-            // Kediyi biraz zıplat (Havalı efekt)
-            if (dancingCat) {
-                dancingCat.position.y += 0.5;
-                setTimeout(() => { dancingCat.position.y -= 0.5; }, 300);
-            }
+            // Sonucu Cyberpunk efektiyle göster
+            let resultDiv = document.getElementById("result3D");
+            resultDiv.innerHTML = `<p class="animate__animated ${animationClass}">${message}</p>`;
         }
 
         window.addEventListener("resize", function () {
