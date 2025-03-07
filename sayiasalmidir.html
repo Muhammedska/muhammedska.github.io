@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asal Sayı Testi</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        body {
+            font-family: 'Press Start 2P', cursive;
+            text-align: center;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            transition: background 1s ease-in-out;
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            max-width: 400px;
+            margin: auto;
+        }
+
+        button {
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .gif {
+            max-width: 300px;
+            border: 5px solid #e0e0e0;
+            display: none;
+        }
+
+        .material-icons {
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title"><span class="material-icons">calculate</span> Asal Sayı Testi</h1>
+        <p class="subtitle">Bir sayı gir ve asal olup olmadığını öğren!</p>
+
+        <div class="input-group mb-3">
+            <input type="number" id="numberInput" class="form-control" placeholder="Bir sayı gir..." aria-label="Bir sayı gir">
+            <button class="btn btn-primary" onclick="checkPrime()">Kontrol Et</button>
+        </div>
+
+        <div id="result" class="mt-3"></div>
+        <img id="gif" class="gif mt-3" src="" alt="">
+    </div>
+
+    <script>
+        // Pixel-art temalı arka planlar (Minecraft, Dead Cells, Stardew Valley)
+        const backgrounds = [
+            "https://i.imgur.com/qGk5J2H.jpg", // Minecraft
+            "https://i.imgur.com/2XqR3GD.jpg", // Dead Cells
+            "https://i.imgur.com/u3y6lfj.jpg"  // Stardew Valley
+        ];
+
+        // Rastgele bir arka plan seç
+        document.body.style.background = `url(${backgrounds[Math.floor(Math.random() * backgrounds.length)]}) no-repeat center center fixed`;
+        document.body.style.backgroundSize = "cover";
+
+        function checkPrime() {
+            const number = parseInt(document.getElementById("numberInput").value);
+            const resultDiv = document.getElementById("result");
+            const gif = document.getElementById("gif");
+
+            if (isNaN(number) || number < 1) {
+                resultDiv.innerHTML = "<p class='text-danger'>Lütfen pozitif bir sayı girin!</p>";
+                gif.style.display = "none";
+                return;
+            }
+
+            let isPrime = number > 1;
+            for (let i = 2; i <= Math.sqrt(number); i++) {
+                if (number % i === 0) {
+                    isPrime = false;
+                    break;
+                }
+            }
+
+            const primeGifs = [
+                "https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif",
+                "https://media.giphy.com/media/l0HlRf0mTqJzibRIs/giphy.gif",
+                "https://media.giphy.com/media/l0HlFz3TzNve7R68Y/giphy.gif"
+            ];
+
+            const notPrimeGifs = [
+                "https://media.giphy.com/media/26FLdmIp6wJr91JAI/giphy.gif",
+                "https://media.giphy.com/media/3o7abldj0b3rxrZUxW/giphy.gif",
+                "https://media.giphy.com/media/xT5LMQFByXkhP6QjzW/giphy.gif"
+            ];
+
+            if (isPrime) {
+                resultDiv.innerHTML = `<p class='text-success'><b>${number}</b> asal sayıdır! 🎉</p>`;
+                gif.src = primeGifs[Math.floor(Math.random() * primeGifs.length)];
+            } else {
+                resultDiv.innerHTML = `<p class='text-danger'><b>${number}</b> asal sayı değildir! 😅</p>`;
+                gif.src = notPrimeGifs[Math.floor(Math.random() * notPrimeGifs.length)];
+            }
+
+            gif.style.display = "block";
+        }
+    </script>
+</body>
+</html>
