@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Retro Asal Sayı Testi</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/GLTFLoader.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Press Start 2P', cursive;
+            background: black;
+            color: white;
+        }
+
+        #overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            color: cyan;
+            z-index: 10;
+            width: 400px;
+            border: 2px solid magenta;
+            box-shadow: 0 0 20px cyan;
+        }
+
+        .input-group {
+            margin-top: 10px;
+        }
+
+        input, button {
+            font-family: 'Press Start 2P', cursive;
+            background: black;
+            color: cyan;
+            border: 2px solid magenta;
+            padding: 10px;
+            outline: none;
+            box-shadow: 0 0 10px magenta;
+            transition: 0.2s;
+        }
+
+        input:focus, button:hover {
+            box-shadow: 0 0 20px cyan;
+            transform: scale(1.1);
+        }
+
+        button {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="overlay">
+        <h1>🕹️ 3D Retro Asal Sayı Testi</h1>
+        <p>Bir sayı gir ve sonucu havalı 3D efektlerle gör!</p>
+        <div class="input-group">
+            <input type="number" id="numberInput" placeholder="Sayı gir..." oninput="update3DText()">
+            <button onclick="update3DText()">Test Et!</button>
+        </div>
+    </div>
+
+    <script>
+        let scene = new THREE.Scene();
+        let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        let renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        let textMesh, dancingCat;
+        let loader = new THREE.FontLoader();
+        let gltfLoader = new THREE.GLTFLoader();
+
+        // 3D Neon Işıklar
+        let light1 = new THREE.PointLight(0x00ffff, 2, 50);
+        light1.position.set(5, 5, 5);
+        scene.add(light1);
+
+        let light2 = new THREE.PointLight(0xff00ff, 2, 50);
+        light2.position.set(-5, -5, 5);
+        scene.add(light2);
+
+        // Dans eden kedi ekle
+        gltfLoader.load("https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/Duck/glTF/Duck.gltf", function (gltf) {
+            dancingCat = gltf.scene;
+            dancingCat.scale.set(2, 2, 2);
+            dancingCat.position.set(0, -1, 0);
+            scene.add(dancingCat);
+        });
+
+        // Kamerayı ayarla
+        camera.position.z = 5;
+
+        // Animasyon döngüsü
+        function animate() {
+            requestAnimationFrame(animate);
+            if (textMesh) textMesh.rotation.y += 0.02;
+            if (dancingCat) dancingCat.rotation.y += 0.03;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        function isPrime(num) {
+            if (num < 2) return false;
+            for (let i = 2; i <= Math.sqrt(num); i++) {
+                if (num % i === 0) return false;
+            }
+            return true;
+        }
+
+        function update3DText() {
+            const num = parseInt(document.getElementById("numberInput").value);
+            if (isNaN(num)) return;
+
+            let message = num + " ";
+            let color;
+
+            if (isPrime(num)) {
+                message += "ASAL 🚀🔥";
+                color = 0x00ff00;
+            } else {
+                message += "ASAL DEĞİL 😢";
+                color = 0xff0000;
+            }
+
+            // Önceki metni kaldır
+            if (textMesh) scene.remove(textMesh);
+
+            loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+                let textGeometry = new THREE.TextGeometry(message, {
+                    font: font,
+                    size: 1,
+                    height: 0.3,
+                    bevelEnabled: true,
+                    bevelThickness: 0.03,
+                    bevelSize: 0.02,
+                    bevelSegments: 5
+                });
+
+                let textMaterial = new THREE.MeshStandardMaterial({ color: color });
+                textMesh = new THREE.Mesh(textGeometry, textMaterial);
+                textMesh.position.set(-2, 0, 0);
+                scene.add(textMesh);
+            });
+
+            // Kediyi biraz zıplat (Havalı efekt)
+            if (dancingCat) {
+                dancingCat.position.y += 0.5;
+                setTimeout(() => { dancingCat.position.y -= 0.5; }, 300);
+            }
+        }
+
+        window.addEventListener("resize", function () {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+    </script>
+</body>
+</html>
