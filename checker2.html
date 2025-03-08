@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Öğrenci Yoklama</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 800px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+        table {
+            width: 100%;
+        }
+        .fa-check, .fa-times {
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .fa-check { color: green; }
+        .fa-times { color: red; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h3 class="text-center mb-3"><i class="fa fa-users"></i> Öğrenci Yoklama</h3>
+
+    <table class="table table-bordered text-center">
+        <thead class="table-dark">
+            <tr>
+                <th>Öğrenci</th>
+                <th>Sabah</th>
+                <th>Öğle</th>
+                <th>Akşam</th>
+            </tr>
+        </thead>
+        <tbody id="studentTable">
+            <!-- Öğrenci satırları burada olacak -->
+        </tbody>
+    </table>
+
+    <button class="btn btn-success w-100 mt-3" onclick="exportToExcel()">
+        <i class="fa fa-download"></i> Excel Olarak İndir
+    </button>
+</div>
+
+<script>
+    // Öğrenci Listesi
+    const students = ["Ali Yılmaz", "Zeynep Kaya", "Mehmet Demir", "Ayşe Çelik"];
+    const times = ["sabah", "ogle", "aksam"]; // Zaman dilimleri
+    let attendanceData = JSON.parse(localStorage.getItem("attendanceData")) || {}; // Verileri kaydetmek için
+
+    function loadTable() {
+        const table = document.getElementById("studentTable");
+        table.innerHTML = "";
+
+        students.forEach(student => {
+            let row = `<tr><td>${student}</td>`;
+            times.forEach(time => {
+                let status = attendanceData[student]?.[time] || "";
+                let checkIcon = status === "geldi" ? "fa-check" : "";
+                let timesIcon = status === "gelmedi" ? "fa-times" : "";
+                row += `
+                    <td>
+                        <i class="fa ${checkIcon}" onclick="markAttendance('${student}', '${time}', 'geldi')"></i>
+                        <i class="fa ${timesIcon}" onclick="markAttendance('${student}', '${time}', 'gelmedi')"></i>
+                    </td>
+                `;
+            });
+            row += "</tr>";
+            table.innerHTML += row;
+        });
+    }
+
+    function markAttendance(student, time, status) {
+        if (!attendanceData[student]) attendanceData[student] = {};
+        attendanceData[student][time] = status;
+        localStorage.setItem("attendanceData", JSON.stringify(attendanceData));
+        loadTable();
+    }
+
+    function exportToExcel() {
+        let data = [["Öğrenci", "Sabah", "Öğle", "Akşam"]];
+        students.forEach(student => {
+            data.push([
+                student,
+                attendanceData[student]?.sabah || "-",
+                attendanceData[student]?.ogle || "-",
+                attendanceData[student]?.aksam || "-"
+            ]);
+        });
+
+        let ws = XLSX.utils.aoa_to_sheet(data);
+        let wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Yoklama Listesi");
+        XLSX.writeFile(wb, "Yoklama_Listesi.xlsx");
+    }
+
+    loadTable(); // Sayfa açıldığında tabloyu yükle
+</script>
+
+</body>
+</html>
