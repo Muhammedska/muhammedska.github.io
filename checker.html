@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Öğrenci Yoklama</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 600px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+        .form-control {
+            font-size: 16px;
+        }
+        .btn-attendance {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h3 class="text-center mb-3"><i class="fa fa-users"></i> Öğrenci Yoklama</h3>
+    
+    <form id="attendanceForm">
+        <div class="mb-3">
+            <label class="form-label"><i class="fa fa-user"></i> Öğrenci Seç</label>
+            <select class="form-control" id="studentSelect">
+                <option value="Ali Yılmaz">Ali Yılmaz</option>
+                <option value="Zeynep Kaya">Zeynep Kaya</option>
+                <option value="Mehmet Demir">Mehmet Demir</option>
+                <option value="Ayşe Çelik">Ayşe Çelik</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label"><i class="fa fa-clock-o"></i> Saat Seç</label>
+            <input type="time" class="form-control" id="timeSelect">
+        </div>
+
+        <button type="button" class="btn btn-success w-100 btn-attendance" onclick="takeAttendance()">
+            <i class="fa fa-check"></i> Yoklamayı Kaydet
+        </button>
+    </form>
+
+    <hr>
+
+    <h5 class="text-center mt-3"><i class="fa fa-list"></i> Yoklama Listesi</h5>
+    <ul class="list-group" id="attendanceList"></ul>
+</div>
+
+<script>
+    function takeAttendance() {
+        var student = document.getElementById("studentSelect").value;
+        var time = document.getElementById("timeSelect").value;
+
+        if (!time) {
+            alert("Lütfen bir saat seçin!");
+            return;
+        }
+
+        var listItem = document.createElement("li");
+        listItem.className = "list-group-item";
+        listItem.innerHTML = `<i class="fa fa-user"></i> <strong>${student}</strong> - <i class="fa fa-clock-o"></i> ${time}`;
+        
+        document.getElementById("attendanceList").appendChild(listItem);
+    }
+</script>
+
+</body>
+</html>
