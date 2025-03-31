@@ -1,56 +1,69 @@
-<!DOCTYPE html>
-<html lang="tr">
+<!DOCTYPE html><html lang="tr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sağlıklı Yaşam Rehberi</title>
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- CreateJS CDN -->
   <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
 </head>
 <body class="bg-gray-100 text-gray-900">
   <div class="container mx-auto p-4">
     <header class="text-center mb-6">
-      <h1 class="text-3xl font-bold">Testosteron Artışı & Kadın Sağlığı Programı</h1>
-      <p class="text-lg mt-2">Egzersizler, beslenme ve stick figure animasyonlarıyla rehberiniz</p>
-    </header>
-    
-    <!-- Egzersiz Programı Bölümü -->
-    <section id="egzersiz" class="mb-8">
-      <div class="bg-white p-6 rounded-lg shadow-lg mb-6">
-        <h2 class="text-xl font-semibold mb-4">Egzersiz Programı</h2>
-        <p class="mb-4">Evde uygulayabileceğiniz temel egzersizler: Squat, Push-up, Pull-up, Plank, HIIT.</p>
-        <!-- Stick Figure Animasyon Canvas -->  
-        <div class="mb-2 text-center font-semibold">Squat Hareketi (Çöp Adam Animasyonu)</div>
-        <canvas id="stickCanvas" width="300" height="200" class="mx-auto border border-gray-300"></canvas>
-      </div>
-    </section>
-    
-    <!-- Beslenme Programı Bölümü -->
-    <section id="beslenme" class="mb-8">
-      <div class="bg-white p-6 rounded-lg shadow-lg mb-6">
-        <h2 class="text-xl font-semibold mb-4">Beslenme Programı</h2>
-        <p class="mb-4">Dengeli beslenme, hormon dengeniz ve ağrıların hafiflemesi için kritiktir. Aşağıdaki örnek menü, protein, sağlıklı yağlar ve antioksidanlar açısından zengindir.</p>
-        <ul class="list-disc pl-5 space-y-1 text-sm">
-          <li><strong>Kahvaltı:</strong> Yulaf ezmesi, yoğurt, taze meyve, badem</li>
-          <li><strong>Öğle:</strong> Izgara tavuk/balık, tam tahıllı ekmek, zeytinyağlı salata</li>
-          <li><strong>Akşam:</strong> Baklagiller, buharda sebzeler, kahverengi pirinç</li>
-          <li><strong>Ara Öğün:</strong> Sebze dilimleri, humus, meyve</li>
-        </ul>
-      </div>
-    </section>
-    
-    <!-- Besin Etkileri Tablosu -->
-    <section id="besin-etkileri" class="mb-8">
-      <div class="bg-white p-6 rounded-lg shadow-lg">
-        <h2 class="text-xl font-semibold mb-4">Besinlerin Etkileri</h2>
-        <div class="overflow-x-auto">
-          <table class="min-w-full border-collapse border border-gray-300 text-sm">
-            <thead class="bg-pink-500 text-white">
-              <tr>
-                <th class="border p-2">Besin</th>
-                <th class="border p-2">Etkisi</th>
-              </tr>
-            </thead>
-            <tbody class="text-gray-700">\n              <tr>\n                <td class=\"border p-2\">Avokado & Zeytinyağı</td>\n                <td class=\"border p-2 text-green-600\">Artırıcı (sağlıklı yağlar hormon sentezini destekler)</td>\n              </tr>\n              <tr class=\"bg-gray-50\">\n                <td class=\"border p-2\">Yumurta, Tavuk, Balık</td>\n                <td class=\"border p-2 text-green-600\">Artırıcı (yüksek kaliteli protein ve amino asitler)</td>\n              </tr>\n              <tr>\n                <td class=\"border p-2\">İşlenmiş Şeker & Fast Food</td>\n                <td class=\"border p-2 text-red-600\">Azaltıcı (iltihaplanmaya ve hormonal dengesizliğe yol açar)</td>\n              </tr>\n              <tr class=\"bg-gray-50\">\n                <td class=\"border p-2\">Alkollü İçecekler</td>\n                <td class=\"border p-2 text-red-600\">Azaltıcı (hormon dengesini bozabilir)</td>\n              </tr>\n              <tr>\n                <td class=\"border p-2\">Yeşil Sebzeler & Meyveler</td>\n                <td class=\"border p-2 text-green-600\">Artırıcı (antioksidan ve anti-inflamatuar etkiler)</td>\n              </tr>\n            </tbody>\n          </table>\n        </div>\n      </div>\n    </section>\n  </div>\n  \n  <footer class=\"bg-pink-600 text-white py-4\">\n    <div class=\"container mx-auto px-4 text-center\">\n      <p class=\"text-sm\">&copy; 2025 Sağlıklı Yaşam Rehberi. Tüm hakları saklıdır.</p>\n    </div>\n  </footer>\n  \n  <script>\n    // Stick Figure Squat Animasyonu\n    var stage = new createjs.Stage(\"stickCanvas\");\n\n    // Çöp adam çizimi\n    function drawStickFigure(x, y) {\n      var figure = new createjs.Container();\n      figure.x = x;\n      figure.y = y;\n      \n      // Baş\n      var head = new createjs.Shape();\n      head.graphics.beginFill(\"#000\").drawCircle(0, 0, 8);\n      head.y = -30;\n      figure.addChild(head);\n      \n      // Gövde\n      var body = new createjs.Shape();\n      body.graphics.setStrokeStyle(2).beginStroke(\"#000\").moveTo(0, -22).lineTo(0, 0);\n      figure.addChild(body);\n      \n      // Kollar\n      var leftArm = new createjs.Shape();\n      leftArm.graphics.setStrokeStyle(2).beginStroke(\"#000\").moveTo(0, -18).lineTo(-12, -8);\n      var rightArm = new createjs.Shape();\n      rightArm.graphics.setStrokeStyle(2).beginStroke(\"#000\").moveTo(0, -18).lineTo(12, -8);\n      figure.addChild(leftArm, rightArm);\n      \n      // Bacaklar\n      var leftLeg = new createjs.Shape();\n      leftLeg.graphics.setStrokeStyle(2).beginStroke(\"#000\").moveTo(0, 0).lineTo(-10, 20);\n      leftLeg.name = \"leftLeg\";\n      var rightLeg = new createjs.Shape();\n      rightLeg.graphics.setStrokeStyle(2).beginStroke(\"#000\").moveTo(0, 0).lineTo(10, 20);\n      rightLeg.name = \"rightLeg\";\n      figure.addChild(leftLeg, rightLeg);\n      \n      return figure;\n    }\n\n    // Çöp adamı oluştur ve ekle\n    var stickFigure = drawStickFigure(150, 100);\n    stage.addChild(stickFigure);\n\n    // Squat animasyonu: çöp adamın bacaklarını aşağı yukarı hareket ettir\n    createjs.Tween.get(stickFigure.getChildByName(\"leftLeg\"), { loop: true })\n      .to({ rotation: 20, y: 5 }, 500, createjs.Ease.quadInOut)\n      .to({ rotation: 0, y: 0 }, 500, createjs.Ease.quadInOut);\n\n    createjs.Tween.get(stickFigure.getChildByName(\"rightLeg\"), { loop: true })\n      .to({ rotation: -20, y: 5 }, 500, createjs.Ease.quadInOut)\n      .to({ rotation: 0, y: 0 }, 500, createjs.Ease.quadInOut);\n\n    createjs.Ticker.framerate = 60;\n    createjs.Ticker.addEventListener(\"tick\", stage);\n  </script>\n</body>\n</html>\n"}]}
+      <h1 class="text-3xl font-bold">Testosteron Artışı & Kadın Sağlığı</h1>
+      <p class="text-lg mt-2">Egzersizler ve beslenme rehberi</p>
+    </header><section class="mb-8 bg-white p-6 rounded-lg shadow-lg">
+  <h2 class="text-xl font-semibold mb-4">Squat Hareketi (Animasyon)</h2>
+  <canvas id="stickCanvas" width="300" height="200" class="mx-auto border border-gray-300"></canvas>
+</section>
+
+<section class="mb-8 bg-white p-6 rounded-lg shadow-lg">
+  <h2 class="text-xl font-semibold mb-4">Besinlerin Etkileri</h2>
+  <table class="min-w-full border-collapse border border-gray-300 text-sm">
+    <thead class="bg-pink-500 text-white">
+      <tr><th class="border p-2">Besin</th><th class="border p-2">Etkisi</th></tr>
+    </thead>
+    <tbody class="text-gray-700">
+      <tr><td class="border p-2">Avokado & Zeytinyağı</td><td class="border p-2 text-green-600">Artırıcı</td></tr>
+      <tr class="bg-gray-50"><td class="border p-2">İşlenmiş Şeker</td><td class="border p-2 text-red-600">Azaltıcı</td></tr>
+    </tbody>
+  </table>
+</section>
+
+  </div>  <footer class="bg-pink-600 text-white py-4 text-center">
+    <p class="text-sm">&copy; 2025 Sağlıklı Yaşam Rehberi</p>
+  </footer>  <script>
+    var stage = new createjs.Stage("stickCanvas");
+    function drawStickFigure(x, y) {
+      var figure = new createjs.Container();
+      figure.x = x;
+      figure.y = y;
+      
+      var head = new createjs.Shape();
+      head.graphics.beginFill("#000").drawCircle(0, 0, 8);
+      head.y = -30;
+      figure.addChild(head);
+      
+      var body = new createjs.Shape();
+      body.graphics.setStrokeStyle(2).beginStroke("#000").moveTo(0, -22).lineTo(0, 0);
+      figure.addChild(body);
+      
+      var leftLeg = new createjs.Shape(), rightLeg = new createjs.Shape();
+      leftLeg.graphics.setStrokeStyle(2).beginStroke("#000").moveTo(0, 0).lineTo(-10, 20);
+      rightLeg.graphics.setStrokeStyle(2).beginStroke("#000").moveTo(0, 0).lineTo(10, 20);
+      leftLeg.name = "leftLeg"; rightLeg.name = "rightLeg";
+      figure.addChild(leftLeg, rightLeg);
+      
+      return figure;
+    }
+    var stickFigure = drawStickFigure(150, 100);
+    stage.addChild(stickFigure);
+    createjs.Tween.get(stickFigure.getChildByName("leftLeg"), { loop: true })
+      .to({ rotation: 20, y: 5 }, 500, createjs.Ease.quadInOut)
+      .to({ rotation: 0, y: 0 }, 500, createjs.Ease.quadInOut);
+    createjs.Tween.get(stickFigure.getChildByName("rightLeg"), { loop: true })
+      .to({ rotation: -20, y: 5 }, 500, createjs.Ease.quadInOut)
+      .to({ rotation: 0, y: 0 }, 500, createjs.Ease.quadInOut);
+    createjs.Ticker.framerate = 60;
+    createjs.Ticker.addEventListener("tick", stage);
+  </script></body>
+</html>
