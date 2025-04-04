@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Force ile Hesapla: Ne Kadar Alkol?</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Star Wars atmosferi için basit arka plan efekti */
+    body {
+      background: url('https://wallpaperaccess.com/full/317501.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+    /* Yarı saydam zemin kutusu */
+    .backdrop {
+      background: rgba(0, 0, 0, 0.7);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center text-white">
+  <div class="backdrop p-8 rounded-lg shadow-xl max-w-md mx-auto">
+    <h1 class="text-3xl font-bold text-center mb-6">May the Force be with your BAC</h1>
+    <p class="mb-4 text-center">Aşağıdaki formu doldurarak sarhoş olma eşiğinizde tüketmeniz gereken standart içki sayısını hesaplayabilirsiniz.</p>
+    
+    <form id="alcoholForm" class="space-y-4">
+      <div>
+        <label for="weight" class="block mb-1">Kilonuz (kg):</label>
+        <input type="number" id="weight" class="w-full p-2 rounded text-black" placeholder="Örneğin, 70" required>
+      </div>
+      <div>
+        <label for="gender" class="block mb-1">Cinsiyetiniz:</label>
+        <select id="gender" class="w-full p-2 rounded text-black" required>
+          <option value="">Seçiniz</option>
+          <option value="male">Erkek</option>
+          <option value="female">Kadın</option>
+        </select>
+      </div>
+      <!-- Gerekirse standart içki başına alkol miktarı (gram) ayarlanabilir -->
+      <div>
+        <label for="drinkSize" class="block mb-1">Standart içki başına alkol miktarı (gram):</label>
+        <input type="number" id="drinkSize" class="w-full p-2 rounded text-black" placeholder="Örneğin, 10" value="10" required>
+      </div>
+      <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-bold p-2 rounded transition">
+        Hesapla
+      </button>
+    </form>
+    
+    <div id="result" class="mt-6 text-center text-xl"></div>
+    
+    <p class="mt-8 text-xs text-center">Not: Bu hesaplama yaklaşık bir değerdir ve gerçek etki kişiden kişiye değişebilir. Sorumlu içki tüketimi önemlidir.</p>
+  </div>
+
+  <script>
+    document.getElementById('alcoholForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Kullanıcı girişleri
+      const weight = parseFloat(document.getElementById('weight').value);
+      const gender = document.getElementById('gender').value;
+      const drinkSize = parseFloat(document.getElementById('drinkSize').value);
+      
+      if (isNaN(weight) || weight <= 0 || !gender || isNaN(drinkSize) || drinkSize <= 0) {
+        document.getElementById('result').textContent = "Lütfen geçerli değerler giriniz.";
+        return;
+      }
+      
+      // Widmark formülünün sadeleştirilmiş versiyonu
+      // BAC = (Alkol (gram) / (Vücut ağırlığı (g) * r)) * 100 şeklinde hesaplanır.
+      // Sarhoşluk için yaklaşık hedef BAC: %0.08
+      // Dolayısıyla gereken alkol miktarı (gram) = (targetBAC/100) * (weight in grams * r)
+      // r: erkek için 0.68, kadın için 0.55
+      let r;
+      if (gender === "male") {
+        r = 0.68;
+      } else if (gender === "female") {
+        r = 0.55;
+      }
+      
+      const targetBAC = 0.08; // %0.08
+      const requiredAlcoholGrams = (targetBAC) * (weight * 1000 * r);
+      // Ancak Widmark formülünde BAC hesaplamasında %100 çarpanı vardır; burada basitleştirilmiş olarak 0.08'deki oranı almak için formülü
+      // biraz düzenledik: Gerçek hesaplamalarda zaman etkisi ve metabolizma katsayısı da eklenmelidir.
+      // Şimdilik: requiredAlcoholGrams = (0.08/100) * weight_in_grams * r  şeklinde (yani 0.0008 * weight * 1000 * r)
+      // Hesaplamayı yukarıdaki mantıkla tekrar düzenleyelim:
+      // BAC = (Alkol / (weight * 1000 * r)) * 100 ise,
+      // Alkol = (BAC/100) * weight * 1000 * r
+      const alcoholNeeded = (targetBAC / 100) * (weight * 1000 * r);
+      
+      // İstenen hesaplama sonucu: kaç adet standart içki
+      const numberOfDrinks = alcoholNeeded / drinkSize;
+      
+      const roundedDrinks = Math.round(numberOfDrinks * 10) / 10;
+      
+      const resultText = `Yaklaşık ${roundedDrinks} adet standart içki tüketimi, ${weight} kg ${gender === 'male' ? 'erkek' : 'kadın'} için sarhoşluk eşiğine ulaşabilir.`;
+      
+      document.getElementById('result').textContent = resultText;
+    });
+  </script>
+</body>
+</html>
