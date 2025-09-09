@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jet Motoru Tasarımı</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117;
+            color: #f0f6fc;
+            margin: 0;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            /* Sayfa sayfa kaydırma efekti */
+            scroll-snap-type: y mandatory;
+        }
+
+        #scene-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        .content-section {
+            padding: 8rem 1rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            /* Kaydırma noktasını ayarla */
+            scroll-snap-align: start;
+        }
+
+        .team-card {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .team-card.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        h1, h2 {
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .parallax-title {
+            position: relative;
+            z-index: 10;
+        }
+
+        .parallax-text {
+            position: relative;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div id="scene-container"></div>
+
+    <!-- Giriş Bölümü -->
+    <section id="intro" class="content-section bg-gradient-to-b from-transparent to-[#0d1117]">
+        <div class="max-w-4xl mx-auto px-4">
+            <h1 class="text-4xl sm:text-6xl font-bold text-white mb-4 parallax-title">Geleceği Şekillendiriyoruz</h1>
+            <p class="text-lg sm:text-xl text-gray-400 parallax-text">Uzay endüstrisinde devrim yaratan, yeniden kullanılabilir roket teknolojileri ve yenilikçi motor tasarımlarıyla geleceğe uçuyoruz.</p>
+        </div>
+    </section>
+
+    <!-- Jet Motoru Tasarım Bölümü (Detay 1) -->
+    <section id="design" class="content-section bg-transparent">
+        <div class="max-w-4xl mx-auto px-4">
+            <h2 class="text-3xl sm:text-5xl font-bold text-white mb-6">Motor Tasarım Felsefemiz</h2>
+            <p class="text-md sm:text-lg text-gray-400 mb-8">Sürdürülebilirlik, maliyet etkinliği ve yüksek performans prensipleriyle geliştirdiğimiz motorlar, uzay yolculuklarını daha erişilebilir kılıyor.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="team-card rounded-2xl">
+                    <h3 class="font-bold text-xl text-white mb-2">Yeniden Kullanılabilirlik</h3>
+                    <p class="text-sm text-gray-400">Motorlarımız, iniş sonrası kısa sürede yeniden kullanıma hazır hale gelecek şekilde tasarlandı.</p>
+                </div>
+                <div class="team-card rounded-2xl">
+                    <h3 class="font-bold text-xl text-white mb-2">Güç ve Verimlilik</h3>
+                    <p class="text-sm text-gray-400">En zorlu görevler için gerekli itme gücünü en yüksek verimlilikle sağlıyoruz.</p>
+                </div>
+                <div class="team-card rounded-2xl">
+                    <h3 class="font-bold text-xl text-white mb-2">Güvenilirlik</h3>
+                    <p class="text-sm text-gray-400">Her motor, uçuş güvenliğini en üst düzeyde tutmak için kapsamlı testlere tabi tutulur.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ekibimiz Bölümü (Detay 2) -->
+    <section id="team" class="content-section bg-transparent">
+        <div class="max-w-4xl mx-auto px-4">
+            <h2 class="text-3xl sm:text-5xl font-bold text-white mb-6">Öncü Ekibimiz</h2>
+            <p class="text-md sm:text-lg text-gray-400 mb-8">Tutkulu ve vizyoner mühendislerden oluşan ekibimiz, uzay keşfinin geleceğini inşa ediyor.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="team-card rounded-2xl">
+                    <img src="https://placehold.co/150x150/161b22/f0f6fc?text=Mehmet" alt="Mehmet Özdemir" class="mx-auto rounded-full mb-4 border-2 border-white">
+                    <h3 class="font-bold text-xl text-white">Mehmet Özdemir</h3>
+                    <p class="text-sm text-gray-400">Baş Mühendis</p>
+                </div>
+                <div class="team-card rounded-2xl">
+                    <img src="https://placehold.co/150x150/161b22/f0f6fc?text=Ayşe" alt="Ayşe Yılmaz" class="mx-auto rounded-full mb-4 border-2 border-white">
+                    <h3 class="font-bold text-xl text-white">Ayşe Yılmaz</h3>
+                    <p class="text-sm text-gray-400">Aviyonik Uzmanı</p>
+                </div>
+                <div class="team-card rounded-2xl">
+                    <img src="https://placehold.co/150x150/161b22/f0f6fc?text=Can" alt="Can Kaya" class="mx-auto rounded-full mb-4 border-2 border-white">
+                    <h3 class="font-bold text-xl text-white">Can Kaya</h3>
+                    <p class="text-sm text-gray-400">Yazılım Mühendisi</p>
+                </div>
+                <div class="team-card rounded-2xl">
+                    <img src="https://placehold.co/150x150/161b22/f0f6fc?text=Selin" alt="Selin Demir" class="mx-auto rounded-full mb-4 border-2 border-white">
+                    <h3 class="font-bold text-xl text-white">Selin Demir</h3>
+                    <p class="text-sm text-gray-400">Malzeme Bilimi</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        window.onload = function() {
+            // Three.js sahne kurulumu
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('scene-container').appendChild(renderer.domElement);
+
+            // Işıklandırma
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            const pointLight = new THREE.PointLight(0xffffff, 1);
+            pointLight.position.set(5, 5, 5);
+            scene.add(pointLight);
+
+            // Blueprint (tel kafes) materyal
+            const blueprintMaterial = new THREE.LineBasicMaterial({ color: 0x00aaff });
+            
+            // Jet Motoru Bölümleri (her biri ayrı bir grup)
+            const jetEngine = new THREE.Group();
+            
+            // 1. Fan ve Giriş Bölümü
+            const fanGroup = new THREE.Group();
+            const fanGeometry = new THREE.CylinderGeometry(2.5, 2.5, 0.5, 32);
+            const fanWireframe = new THREE.WireframeGeometry(fanGeometry);
+            const fanMesh = new THREE.LineSegments(fanWireframe, blueprintMaterial);
+            fanGroup.add(fanMesh);
+            jetEngine.add(fanGroup);
+            
+            // 2. Kompresör Bölümü
+            const compressorGroup = new THREE.Group();
+            const compressorGeometry = new THREE.CylinderGeometry(2.2, 2.3, 5, 32);
+            const compressorWireframe = new THREE.WireframeGeometry(compressorGeometry);
+            const compressorMesh = new THREE.LineSegments(compressorWireframe, blueprintMaterial);
+            compressorMesh.position.y = -2.75;
+            compressorGroup.add(compressorMesh);
+            jetEngine.add(compressorGroup);
+            
+            // 3. Yanma Odası Bölümü
+            const combustionGroup = new THREE.Group();
+            const combustionGeometry = new THREE.CylinderGeometry(1.8, 2, 4, 32);
+            const combustionWireframe = new THREE.WireframeGeometry(combustionGeometry);
+            const combustionMesh = new THREE.LineSegments(combustionWireframe, blueprintMaterial);
+            combustionMesh.position.y = -6.75;
+            combustionGroup.add(combustionMesh);
+            jetEngine.add(combustionGroup);
+            
+            // 4. Türbin ve Nozul Bölümü
+            const turbineGroup = new THREE.Group();
+            const turbineGeometry = new THREE.CylinderGeometry(1.6, 1.5, 4, 32);
+            const turbineWireframe = new THREE.WireframeGeometry(turbineGeometry);
+            const turbineMesh = new THREE.LineSegments(turbineWireframe, blueprintMaterial);
+            turbineMesh.position.y = -10.75;
+            turbineGroup.add(turbineMesh);
+
+            const nozzleGeometry = new THREE.ConeGeometry(1.5, 2, 32);
+            const nozzleWireframe = new THREE.WireframeGeometry(nozzleGeometry);
+            const nozzleMesh = new THREE.LineSegments(nozzleWireframe, blueprintMaterial);
+            nozzleMesh.position.y = -13.75;
+            turbineGroup.add(nozzleMesh);
+            jetEngine.add(turbineGroup);
+
+            // Tüm motoru sahneye ekle
+            scene.add(jetEngine);
+            camera.position.z = 25;
+            jetEngine.rotation.x = Math.PI / 2;
+            jetEngine.rotation.y = 0;
+
+            // Kamera ve modelin hedeflenen pozisyonları
+            const targets = {
+                intro: { z: 25, y: 0, rotY: 0, rotX: Math.PI / 2 },
+                design: { z: 7, y: 0, rotY: Math.PI / 2, rotX: Math.PI / 2 },
+                team: { z: 7, y: -12, rotY: Math.PI / 2, rotX: Math.PI / 2 }
+            };
+
+            // Scroll animasyonunu yönet
+            function onScroll() {
+                const scrollY = window.scrollY;
+                const introSection = document.getElementById('intro');
+                const designSection = document.getElementById('design');
+                const teamSection = document.getElementById('team');
+                
+                let target = targets.intro;
+
+                // Bölümlere göre hedefleri ayarla
+                if (scrollY >= designSection.offsetTop - window.innerHeight / 2 && scrollY < teamSection.offsetTop - window.innerHeight / 2) {
+                    target = targets.design;
+                } else if (scrollY >= teamSection.offsetTop - window.innerHeight / 2) {
+                    target = targets.team;
+                }
+
+                // Kamera ve motoru hedefe doğru yumuşakça hareket ettir
+                camera.position.z += (target.z - camera.position.z) * 0.05;
+                camera.position.y += (target.y - camera.position.y) * 0.05;
+                jetEngine.rotation.y += (target.rotY - jetEngine.rotation.y) * 0.05;
+                jetEngine.rotation.x += (target.rotX - jetEngine.rotation.x) * 0.05;
+
+                // İçerik kartlarını canlandır
+                const teamCards = document.querySelectorAll('.team-card');
+                teamCards.forEach((card, index) => {
+                    const cardScrollPos = (window.scrollY - (teamSection.offsetTop + (index * 150)) + window.innerHeight) / window.innerHeight;
+                    if (cardScrollPos > 0.5 && cardScrollPos < 1.5) {
+                        card.classList.add('visible');
+                    } else {
+                        card.classList.remove('visible');
+                    }
+                });
+            }
+
+            // Yeniden boyutlandırma
+            function onWindowResize() {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+
+            window.addEventListener('scroll', onScroll, false);
+            window.addEventListener('resize', onWindowResize, false);
+
+            // Animasyon döngüsü
+            function animate() {
+                requestAnimationFrame(animate);
+                renderer.render(scene, camera);
+            }
+
+            animate();
+        };
+    </script>
+</body>
+</html>
