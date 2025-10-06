@@ -22,6 +22,9 @@
 
     <style>
         body{font-family:'Inter',sans-serif;background-color:#111827}.card{background-color:#1F2937;border-radius:0.75rem;padding:1.5rem;border:1px solid #374151;transition:all .3s ease-in-out}.card:hover{box-shadow:0 0 15px rgba(79,70,229,.5);border-color:#4f46e5}.result-label{font-weight:500;color:#9CA3AF}.result-value{font-weight:600;color:#F9FAFB;word-break:break-all;font-family:monospace}.btn{background-color:#4F46E5;color:#fff;font-weight:600;padding:.75rem 1.25rem;border-radius:.5rem;transition:background-color .2s ease-in-out}.btn:hover{background-color:#4338CA}.btn:disabled{background-color:#374151;cursor:not-allowed}.loader{border:4px solid #374151;border-top:4px solid #4F46E5;border-radius:50%;width:24px;height:24px;animation:spin 1s linear infinite;margin:0 auto}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+        .sensor-map {width:100%;height:200px;background-color:#0f172a;border-radius:0.5rem;margin-top:1rem;position:relative;overflow:hidden}
+        .position-marker {width:12px;height:12px;background-color:#ef4444;border-radius:50%;position:absolute;transform:translate(-50%,-50%);box-shadow:0 0 0 4px rgba(239,68,68,0.3)}
+        .position-trail {width:4px;height:4px;background-color:#3b82f6;border-radius:50%;position:absolute;transform:translate(-50%,-50%)}
     </style>
 </head>
 <body class="text-white">
@@ -84,10 +87,47 @@
                     <button id="toggleSensors" class="btn mb-4">Sensörleri Başlat</button>
                     <div id="sensorResult" class="w-full space-y-2 hidden">
                         <div class="flex justify-between"><span class="result-label">İvme (X):</span> <span id="accelX" class="result-value">---</span></div>
+                        <div class="flex justify-between"><span class="result-label">İvme (Y):</span> <span id="accelY" class="result-value">---</span></div>
+                        <div class="flex justify-between"><span class="result-label">İvme (Z):</span> <span id="accelZ" class="result-value">---</span></div>
                         <div class="flex justify-between"><span class="result-label">Yön (α):</span> <span id="orientAlpha" class="result-value">---</span></div>
                         <div class="flex justify-between"><span class="result-label">Eğim (β):</span> <span id="orientBeta" class="result-value">---</span></div>
+                        <div class="flex justify-between"><span class="result-label">Dönüş (γ):</span> <span id="orientGamma" class="result-value">---</span></div>
                     </div>
                     <p id="sensorError" class="text-yellow-400 mt-2 text-center"></p>
+                </div>
+            </div>
+
+            <!-- Card 5: Sensor-based Location Tracking -->
+            <div class="card col-span-1 md:col-span-2 lg:col-span-3">
+                <h2 class="text-xl font-bold mb-4 text-indigo-400">5. Sensör ile Konum İzleme</h2>
+                <div class="flex flex-col items-center">
+                    <div class="flex flex-wrap gap-4 mb-4">
+                        <button id="startSensorTracking" class="btn">Konum İzlemeyi Başlat</button>
+                        <button id="resetSensorTracking" class="btn bg-gray-600 hover:bg-gray-700">Konumu Sıfırla</button>
+                    </div>
+                    
+                    <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2 text-gray-300">Sensör Konum Verileri</h3>
+                            <div id="sensorLocationResult" class="space-y-2">
+                                <div class="flex justify-between"><span class="result-label">X Pozisyonu:</span> <span id="sensorX" class="result-value">0.00 m</span></div>
+                                <div class="flex justify-between"><span class="result-label">Y Pozisyonu:</span> <span id="sensorY" class="result-value">0.00 m</span></div>
+                                <div class="flex justify-between"><span class="result-label">Z Pozisyonu:</span> <span id="sensorZ" class="result-value">0.00 m</span></div>
+                                <div class="flex justify-between"><span class="result-label">Toplam Mesafe:</span> <span id="totalDistance" class="result-value">0.00 m</span></div>
+                                <div class="flex justify-between"><span class="result-label">Hız:</span> <span id="sensorSpeed" class="result-value">0.00 m/s</span></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2 text-gray-300">Konum Haritası</h3>
+                            <div class="sensor-map" id="sensorMap">
+                                <div class="position-marker" id="positionMarker" style="top:50%;left:50%"></div>
+                            </div>
+                            <p class="text-gray-400 text-sm mt-2 text-center">Harita, sensör verilerine göre hesaplanan göreceli konumu gösterir</p>
+                        </div>
+                    </div>
+                    
+                    <div id="sensorLocationError" class="text-red-400 mt-4 text-center"></div>
                 </div>
             </div>
 
@@ -130,13 +170,37 @@
                 btn: document.getElementById('toggleSensors'),
                 result: document.getElementById('sensorResult'),
                 accelX: document.getElementById('accelX'),
+                accelY: document.getElementById('accelY'),
+                accelZ: document.getElementById('accelZ'),
                 orientAlpha: document.getElementById('orientAlpha'),
                 orientBeta: document.getElementById('orientBeta'),
+                orientGamma: document.getElementById('orientGamma'),
                 error: document.getElementById('sensorError')
+            },
+            sensorLocation: {
+                startBtn: document.getElementById('startSensorTracking'),
+                resetBtn: document.getElementById('resetSensorTracking'),
+                result: document.getElementById('sensorLocationResult'),
+                x: document.getElementById('sensorX'),
+                y: document.getElementById('sensorY'),
+                z: document.getElementById('sensorZ'),
+                distance: document.getElementById('totalDistance'),
+                speed: document.getElementById('sensorSpeed'),
+                map: document.getElementById('sensorMap'),
+                marker: document.getElementById('positionMarker'),
+                error: document.getElementById('sensorLocationError')
             }
         };
 
         let sensorsActive = false;
+        let sensorTrackingActive = false;
+        
+        // Sensör konum izleme değişkenleri
+        let position = { x: 0, y: 0, z: 0 };
+        let velocity = { x: 0, y: 0, z: 0 };
+        let lastTimestamp = null;
+        let totalDistance = 0;
+        let trailPoints = [];
 
         // --- 1. FingerprintJS ile Cihaz Kimliği Alma ---
         elements.fingerprint.btn.addEventListener('click', async () => {
@@ -228,11 +292,130 @@
         // --- 4. Cihaz Hareket Sensörleri ---
         function handleMotion(event) {
             elements.sensors.accelX.textContent = event.acceleration.x ? event.acceleration.x.toFixed(3) : '---';
+            elements.sensors.accelY.textContent = event.acceleration.y ? event.acceleration.y.toFixed(3) : '---';
+            elements.sensors.accelZ.textContent = event.acceleration.z ? event.acceleration.z.toFixed(3) : '---';
+            
+            // Konum izleme aktifse, ivme verilerini işle
+            if (sensorTrackingActive) {
+                processMotionForLocation(event);
+            }
         }
         
         function handleOrientation(event) {
             elements.sensors.orientAlpha.textContent = event.alpha ? event.alpha.toFixed(2) : '---';
             elements.sensors.orientBeta.textContent = event.beta ? event.beta.toFixed(2) : '---';
+            elements.sensors.orientGamma.textContent = event.gamma ? event.gamma.toFixed(2) : '---';
+        }
+
+        // Sensör verilerini konum hesaplamak için işle
+        function processMotionForLocation(event) {
+            const acceleration = event.accelerationIncludingGravity;
+            const currentTime = Date.now();
+            
+            if (!lastTimestamp) {
+                lastTimestamp = currentTime;
+                return;
+            }
+            
+            // Zaman farkını saniye cinsinden hesapla
+            const deltaTime = (currentTime - lastTimestamp) / 1000;
+            
+            if (acceleration && deltaTime > 0) {
+                // Yerçekimi ivmesini çıkar (yaklaşık 9.81 m/s²)
+                const gravity = 9.81;
+                const linearAcceleration = {
+                    x: acceleration.x || 0,
+                    y: acceleration.y || 0,
+                    z: (acceleration.z || 0) - gravity
+                };
+                
+                // Hızı güncelle (v = v0 + a * t)
+                velocity.x += linearAcceleration.x * deltaTime;
+                velocity.y += linearAcceleration.y * deltaTime;
+                velocity.z += linearAcceleration.z * deltaTime;
+                
+                // Konumu güncelle (p = p0 + v * t + 0.5 * a * t²)
+                position.x += velocity.x * deltaTime + 0.5 * linearAcceleration.x * deltaTime * deltaTime;
+                position.y += velocity.y * deltaTime + 0.5 * linearAcceleration.y * deltaTime * deltaTime;
+                position.z += velocity.z * deltaTime + 0.5 * linearAcceleration.z * deltaTime * deltaTime;
+                
+                // Mesafe hesapla
+                const distanceIncrement = Math.sqrt(
+                    Math.pow(velocity.x * deltaTime, 2) + 
+                    Math.pow(velocity.y * deltaTime, 2) + 
+                    Math.pow(velocity.z * deltaTime, 2)
+                );
+                totalDistance += distanceIncrement;
+                
+                // Hız hesapla (m/s)
+                const speed = Math.sqrt(
+                    Math.pow(velocity.x, 2) + 
+                    Math.pow(velocity.y, 2) + 
+                    Math.pow(velocity.z, 2)
+                );
+                
+                // UI'ı güncelle
+                updateSensorLocationUI(speed);
+                
+                // Konum işaretçisini güncelle
+                updatePositionMarker();
+            }
+            
+            lastTimestamp = currentTime;
+        }
+        
+        function updateSensorLocationUI(speed) {
+            elements.sensorLocation.x.textContent = position.x.toFixed(2) + ' m';
+            elements.sensorLocation.y.textContent = position.y.toFixed(2) + ' m';
+            elements.sensorLocation.z.textContent = position.z.toFixed(2) + ' m';
+            elements.sensorLocation.distance.textContent = totalDistance.toFixed(2) + ' m';
+            elements.sensorLocation.speed.textContent = speed.toFixed(2) + ' m/s';
+        }
+        
+        function updatePositionMarker() {
+            const mapWidth = elements.sensorLocation.map.offsetWidth;
+            const mapHeight = elements.sensorLocation.map.offsetHeight;
+            
+            // X ve Y pozisyonlarını harita boyutlarına göre ölçeklendir
+            // Haritanın merkezi (0,0) noktası olacak şekilde
+            const centerX = mapWidth / 2;
+            const centerY = mapHeight / 2;
+            
+            // Pozisyonu ölçeklendir (1m = 20px)
+            const scale = 20;
+            let markerX = centerX + position.x * scale;
+            let markerY = centerY + position.y * scale;
+            
+            // İşaretçiyi harita sınırları içinde tut
+            markerX = Math.max(10, Math.min(mapWidth - 10, markerX));
+            markerY = Math.max(10, Math.min(mapHeight - 10, markerY));
+            
+            // İşaretçiyi konumlandır
+            elements.sensorLocation.marker.style.left = markerX + 'px';
+            elements.sensorLocation.marker.style.top = markerY + 'px';
+            
+            // İz noktası ekle (her 0.5m'de bir)
+            if (trailPoints.length === 0 || 
+                Math.sqrt(Math.pow(position.x - trailPoints[trailPoints.length-1].x, 2) + 
+                         Math.pow(position.y - trailPoints[trailPoints.length-1].y, 2)) > 0.5) {
+                
+                const trailPoint = document.createElement('div');
+                trailPoint.className = 'position-trail';
+                trailPoint.style.left = markerX + 'px';
+                trailPoint.style.top = markerY + 'px';
+                elements.sensorLocation.map.appendChild(trailPoint);
+                
+                trailPoints.push({x: position.x, y: position.y});
+                
+                // Çok fazla iz noktası varsa en eskilerini temizle
+                if (trailPoints.length > 50) {
+                    const oldTrail = elements.sensorLocation.map.querySelector('.position-trail');
+                    if (oldTrail) {
+                        elements.sensorLocation.map.removeChild(oldTrail);
+                        trailPoints.shift();
+                    }
+                }
+            }
         }
 
         async function startSensorListeners() {
@@ -266,6 +449,7 @@
              if (sensorsActive) {
                 stopSensorListeners();
                 sensorsActive = false;
+                sensorTrackingActive = false;
                 elements.sensors.btn.textContent = 'Sensörleri Başlat';
                 elements.sensors.btn.classList.remove('bg-red-600', 'hover:bg-red-700');
                 elements.sensors.btn.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
@@ -280,6 +464,53 @@
                     showElement(elements.sensors.result);
                 }
             }
+        });
+
+        // --- 5. Sensör ile Konum İzleme ---
+        elements.sensorLocation.startBtn.addEventListener('click', async () => {
+            if (!sensorsActive) {
+                // Sensörleri başlat
+                const started = await startSensorListeners();
+                if (!started) {
+                    elements.sensorLocation.error.textContent = 'Sensörlere erişim sağlanamadı.';
+                    return;
+                }
+                sensorsActive = true;
+                elements.sensors.btn.textContent = 'Sensörleri Durdur';
+                elements.sensors.btn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
+                elements.sensors.btn.classList.add('bg-red-600', 'hover:bg-red-700');
+                showElement(elements.sensors.result);
+            }
+            
+            sensorTrackingActive = true;
+            elements.sensorLocation.startBtn.disabled = true;
+            elements.sensorLocation.startBtn.textContent = 'Konum İzleme Aktif';
+            elements.sensorLocation.error.textContent = '';
+        });
+        
+        elements.sensorLocation.resetBtn.addEventListener('click', () => {
+            // Konum ve hız verilerini sıfırla
+            position = { x: 0, y: 0, z: 0 };
+            velocity = { x: 0, y: 0, z: 0 };
+            totalDistance = 0;
+            lastTimestamp = null;
+            
+            // UI'ı güncelle
+            updateSensorLocationUI(0);
+            
+            // İz noktalarını temizle
+            trailPoints = [];
+            const trailElements = elements.sensorLocation.map.querySelectorAll('.position-trail');
+            trailElements.forEach(el => el.remove());
+            
+            // İşaretçiyi merkeze taşı
+            elements.sensorLocation.marker.style.left = '50%';
+            elements.sensorLocation.marker.style.top = '50%';
+            
+            // İzlemeyi durdur ve butonu sıfırla
+            sensorTrackingActive = false;
+            elements.sensorLocation.startBtn.disabled = false;
+            elements.sensorLocation.startBtn.textContent = 'Konum İzlemeyi Başlat';
         });
 
     </script>
