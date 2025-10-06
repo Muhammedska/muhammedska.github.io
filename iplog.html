@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cihaz Kimliği ve Konum Tespiti</title>
+    <title>Gelişmiş Cihaz Analizi v2</title>
     
     <!-- Tailwind CSS for modern styling -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -29,57 +29,39 @@
             border: 1px solid #374151; /* border-gray-700 */
             transition: all 0.3s ease-in-out;
         }
-        .card:hover {
-            box-shadow: 0 0 15px rgba(79, 70, 229, 0.5);
-            border-color: #4f46e5; /* border-indigo-600 */
-        }
-        .result-label {
-            font-weight: 500;
-            color: #9CA3AF; /* text-gray-400 */
-        }
-        .result-value {
-            font-weight: 600;
-            color: #F9FAFB; /* text-gray-50 */
-            word-break: break-all;
-            font-family: monospace;
-        }
+        .result-label { font-weight: 500; color: #9CA3AF; /* text-gray-400 */ }
+        .result-value { font-weight: 600; color: #F9FAFB; /* text-gray-50 */ word-break: break-all; font-family: monospace; }
         .btn {
-            background-color: #4F46E5; /* bg-indigo-600 */
-            color: white;
-            font-weight: 600;
-            padding: 0.75rem 1.25rem;
-            border-radius: 0.5rem; /* rounded-lg */
+            background-color: #4F46E5; color: white; font-weight: 600;
+            padding: 0.75rem 1.25rem; border-radius: 0.5rem; /* rounded-lg */
             transition: background-color 0.2s ease-in-out;
         }
-        .btn:hover {
-            background-color: #4338CA; /* bg-indigo-700 */
-        }
-        .btn:disabled {
-            background-color: #374151; /* bg-gray-700 */
-            cursor: not-allowed;
-        }
+        .btn:hover:not(:disabled) { background-color: #4338CA; /* bg-indigo-700 */ }
+        .btn:disabled { background-color: #374151; /* bg-gray-700 */ cursor: not-allowed; }
         .loader {
-            border: 4px solid #374151;
-            border-top: 4px solid #4F46E5;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
+            border: 4px solid #374151; border-top: 4px solid #4F46E5;
+            border-radius: 50%; width: 24px; height: 24px;
+            animation: spin 1s linear infinite; margin: 0 auto;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .status-banner {
+            padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem;
+            font-weight: 500; text-align: center;
         }
+        .banner-warning { background-color: #3730A3; border: 1px solid #4F46E5; color: #C7D2FE; }
+        .banner-error { background-color: #991B1B; border: 1px solid #DC2626; color: #FECACA; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="text-white">
 
     <div class="container mx-auto p-4 md:p-8">
         <header class="text-center mb-10">
-            <h1 class="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500">Gelişmiş Cihaz Analizi</h1>
-            <p class="mt-2 text-gray-400">FingerprintJS, IP Adresi ve Telefon Sensörleri ile Cihaz Kimliklendirme ve Konum Tespiti</p>
+            <h1 class="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500">Gelişmiş Cihaz Analizi v2</h1>
+            <p class="mt-2 text-gray-400">Daha Kararlı ve Bilgilendirici Versiyon</p>
         </header>
+
+        <!-- Status Banner -->
+        <div id="status-banner" class="status-banner hidden"></div>
 
         <main class="grid grid-cols-1 md:grid-cols-2 gap-6">
             
@@ -105,7 +87,6 @@
                         <div class="flex justify-between"><span class="result-label">IP Adresi:</span> <span id="ipAddress" class="result-value"></span></div>
                         <div class="flex justify-between"><span class="result-label">Ülke:</span> <span id="ipCountry" class="result-value"></span></div>
                         <div class="flex justify-between"><span class="result-label">Şehir:</span> <span id="ipCity" class="result-value"></span></div>
-                        <div class="flex justify-between"><span class="result-label">Sağlayıcı:</span> <span id="ipIsp" class="result-value"></span></div>
                     </div>
                      <div id="ipLoader" class="loader hidden"></div>
                  </div>
@@ -122,114 +103,218 @@
                         <div class="flex justify-between"><span class="result-label">Hassasiyet:</span> <span id="accuracy" class="result-value"></span></div>
                     </div>
                     <div id="gpsLoader" class="loader hidden"></div>
-                    <p id="gpsError" class="text-red-400 mt-2 text-center"></p>
+                    <p id="gpsError" class="text-red-400 mt-2 text-center font-semibold"></p>
                 </div>
             </div>
 
-            <!-- Card 4: Device Sensors (Accelerometer) -->
-            <div class="card">
-                <h2 class="text-xl font-bold mb-4 text-indigo-400">4. İvmeölçer Sensörleri</h2>
+            <!-- Card 4 & 5: All Sensors -->
+            <div class="card col-span-1 md:col-span-2">
+                <h2 class="text-xl font-bold mb-4 text-indigo-400">4. Cihaz Sensörleri (Pusula, Jiroskop, İvmeölçer)</h2>
                 <div class="flex flex-col items-center">
                     <button id="toggleSensors" class="btn mb-4">Sensörleri Başlat</button>
-                    <div id="sensorResult" class="w-full space-y-2 hidden">
-                        <div class="flex justify-between"><span class="result-label">İvme (X):</span> <span id="accelX" class="result-value">---</span></div>
-                        <div class="flex justify-between"><span class="result-label">İvme (Y):</span> <span id="accelY" class="result-value">---</span></div>
-                        <div class="flex justify-between"><span class="result-label">İvme (Z):</span> <span id="accelZ" class="result-value">---</span></div>
+                    <div id="sensorsContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full hidden">
+                        <div id="orientationResult" class="w-full space-y-2 p-4 bg-gray-900 rounded-lg">
+                            <h3 class="font-bold text-center mb-2 text-indigo-300">Yönelim & Pusula</h3>
+                            <div class="flex justify-between"><span class="result-label">Pusula Yönü (α):</span> <span id="orientAlpha" class="result-value">---</span></div>
+                            <div class="flex justify-between"><span class="result-label">Ön/Arka Eğim (β):</span> <span id="orientBeta" class="result-value">---</span></div>
+                            <div class="flex justify-between"><span class="result-label">Sağ/Sol Eğim (γ):</span> <span id="orientGamma" class="result-value">---</span></div>
+                        </div>
+                        <div id="motionResult" class="w-full space-y-2 p-4 bg-gray-900 rounded-lg">
+                             <h3 class="font-bold text-center mb-2 text-indigo-300">Hareket & Dönüş</h3>
+                            <div class="flex justify-between"><span class="result-label">İvme (X):</span> <span id="accelX" class="result-value">---</span></div>
+                            <div class="flex justify-between"><span class="result-label">İvme (Y):</span> <span id="accelY" class="result-value">---</span></div>
+                             <div class="flex justify-between"><span class="result-label">Dönüş Hızı (β):</span> <span id="gyroY" class="result-value">---</span></div>
+                        </div>
                     </div>
-                    <p id="sensorError" class="text-yellow-400 mt-2 text-center"></p>
+                    <p id="sensorError" class="text-yellow-400 mt-4 text-center font-semibold"></p>
                 </div>
             </div>
-
-            <!-- Card 5: Device Orientation & Gyroscope -->
-            <div class="card">
-                <h2 class="text-xl font-bold mb-4 text-indigo-400">5. Yönelim & Jiroskop</h2>
-                <div id="orientationResult" class="w-full space-y-2 hidden">
-                    <div class="flex justify-between"><span class="result-label">Pusula Yönü (α):</span> <span id="orientAlpha" class="result-value">---</span></div>
-                    <div class="flex justify-between"><span class="result-label">Ön/Arka Eğim (β):</span> <span id="orientBeta" class="result-value">---</span></div>
-                    <div class="flex justify-between"><span class="result-label">Sağ/Sol Eğim (γ):</span> <span id="orientGamma" class="result-value">---</span></div>
-                    <hr class="border-gray-600 my-2">
-                    <div class="flex justify-between"><span class="result-label">Dönüş Hızı (X):</span> <span id="gyroX" class="result-value">---</span></div>
-                    <div class="flex justify-between"><span class="result-label">Dönüş Hızı (Y):</span> <span id="gyroY" class="result-value">---</span></div>
-                    <div class="flex justify-between"><span class="result-label">Dönüş Hızı (Z):</span> <span id="gyroZ" class="result-value">---</span></div>
-                </div>
-                 <p class="text-gray-500 text-center text-sm mt-4" id="orientationMessage">Veri için sensörleri başlatın.</p>
-            </div>
-
         </main>
     </div>
 
     <script>
-// ... existing code ... -->
-        const toggleSensorsBtn = document.getElementById('toggleSensors');
-        const sensorResultDiv = document.getElementById('sensorResult');
-        const accelXEl = document.getElementById('accelX');
-        const accelYEl = document.getElementById('accelY');
-        const accelZEl = document.getElementById('accelZ');
-        const sensorErrorEl = document.getElementById('sensorError');
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Global Variables & DOM Elements ---
+            const statusBanner = document.getElementById('status-banner');
+            const isSecureContext = window.isSecureContext; // Check for HTTPS
 
-        // Yeni eklenen elementler
-        const orientationResultDiv = document.getElementById('orientationResult');
-        const orientationMessage = document.getElementById('orientationMessage');
-        const orientAlphaEl = document.getElementById('orientAlpha');
-        const orientBetaEl = document.getElementById('orientBeta');
-        const orientGammaEl = document.getElementById('orientGamma');
-        const gyroXEl = document.getElementById('gyroX');
-        const gyroYEl = document.getElementById('gyroY');
-        const gyroZEl = document.getElementById('gyroZ');
+            // Fingerprint
+            const getFingerprintBtn = document.getElementById('getFingerprint');
+            const fingerprintLoader = document.getElementById('fingerprintLoader');
+            const fingerprintResultDiv = document.getElementById('fingerprintResult');
+            const visitorIdEl = document.getElementById('visitorId');
 
-        let sensorsActive = false;
+            // IP Location
+            const getIpLocationBtn = document.getElementById('getIpLocation');
+            const ipLoader = document.getElementById('ipLoader');
+            const ipResultDiv = document.getElementById('ipResult');
+            const ipAddressEl = document.getElementById('ipAddress');
+            const ipCountryEl = document.getElementById('ipCountry');
+            const ipCityEl = document.getElementById('ipCity');
 
-        // --- 1. FingerprintJS ile Cihaz Kimliği Alma ---
-// ... existing code ... -->
-            });
-        });
-        
-        // --- 4. Cihaz Hareket ve Yönelim Sensörleri ---
-        function handleMotion(event) {
-            accelXEl.textContent = event.acceleration.x ? event.acceleration.x.toFixed(3) : '---';
-            accelYEl.textContent = event.acceleration.y ? event.acceleration.y.toFixed(3) : '---';
-            accelZEl.textContent = event.acceleration.z ? event.acceleration.z.toFixed(3) : '---';
+            // GPS Location
+            const getGpsLocationBtn = document.getElementById('getGpsLocation');
+            const gpsLoader = document.getElementById('gpsLoader');
+            const gpsResultDiv = document.getElementById('gpsResult');
+            const gpsErrorEl = document.getElementById('gpsError');
+            const latitudeEl = document.getElementById('latitude');
+            const longitudeEl = document.getElementById('longitude');
+            const accuracyEl = document.getElementById('accuracy');
 
-            if(event.rotationRate){
-                gyroXEl.textContent = event.rotationRate.alpha ? event.rotationRate.alpha.toFixed(3) : '---';
-                gyroYEl.textContent = event.rotationRate.beta ? event.rotationRate.beta.toFixed(3) : '---';
-                gyroZEl.textContent = event.rotationRate.gamma ? event.rotationRate.gamma.toFixed(3) : '---';
-            }
-        }
-        
-        function handleOrientation(event) {
-            orientAlphaEl.textContent = event.alpha ? event.alpha.toFixed(2) : '---';
-            orientBetaEl.textContent = event.beta ? event.beta.toFixed(2) : '---';
-            orientGammaEl.textContent = event.gamma ? event.gamma.toFixed(2) : '---';
-        }
+            // Sensors
+            const toggleSensorsBtn = document.getElementById('toggleSensors');
+            const sensorErrorEl = document.getElementById('sensorError');
+            const sensorsContainer = document.getElementById('sensorsContainer');
+            const orientAlphaEl = document.getElementById('orientAlpha');
+            const orientBetaEl = document.getElementById('orientBeta');
+            const orientGammaEl = document.getElementById('orientGamma');
+            const accelXEl = document.getElementById('accelX');
+            const accelYEl = document.getElementById('accelY');
+            const gyroYEl = document.getElementById('gyroY');
+            let sensorsActive = false;
 
-        async function startSensorListeners() {
-            sensorErrorEl.textContent = '';
-// ... existing code ... -->
-        toggleSensorsBtn.addEventListener('click', async () => {
-             if (sensorsActive) {
-                stopSensorListeners();
-                sensorsActive = false;
-                toggleSensorsBtn.textContent = 'Sensörleri Başlat';
-                toggleSensorsBtn.classList.remove('bg-red-600', 'hover:bg-red-700');
-                toggleSensorsBtn.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
-                sensorResultDiv.classList.add('hidden');
-                orientationResultDiv.classList.add('hidden');
-                orientationMessage.classList.remove('hidden');
-            } else {
-                const started = await startSensorListeners();
-                if(started) {
-                    sensorsActive = true;
-                    toggleSensorsBtn.textContent = 'Sensörleri Durdur';
-                    toggleSensorsBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
-                    toggleSensorsBtn.classList.add('bg-red-600', 'hover:bg-red-700');
-                    sensorResultDiv.classList.remove('hidden');
-                    orientationResultDiv.classList.remove('hidden');
-                    orientationMessage.classList.add('hidden');
+            // --- Initial Security and Feature Check ---
+            function initialCheck() {
+                if (!isSecureContext) {
+                    statusBanner.innerHTML = '<strong>UYARI:</strong> GPS ve Cihaz Sensörleri özellikleri için güvenli bir bağlantı (HTTPS) gereklidir. Bu sayfa `http://` veya `file://` üzerinden açıldığı için bu özellikler çalışmayacaktır.';
+                    statusBanner.className = 'status-banner banner-error';
+                    statusBanner.classList.remove('hidden');
+                    getGpsLocationBtn.disabled = true;
+                    toggleSensorsBtn.disabled = true;
+                } else if (!navigator.geolocation) {
+                     statusBanner.innerHTML = '<strong>UYARI:</strong> Tarayıcınız coğrafi konumu (GPS) desteklemiyor.';
+                     statusBanner.className = 'status-banner banner-warning';
+                     statusBanner.classList.remove('hidden');
+                     getGpsLocationBtn.disabled = true;
                 }
             }
-        });
+            initialCheck();
+            
+            // --- Helper Functions for UI ---
+            const showLoader = (loader, button) => {
+                loader.classList.remove('hidden');
+                if (button) button.disabled = true;
+            };
+            const hideLoader = (loader, button) => {
+                loader.classList.add('hidden');
+                if (button) button.disabled = false;
+            };
 
+            // --- 1. FingerprintJS ---
+            getFingerprintBtn.addEventListener('click', async () => {
+                showLoader(fingerprintLoader, getFingerprintBtn);
+                fingerprintResultDiv.classList.add('hidden');
+                try {
+                    const fp = await FingerprintJS.load({apiKey: "gzzoWOhDgp8rdSBL5vP3"});
+                    const result = await fp.get();
+                    visitorIdEl.textContent = result.visitorId;
+                    fingerprintResultDiv.classList.remove('hidden');
+                } catch (error) {
+                    visitorIdEl.textContent = 'Hata oluştu!';
+                } finally {
+                     hideLoader(fingerprintLoader, getFingerprintBtn);
+                }
+            });
+
+            // --- 2. IP Location ---
+            getIpLocationBtn.addEventListener('click', async () => {
+                showLoader(ipLoader, getIpLocationBtn);
+                ipResultDiv.classList.add('hidden');
+                try {
+                    const response = await fetch('https://ip-api.com/json');
+                    if (!response.ok) throw new Error('API response not OK');
+                    const data = await response.json();
+                    ipAddressEl.textContent = data.query || 'N/A';
+                    ipCountryEl.textContent = data.country || 'N/A';
+                    ipCityEl.textContent = data.city || 'N/A';
+                    ipResultDiv.classList.remove('hidden');
+                } catch (error) {
+                    ipAddressEl.textContent = 'Hata!';
+                } finally {
+                    hideLoader(ipLoader, getIpLocationBtn);
+                }
+            });
+
+            // --- 3. GPS Location ---
+            getGpsLocationBtn.addEventListener('click', () => {
+                showLoader(gpsLoader, getGpsLocationBtn);
+                gpsResultDiv.classList.add('hidden');
+                gpsErrorEl.textContent = '';
+                
+                const success = (position) => {
+                    latitudeEl.textContent = position.coords.latitude.toFixed(6);
+                    longitudeEl.textContent = position.coords.longitude.toFixed(6);
+                    accuracyEl.textContent = `${position.coords.accuracy.toFixed(1)} metre`;
+                    gpsResultDiv.classList.remove('hidden');
+                    hideLoader(gpsLoader, getGpsLocationBtn);
+                };
+                const error = (err) => {
+                    let message = 'Konum alınamadı. Cihaz ayarlarınızı kontrol edin.';
+                    if (err.code === 1) message = 'Konum izni reddedildi. Lütfen tarayıcı ayarlarından izin verin.';
+                    gpsErrorEl.textContent = message;
+                    hideLoader(gpsLoader, getGpsLocationBtn);
+                };
+                navigator.geolocation.getCurrentPosition(success, error, {
+                    enableHighAccuracy: true, timeout: 10000, maximumAge: 0
+                });
+            });
+
+            // --- 4. Device Sensors ---
+            const handleMotion = (e) => {
+                accelXEl.textContent = e.acceleration?.x?.toFixed(2) || '---';
+                accelYEl.textContent = e.acceleration?.y?.toFixed(2) || '---';
+                gyroYEl.textContent = e.rotationRate?.beta?.toFixed(2) || '---';
+            };
+            const handleOrientation = (e) => {
+                orientAlphaEl.textContent = e.alpha?.toFixed(1) || '---';
+                orientBetaEl.textContent = e.beta?.toFixed(1) || '---';
+                orientGammaEl.textContent = e.gamma?.toFixed(1) || '---';
+            };
+
+            const startSensorListeners = async () => {
+                sensorErrorEl.textContent = '';
+                // For iOS 13+
+                if (typeof DeviceMotionEvent.requestPermission === 'function') {
+                    try {
+                        const motionPermission = await DeviceMotionEvent.requestPermission();
+                        const orientationPermission = await DeviceOrientationEvent.requestPermission();
+                        if (motionPermission === 'granted' && orientationPermission === 'granted') {
+                             window.addEventListener('devicemotion', handleMotion);
+                             window.addEventListener('deviceorientation', handleOrientation);
+                        } else { throw new Error('Sensör izni verilmedi.'); }
+                    } catch (err) {
+                        sensorErrorEl.textContent = 'Sensör izni reddedildi veya bir hata oluştu.';
+                        return false;
+                    }
+                } else {
+                    // For other devices
+                    window.addEventListener('devicemotion', handleMotion);
+                    window.addEventListener('deviceorientation', handleOrientation);
+                }
+                return true;
+            };
+
+            const stopSensorListeners = () => {
+                window.removeEventListener('devicemotion', handleMotion);
+                window.removeEventListener('deviceorientation', handleOrientation);
+            };
+
+            toggleSensorsBtn.addEventListener('click', async () => {
+                if (sensorsActive) {
+                    stopSensorListeners();
+                    sensorsActive = false;
+                    toggleSensorsBtn.textContent = 'Sensörleri Başlat';
+                    sensorsContainer.classList.add('hidden');
+                } else {
+                    const started = await startSensorListeners();
+                    if (started) {
+                        sensorsActive = true;
+                        toggleSensorsBtn.textContent = 'Sensörleri Durdur';
+                        sensorsContainer.classList.remove('hidden');
+                    }
+                }
+            });
+        });
     </script>
 </body>
 </html>
