@@ -5,26 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cihaz Kimliği ve Konum Tespiti</title>
     
-    <!-- Preload önemli kaynaklar -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdn.fpjs.io">
-    <link rel="preconnect" href="https://cdn.tailwindcss.com">
-    
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS for modern styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- FingerprintJS Pro CDN -->
     <script async src="https://cdn.fpjs.io/v3/gzzoWOhDgp8rdSBL5vP3"></script>
 
     <style>
-        body{font-family:'Inter',sans-serif;background-color:#111827}.card{background-color:#1F2937;border-radius:0.75rem;padding:1.5rem;border:1px solid #374151;transition:all .3s ease-in-out}.card:hover{box-shadow:0 0 15px rgba(79,70,229,.5);border-color:#4f46e5}.result-label{font-weight:500;color:#9CA3AF}.result-value{font-weight:600;color:#F9FAFB;word-break:break-all;font-family:monospace}.btn{background-color:#4F46E5;color:#fff;font-weight:600;padding:.75rem 1.25rem;border-radius:.5rem;transition:background-color .2s ease-in-out}.btn:hover{background-color:#4338CA}.btn:disabled{background-color:#374151;cursor:not-allowed}.loader{border:4px solid #374151;border-top:4px solid #4F46E5;border-radius:50%;width:24px;height:24px;animation:spin 1s linear infinite;margin:0 auto}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
-        .sensor-map {width:100%;height:200px;background-color:#0f172a;border-radius:0.5rem;margin-top:1rem;position:relative;overflow:hidden}
-        .position-marker {width:12px;height:12px;background-color:#ef4444;border-radius:50%;position:absolute;transform:translate(-50%,-50%);box-shadow:0 0 0 4px rgba(239,68,68,0.3)}
-        .position-trail {width:4px;height:4px;background-color:#3b82f6;border-radius:50%;position:absolute;transform:translate(-50%,-50%)}
+        /* Custom styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* bg-gray-900 */
+        }
+        .card {
+            background-color: #1F2937; /* bg-gray-800 */
+            border-radius: 0.75rem; /* rounded-xl */
+            padding: 1.5rem; /* p-6 */
+            border: 1px solid #374151; /* border-gray-700 */
+            transition: all 0.3s ease-in-out;
+        }
+        .card:hover {
+            box-shadow: 0 0 15px rgba(79, 70, 229, 0.5);
+            border-color: #4f46e5; /* border-indigo-600 */
+        }
+        .result-label {
+            font-weight: 500;
+            color: #9CA3AF; /* text-gray-400 */
+        }
+        .result-value {
+            font-weight: 600;
+            color: #F9FAFB; /* text-gray-50 */
+            word-break: break-all;
+            font-family: monospace;
+        }
+        .btn {
+            background-color: #4F46E5; /* bg-indigo-600 */
+            color: white;
+            font-weight: 600;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem; /* rounded-lg */
+            transition: background-color 0.2s ease-in-out;
+        }
+        .btn:hover {
+            background-color: #4338CA; /* bg-indigo-700 */
+        }
+        .btn:disabled {
+            background-color: #374151; /* bg-gray-700 */
+            cursor: not-allowed;
+        }
+        .loader {
+            border: 4px solid #374151;
+            border-top: 4px solid #4F46E5;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body class="text-white">
@@ -35,10 +81,10 @@
             <p class="mt-2 text-gray-400">FingerprintJS, IP Adresi ve Telefon Sensörleri ile Cihaz Kimliklendirme ve Konum Tespiti</p>
         </header>
 
-        <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <main class="grid grid-cols-1 md:grid-cols-2 gap-6">
             
             <!-- Card 1: FingerprintJS Device ID -->
-            <div class="card col-span-1 md:col-span-2 lg:col-span-3">
+            <div class="card col-span-1 md:col-span-2">
                 <h2 class="text-xl font-bold mb-4 text-indigo-400">1. Cihaz Kimliği (FingerprintJS)</h2>
                 <div class="flex flex-col items-center">
                     <button id="getFingerprint" class="btn mb-4">Benzersiz Cihaz Kimliğini Al</button>
@@ -80,439 +126,112 @@
                 </div>
             </div>
 
-            <!-- Card 4: Device Sensors -->
+            <!-- Card 4: Device Sensors (Accelerometer) -->
             <div class="card">
-                <h2 class="text-xl font-bold mb-4 text-indigo-400">4. Cihaz Hareket Sensörleri</h2>
+                <h2 class="text-xl font-bold mb-4 text-indigo-400">4. İvmeölçer Sensörleri</h2>
                 <div class="flex flex-col items-center">
                     <button id="toggleSensors" class="btn mb-4">Sensörleri Başlat</button>
                     <div id="sensorResult" class="w-full space-y-2 hidden">
                         <div class="flex justify-between"><span class="result-label">İvme (X):</span> <span id="accelX" class="result-value">---</span></div>
                         <div class="flex justify-between"><span class="result-label">İvme (Y):</span> <span id="accelY" class="result-value">---</span></div>
                         <div class="flex justify-between"><span class="result-label">İvme (Z):</span> <span id="accelZ" class="result-value">---</span></div>
-                        <div class="flex justify-between"><span class="result-label">Yön (α):</span> <span id="orientAlpha" class="result-value">---</span></div>
-                        <div class="flex justify-between"><span class="result-label">Eğim (β):</span> <span id="orientBeta" class="result-value">---</span></div>
-                        <div class="flex justify-between"><span class="result-label">Dönüş (γ):</span> <span id="orientGamma" class="result-value">---</span></div>
                     </div>
                     <p id="sensorError" class="text-yellow-400 mt-2 text-center"></p>
                 </div>
             </div>
 
-            <!-- Card 5: Sensor-based Location Tracking -->
-            <div class="card col-span-1 md:col-span-2 lg:col-span-3">
-                <h2 class="text-xl font-bold mb-4 text-indigo-400">5. Sensör ile Konum İzleme</h2>
-                <div class="flex flex-col items-center">
-                    <div class="flex flex-wrap gap-4 mb-4">
-                        <button id="startSensorTracking" class="btn">Konum İzlemeyi Başlat</button>
-                        <button id="resetSensorTracking" class="btn bg-gray-600 hover:bg-gray-700">Konumu Sıfırla</button>
-                    </div>
-                    
-                    <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <h3 class="text-lg font-semibold mb-2 text-gray-300">Sensör Konum Verileri</h3>
-                            <div id="sensorLocationResult" class="space-y-2">
-                                <div class="flex justify-between"><span class="result-label">X Pozisyonu:</span> <span id="sensorX" class="result-value">0.00 m</span></div>
-                                <div class="flex justify-between"><span class="result-label">Y Pozisyonu:</span> <span id="sensorY" class="result-value">0.00 m</span></div>
-                                <div class="flex justify-between"><span class="result-label">Z Pozisyonu:</span> <span id="sensorZ" class="result-value">0.00 m</span></div>
-                                <div class="flex justify-between"><span class="result-label">Toplam Mesafe:</span> <span id="totalDistance" class="result-value">0.00 m</span></div>
-                                <div class="flex justify-between"><span class="result-label">Hız:</span> <span id="sensorSpeed" class="result-value">0.00 m/s</span></div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <h3 class="text-lg font-semibold mb-2 text-gray-300">Konum Haritası</h3>
-                            <div class="sensor-map" id="sensorMap">
-                                <div class="position-marker" id="positionMarker" style="top:50%;left:50%"></div>
-                            </div>
-                            <p class="text-gray-400 text-sm mt-2 text-center">Harita, sensör verilerine göre hesaplanan göreceli konumu gösterir</p>
-                        </div>
-                    </div>
-                    
-                    <div id="sensorLocationError" class="text-red-400 mt-4 text-center"></div>
+            <!-- Card 5: Device Orientation & Gyroscope -->
+            <div class="card">
+                <h2 class="text-xl font-bold mb-4 text-indigo-400">5. Yönelim & Jiroskop</h2>
+                <div id="orientationResult" class="w-full space-y-2 hidden">
+                    <div class="flex justify-between"><span class="result-label">Pusula Yönü (α):</span> <span id="orientAlpha" class="result-value">---</span></div>
+                    <div class="flex justify-between"><span class="result-label">Ön/Arka Eğim (β):</span> <span id="orientBeta" class="result-value">---</span></div>
+                    <div class="flex justify-between"><span class="result-label">Sağ/Sol Eğim (γ):</span> <span id="orientGamma" class="result-value">---</span></div>
+                    <hr class="border-gray-600 my-2">
+                    <div class="flex justify-between"><span class="result-label">Dönüş Hızı (X):</span> <span id="gyroX" class="result-value">---</span></div>
+                    <div class="flex justify-between"><span class="result-label">Dönüş Hızı (Y):</span> <span id="gyroY" class="result-value">---</span></div>
+                    <div class="flex justify-between"><span class="result-label">Dönüş Hızı (Z):</span> <span id="gyroZ" class="result-value">---</span></div>
                 </div>
+                 <p class="text-gray-500 text-center text-sm mt-4" id="orientationMessage">Veri için sensörleri başlatın.</p>
             </div>
 
         </main>
     </div>
 
     <script>
-        // Yardımcı fonksiyonlar
-        const showElement = (el) => el.classList.remove('hidden');
-        const hideElement = (el) => el.classList.add('hidden');
-        const setButtonState = (btn, disabled) => btn.disabled = disabled;
-        
-        // DOM Elementleri
-        const elements = {
-            fingerprint: {
-                btn: document.getElementById('getFingerprint'),
-                result: document.getElementById('fingerprintResult'),
-                id: document.getElementById('visitorId'),
-                loader: document.getElementById('fingerprintLoader')
-            },
-            ip: {
-                btn: document.getElementById('getIpLocation'),
-                result: document.getElementById('ipResult'),
-                address: document.getElementById('ipAddress'),
-                country: document.getElementById('ipCountry'),
-                city: document.getElementById('ipCity'),
-                isp: document.getElementById('ipIsp'),
-                loader: document.getElementById('ipLoader')
-            },
-            gps: {
-                btn: document.getElementById('getGpsLocation'),
-                result: document.getElementById('gpsResult'),
-                latitude: document.getElementById('latitude'),
-                longitude: document.getElementById('longitude'),
-                accuracy: document.getElementById('accuracy'),
-                error: document.getElementById('gpsError'),
-                loader: document.getElementById('gpsLoader')
-            },
-            sensors: {
-                btn: document.getElementById('toggleSensors'),
-                result: document.getElementById('sensorResult'),
-                accelX: document.getElementById('accelX'),
-                accelY: document.getElementById('accelY'),
-                accelZ: document.getElementById('accelZ'),
-                orientAlpha: document.getElementById('orientAlpha'),
-                orientBeta: document.getElementById('orientBeta'),
-                orientGamma: document.getElementById('orientGamma'),
-                error: document.getElementById('sensorError')
-            },
-            sensorLocation: {
-                startBtn: document.getElementById('startSensorTracking'),
-                resetBtn: document.getElementById('resetSensorTracking'),
-                result: document.getElementById('sensorLocationResult'),
-                x: document.getElementById('sensorX'),
-                y: document.getElementById('sensorY'),
-                z: document.getElementById('sensorZ'),
-                distance: document.getElementById('totalDistance'),
-                speed: document.getElementById('sensorSpeed'),
-                map: document.getElementById('sensorMap'),
-                marker: document.getElementById('positionMarker'),
-                error: document.getElementById('sensorLocationError')
-            }
-        };
+// ... existing code ... -->
+        const toggleSensorsBtn = document.getElementById('toggleSensors');
+        const sensorResultDiv = document.getElementById('sensorResult');
+        const accelXEl = document.getElementById('accelX');
+        const accelYEl = document.getElementById('accelY');
+        const accelZEl = document.getElementById('accelZ');
+        const sensorErrorEl = document.getElementById('sensorError');
+
+        // Yeni eklenen elementler
+        const orientationResultDiv = document.getElementById('orientationResult');
+        const orientationMessage = document.getElementById('orientationMessage');
+        const orientAlphaEl = document.getElementById('orientAlpha');
+        const orientBetaEl = document.getElementById('orientBeta');
+        const orientGammaEl = document.getElementById('orientGamma');
+        const gyroXEl = document.getElementById('gyroX');
+        const gyroYEl = document.getElementById('gyroY');
+        const gyroZEl = document.getElementById('gyroZ');
 
         let sensorsActive = false;
-        let sensorTrackingActive = false;
-        
-        // Sensör konum izleme değişkenleri
-        let position = { x: 0, y: 0, z: 0 };
-        let velocity = { x: 0, y: 0, z: 0 };
-        let lastTimestamp = null;
-        let totalDistance = 0;
-        let trailPoints = [];
 
         // --- 1. FingerprintJS ile Cihaz Kimliği Alma ---
-        elements.fingerprint.btn.addEventListener('click', async () => {
-            showElement(elements.fingerprint.loader);
-            hideElement(elements.fingerprint.result);
-            setButtonState(elements.fingerprint.btn, true);
-
-            try {
-                const fp = await FingerprintJS.load({apiKey: "gzzoWOhDgp8rdSBL5vP3"});
-                const result = await fp.get();
-                elements.fingerprint.id.textContent = result.visitorId;
-                showElement(elements.fingerprint.result);
-            } catch (error) {
-                console.error('FingerprintJS Hatası:', error);
-                elements.fingerprint.id.textContent = 'Hata oluştu!';
-                elements.fingerprint.id.classList.add('text-red-500');
-                showElement(elements.fingerprint.result);
-            } finally {
-                hideElement(elements.fingerprint.loader);
-                setButtonState(elements.fingerprint.btn, false);
-            }
-        });
-
-        // --- 2. IP Adresi ile Konum Tespiti ---
-        elements.ip.btn.addEventListener('click', async () => {
-            showElement(elements.ip.loader);
-            hideElement(elements.ip.result);
-            setButtonState(elements.ip.btn, true);
-
-            try {
-                const response = await fetch('https://ip-api.com/json');
-                if (!response.ok) throw new Error('API yanıt vermiyor.');
-                const data = await response.json();
-                
-                elements.ip.address.textContent = data.query || 'N/A';
-                elements.ip.country.textContent = data.country || 'N/A';
-                elements.ip.city.textContent = data.city || 'N/A';
-                elements.ip.isp.textContent = data.isp || 'N/A';
-                showElement(elements.ip.result);
-            } catch (error) {
-                console.error('IP Lokasyon Hatası:', error);
-                elements.ip.address.textContent = 'Hata!';
-                showElement(elements.ip.result);
-            } finally {
-                hideElement(elements.ip.loader);
-                setButtonState(elements.ip.btn, false);
-            }
-        });
-
-        // --- 3. GPS ile Konum Tespiti ---
-        elements.gps.btn.addEventListener('click', () => {
-            if (!navigator.geolocation) {
-                elements.gps.error.textContent = 'Tarayıcınız coğrafi konumu desteklemiyor.';
-                return;
-            }
-            
-            showElement(elements.gps.loader);
-            hideElement(elements.gps.result);
-            elements.gps.error.textContent = '';
-            setButtonState(elements.gps.btn, true);
-
-            const success = (position) => {
-                elements.gps.latitude.textContent = position.coords.latitude.toFixed(6);
-                elements.gps.longitude.textContent = position.coords.longitude.toFixed(6);
-                elements.gps.accuracy.textContent = `${position.coords.accuracy.toFixed(2)} metre`;
-                showElement(elements.gps.result);
-                hideElement(elements.gps.loader);
-                setButtonState(elements.gps.btn, false);
-            };
-
-            const error = (err) => {
-                console.warn(`GPS Hatası (${err.code}): ${err.message}`);
-                let message = 'Konum alınamadı.';
-                if (err.code === 1) message = 'Konum izni reddedildi. Lütfen izin verin.';
-                if (err.code === 2) message = 'Konum bilgisi mevcut değil.';
-                if (err.code === 3) message = 'İstek zaman aşımına uğradı.';
-                elements.gps.error.textContent = message;
-                hideElement(elements.gps.loader);
-                setButtonState(elements.gps.btn, false);
-            };
-
-            navigator.geolocation.getCurrentPosition(success, error, {
-                enableHighAccuracy: true,
-                timeout: 10000,
-                maximumAge: 0
+// ... existing code ... -->
             });
         });
         
-        // --- 4. Cihaz Hareket Sensörleri ---
+        // --- 4. Cihaz Hareket ve Yönelim Sensörleri ---
         function handleMotion(event) {
-            elements.sensors.accelX.textContent = event.acceleration.x ? event.acceleration.x.toFixed(3) : '---';
-            elements.sensors.accelY.textContent = event.acceleration.y ? event.acceleration.y.toFixed(3) : '---';
-            elements.sensors.accelZ.textContent = event.acceleration.z ? event.acceleration.z.toFixed(3) : '---';
-            
-            // Konum izleme aktifse, ivme verilerini işle
-            if (sensorTrackingActive) {
-                processMotionForLocation(event);
+            accelXEl.textContent = event.acceleration.x ? event.acceleration.x.toFixed(3) : '---';
+            accelYEl.textContent = event.acceleration.y ? event.acceleration.y.toFixed(3) : '---';
+            accelZEl.textContent = event.acceleration.z ? event.acceleration.z.toFixed(3) : '---';
+
+            if(event.rotationRate){
+                gyroXEl.textContent = event.rotationRate.alpha ? event.rotationRate.alpha.toFixed(3) : '---';
+                gyroYEl.textContent = event.rotationRate.beta ? event.rotationRate.beta.toFixed(3) : '---';
+                gyroZEl.textContent = event.rotationRate.gamma ? event.rotationRate.gamma.toFixed(3) : '---';
             }
         }
         
         function handleOrientation(event) {
-            elements.sensors.orientAlpha.textContent = event.alpha ? event.alpha.toFixed(2) : '---';
-            elements.sensors.orientBeta.textContent = event.beta ? event.beta.toFixed(2) : '---';
-            elements.sensors.orientGamma.textContent = event.gamma ? event.gamma.toFixed(2) : '---';
-        }
-
-        // Sensör verilerini konum hesaplamak için işle
-        function processMotionForLocation(event) {
-            const acceleration = event.accelerationIncludingGravity;
-            const currentTime = Date.now();
-            
-            if (!lastTimestamp) {
-                lastTimestamp = currentTime;
-                return;
-            }
-            
-            // Zaman farkını saniye cinsinden hesapla
-            const deltaTime = (currentTime - lastTimestamp) / 1000;
-            
-            if (acceleration && deltaTime > 0) {
-                // Yerçekimi ivmesini çıkar (yaklaşık 9.81 m/s²)
-                const gravity = 9.81;
-                const linearAcceleration = {
-                    x: acceleration.x || 0,
-                    y: acceleration.y || 0,
-                    z: (acceleration.z || 0) - gravity
-                };
-                
-                // Hızı güncelle (v = v0 + a * t)
-                velocity.x += linearAcceleration.x * deltaTime;
-                velocity.y += linearAcceleration.y * deltaTime;
-                velocity.z += linearAcceleration.z * deltaTime;
-                
-                // Konumu güncelle (p = p0 + v * t + 0.5 * a * t²)
-                position.x += velocity.x * deltaTime + 0.5 * linearAcceleration.x * deltaTime * deltaTime;
-                position.y += velocity.y * deltaTime + 0.5 * linearAcceleration.y * deltaTime * deltaTime;
-                position.z += velocity.z * deltaTime + 0.5 * linearAcceleration.z * deltaTime * deltaTime;
-                
-                // Mesafe hesapla
-                const distanceIncrement = Math.sqrt(
-                    Math.pow(velocity.x * deltaTime, 2) + 
-                    Math.pow(velocity.y * deltaTime, 2) + 
-                    Math.pow(velocity.z * deltaTime, 2)
-                );
-                totalDistance += distanceIncrement;
-                
-                // Hız hesapla (m/s)
-                const speed = Math.sqrt(
-                    Math.pow(velocity.x, 2) + 
-                    Math.pow(velocity.y, 2) + 
-                    Math.pow(velocity.z, 2)
-                );
-                
-                // UI'ı güncelle
-                updateSensorLocationUI(speed);
-                
-                // Konum işaretçisini güncelle
-                updatePositionMarker();
-            }
-            
-            lastTimestamp = currentTime;
-        }
-        
-        function updateSensorLocationUI(speed) {
-            elements.sensorLocation.x.textContent = position.x.toFixed(2) + ' m';
-            elements.sensorLocation.y.textContent = position.y.toFixed(2) + ' m';
-            elements.sensorLocation.z.textContent = position.z.toFixed(2) + ' m';
-            elements.sensorLocation.distance.textContent = totalDistance.toFixed(2) + ' m';
-            elements.sensorLocation.speed.textContent = speed.toFixed(2) + ' m/s';
-        }
-        
-        function updatePositionMarker() {
-            const mapWidth = elements.sensorLocation.map.offsetWidth;
-            const mapHeight = elements.sensorLocation.map.offsetHeight;
-            
-            // X ve Y pozisyonlarını harita boyutlarına göre ölçeklendir
-            // Haritanın merkezi (0,0) noktası olacak şekilde
-            const centerX = mapWidth / 2;
-            const centerY = mapHeight / 2;
-            
-            // Pozisyonu ölçeklendir (1m = 20px)
-            const scale = 20;
-            let markerX = centerX + position.x * scale;
-            let markerY = centerY + position.y * scale;
-            
-            // İşaretçiyi harita sınırları içinde tut
-            markerX = Math.max(10, Math.min(mapWidth - 10, markerX));
-            markerY = Math.max(10, Math.min(mapHeight - 10, markerY));
-            
-            // İşaretçiyi konumlandır
-            elements.sensorLocation.marker.style.left = markerX + 'px';
-            elements.sensorLocation.marker.style.top = markerY + 'px';
-            
-            // İz noktası ekle (her 0.5m'de bir)
-            if (trailPoints.length === 0 || 
-                Math.sqrt(Math.pow(position.x - trailPoints[trailPoints.length-1].x, 2) + 
-                         Math.pow(position.y - trailPoints[trailPoints.length-1].y, 2)) > 0.5) {
-                
-                const trailPoint = document.createElement('div');
-                trailPoint.className = 'position-trail';
-                trailPoint.style.left = markerX + 'px';
-                trailPoint.style.top = markerY + 'px';
-                elements.sensorLocation.map.appendChild(trailPoint);
-                
-                trailPoints.push({x: position.x, y: position.y});
-                
-                // Çok fazla iz noktası varsa en eskilerini temizle
-                if (trailPoints.length > 50) {
-                    const oldTrail = elements.sensorLocation.map.querySelector('.position-trail');
-                    if (oldTrail) {
-                        elements.sensorLocation.map.removeChild(oldTrail);
-                        trailPoints.shift();
-                    }
-                }
-            }
+            orientAlphaEl.textContent = event.alpha ? event.alpha.toFixed(2) : '---';
+            orientBetaEl.textContent = event.beta ? event.beta.toFixed(2) : '---';
+            orientGammaEl.textContent = event.gamma ? event.gamma.toFixed(2) : '---';
         }
 
         async function startSensorListeners() {
-            elements.sensors.error.textContent = '';
-            if (typeof DeviceMotionEvent.requestPermission === 'function') {
-                try {
-                    const permissionState = await DeviceMotionEvent.requestPermission();
-                    if (permissionState === 'granted') {
-                        window.addEventListener('devicemotion', handleMotion);
-                        window.addEventListener('deviceorientation', handleOrientation);
-                    } else {
-                        throw new Error('Sensör izni reddedildi.');
-                    }
-                } catch (err) {
-                     elements.sensors.error.textContent = err.message;
-                     return false;
-                }
-            } else {
-                window.addEventListener('devicemotion', handleMotion);
-                window.addEventListener('deviceorientation', handleOrientation);
-            }
-            return true;
-        }
-        
-        function stopSensorListeners() {
-            window.removeEventListener('devicemotion', handleMotion);
-            window.removeEventListener('deviceorientation', handleOrientation);
-        }
-
-        elements.sensors.btn.addEventListener('click', async () => {
+            sensorErrorEl.textContent = '';
+// ... existing code ... -->
+        toggleSensorsBtn.addEventListener('click', async () => {
              if (sensorsActive) {
                 stopSensorListeners();
                 sensorsActive = false;
-                sensorTrackingActive = false;
-                elements.sensors.btn.textContent = 'Sensörleri Başlat';
-                elements.sensors.btn.classList.remove('bg-red-600', 'hover:bg-red-700');
-                elements.sensors.btn.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
-                hideElement(elements.sensors.result);
+                toggleSensorsBtn.textContent = 'Sensörleri Başlat';
+                toggleSensorsBtn.classList.remove('bg-red-600', 'hover:bg-red-700');
+                toggleSensorsBtn.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
+                sensorResultDiv.classList.add('hidden');
+                orientationResultDiv.classList.add('hidden');
+                orientationMessage.classList.remove('hidden');
             } else {
                 const started = await startSensorListeners();
                 if(started) {
                     sensorsActive = true;
-                    elements.sensors.btn.textContent = 'Sensörleri Durdur';
-                    elements.sensors.btn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
-                    elements.sensors.btn.classList.add('bg-red-600', 'hover:bg-red-700');
-                    showElement(elements.sensors.result);
+                    toggleSensorsBtn.textContent = 'Sensörleri Durdur';
+                    toggleSensorsBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
+                    toggleSensorsBtn.classList.add('bg-red-600', 'hover:bg-red-700');
+                    sensorResultDiv.classList.remove('hidden');
+                    orientationResultDiv.classList.remove('hidden');
+                    orientationMessage.classList.add('hidden');
                 }
             }
-        });
-
-        // --- 5. Sensör ile Konum İzleme ---
-        elements.sensorLocation.startBtn.addEventListener('click', async () => {
-            if (!sensorsActive) {
-                // Sensörleri başlat
-                const started = await startSensorListeners();
-                if (!started) {
-                    elements.sensorLocation.error.textContent = 'Sensörlere erişim sağlanamadı.';
-                    return;
-                }
-                sensorsActive = true;
-                elements.sensors.btn.textContent = 'Sensörleri Durdur';
-                elements.sensors.btn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
-                elements.sensors.btn.classList.add('bg-red-600', 'hover:bg-red-700');
-                showElement(elements.sensors.result);
-            }
-            
-            sensorTrackingActive = true;
-            elements.sensorLocation.startBtn.disabled = true;
-            elements.sensorLocation.startBtn.textContent = 'Konum İzleme Aktif';
-            elements.sensorLocation.error.textContent = '';
-        });
-        
-        elements.sensorLocation.resetBtn.addEventListener('click', () => {
-            // Konum ve hız verilerini sıfırla
-            position = { x: 0, y: 0, z: 0 };
-            velocity = { x: 0, y: 0, z: 0 };
-            totalDistance = 0;
-            lastTimestamp = null;
-            
-            // UI'ı güncelle
-            updateSensorLocationUI(0);
-            
-            // İz noktalarını temizle
-            trailPoints = [];
-            const trailElements = elements.sensorLocation.map.querySelectorAll('.position-trail');
-            trailElements.forEach(el => el.remove());
-            
-            // İşaretçiyi merkeze taşı
-            elements.sensorLocation.marker.style.left = '50%';
-            elements.sensorLocation.marker.style.top = '50%';
-            
-            // İzlemeyi durdur ve butonu sıfırla
-            sensorTrackingActive = false;
-            elements.sensorLocation.startBtn.disabled = false;
-            elements.sensorLocation.startBtn.textContent = 'Konum İzlemeyi Başlat';
         });
 
     </script>
 </body>
 </html>
+
+
