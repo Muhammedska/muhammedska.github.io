@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optik Form Anket Oluşturucu (.fmt)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide-react@latest/dist/umd/lucide-react.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* gray-50 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); /* shadow-md */
+        }
+        .radio-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem; /* w-10 */
+            height: 2.5rem; /* h-10 */
+            border: 1px solid #d1d5db; /* border-gray-300 */
+            border-radius: 9999px; /* rounded-full */
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            font-weight: 500;
+        }
+        .radio-label:hover {
+            background-color: #f3f4f6; /* hover:bg-gray-100 */
+        }
+        input[type="radio"]:checked + .radio-label {
+            background-color: #3b82f6; /* bg-blue-500 */
+            color: white;
+            border-color: #3b82f6; /* border-blue-500 */
+        }
+        input[type="radio"] {
+            display: none;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-7xl mx-auto">
+
+        <!-- Başlık Bölümü -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">Optik Form Anket Oluşturucu</h1>
+            <p class="text-gray-600 mt-2">Anket bilgilerinizi girin, cevap anahtarını oluşturun ve <code class="bg-gray-200 text-red-600 px-2 py-1 rounded">.fmt</code> formatında indirin.</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            <!-- Ayarlar Paneli (Sol Taraf) -->
+            <div class="card p-6 h-fit">
+                <h2 class="text-2xl font-semibold text-gray-700 border-b pb-3 mb-6 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings-2 mr-2"><path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+                    Anket Ayarları
+                </h2>
+                <div class="space-y-6">
+                    <div>
+                        <label for="anketBasligi" class="block text-sm font-medium text-gray-700 mb-1">Anket Başlığı</label>
+                        <input type="text" id="anketBasligi" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Örn: 10. Sınıf Matematik Dersi Memnuniyet Anketi">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="soruSayisi" class="block text-sm font-medium text-gray-700 mb-1">Soru Sayısı</label>
+                            <input type="number" id="soruSayisi" min="1" max="100" value="10" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                        </div>
+                        <div>
+                            <label for="secenekSayisi" class="block text-sm font-medium text-gray-700 mb-1">Seçenek Sayısı</label>
+                            <select id="secenekSayisi" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                <option value="5">5 (A-B-C-D-E)</option>
+                                <option value="4">4 (A-B-C-D)</option>
+                                <option value="3">3 (A-B-C)</option>
+                                <option value="2">2 (A-B)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cevap Anahtarı Paneli (Sağ Taraf) -->
+            <div class="card p-6">
+                <h2 class="text-2xl font-semibold text-gray-700 border-b pb-3 mb-6 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-key-round mr-2"><path d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z"/><circle cx="16.5" cy="7.5" r=".5"/></svg>
+                    Cevap Anahtarı
+                </h2>
+                <div id="cevapAnahtariFormu" class="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+                    <!-- Sorular buraya dinamik olarak eklenecek -->
+                </div>
+            </div>
+
+        </div>
+
+        <!-- İndirme Butonu -->
+        <div class="mt-8 text-center">
+            <button id="indirBtn" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 active:scale-95 transition-all shadow-lg flex items-center justify-center mx-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                .FMT Dosyasını Oluştur ve İndir
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Gerekli DOM elementlerini seçme
+        const soruSayisiInput = document.getElementById('soruSayisi');
+        const secenekSayisiInput = document.getElementById('secenekSayisi');
+        const anketBasligiInput = document.getElementById('anketBasligi');
+        const cevapAnahtariFormu = document.getElementById('cevapAnahtariFormu');
+        const indirBtn = document.getElementById('indirBtn');
+
+        const secenekHarfleri = ['A', 'B', 'C', 'D', 'E'];
+
+        // Cevap anahtarı formunu dinamik olarak oluşturan fonksiyon
+        function cevapAnahtariniOlustur() {
+            // Formu temizle
+            cevapAnahtariFormu.innerHTML = '';
+
+            const soruSayisi = parseInt(soruSayisiInput.value) || 0;
+            const secenekSayisi = parseInt(secenekSayisiInput.value) || 5;
+
+            if (soruSayisi <= 0) {
+                 cevapAnahtariFormu.innerHTML = '<p class="text-gray-500 text-center">Lütfen geçerli bir soru sayısı girin.</p>';
+                 return;
+            }
+
+            for (let i = 1; i <= soruSayisi; i++) {
+                const soruDiv = document.createElement('div');
+                soruDiv.className = 'flex items-center justify-between bg-gray-50 p-3 rounded-lg';
+                
+                const soruLabel = document.createElement('span');
+                soruLabel.className = 'font-semibold text-gray-700';
+                soruLabel.textContent = `${i}. Soru:`;
+                
+                const seceneklerDiv = document.createElement('div');
+                seceneklerDiv.className = 'flex items-center space-x-2';
+
+                for (let j = 0; j < secenekSayisi; j++) {
+                    const harf = secenekHarfleri[j];
+                    const radioInput = document.createElement('input');
+                    radioInput.type = 'radio';
+                    radioInput.name = `cevap_${i}`;
+                    radioInput.id = `cevap_${i}_${harf}`;
+                    radioInput.value = harf;
+
+                    const radioLabel = document.createElement('label');
+                    radioLabel.htmlFor = `cevap_${i}_${harf}`;
+                    radioLabel.textContent = harf;
+                    radioLabel.className = 'radio-label';
+
+                    seceneklerDiv.appendChild(radioInput);
+                    seceneklerDiv.appendChild(radioLabel);
+                }
+                
+                soruDiv.appendChild(soruLabel);
+                soruDiv.appendChild(seceneklerDiv);
+                cevapAnahtariFormu.appendChild(soruDiv);
+            }
+        }
+
+        // .fmt dosyasını oluşturan ve indiren fonksiyon
+        function fmtDosyasiniIndir() {
+            const anketBasligi = anketBasligiInput.value.trim() || "Basliksiz Anket";
+            const soruSayisi = parseInt(soruSayisiInput.value);
+            const secenekSayisi = parseInt(secenekSayisiInput.value);
+            const tarih = new Date();
+            const tarihStr = `${tarih.getDate().toString().padStart(2, '0')}-${(tarih.getMonth() + 1).toString().padStart(2, '0')}-${tarih.getFullYear()}`;
+
+            // .fmt dosyasının içeriğini oluşturma
+            let fmtIcerik = `[BILGI]\n`;
+            fmtIcerik += `ANKET_BASLIGI: ${anketBasligi}\n`;
+            fmtIcerik += `SORU_SAYISI: ${soruSayisi}\n`;
+            fmtIcerik += `SECENEK_SAYISI: ${secenekSayisi}\n`;
+            fmtIcerik += `OLUSTURMA_TARIHI: ${tarihStr}\n\n`;
+            
+            fmtIcerik += `[CEVAP_ANAHTARI]\n`;
+            
+            let tumCevaplarIsaretli = true;
+            for (let i = 1; i <= soruSayisi; i++) {
+                const seciliCevap = document.querySelector(`input[name="cevap_${i}"]:checked`);
+                const cevap = seciliCevap ? seciliCevap.value : '?'; // Eğer cevap seçilmemişse '?' olarak işaretle
+                if (cevap === '?') {
+                    tumCevaplarIsaretli = false;
+                }
+                fmtIcerik += `${i}:${cevap}\n`;
+            }
+
+            if (!tumCevaplarIsaretli) {
+                if (!confirm("Bazı sorular için cevap işaretlemediniz. Yine de devam etmek istiyor musunuz? İşaretlenmeyen sorular '?' olarak kaydedilecektir.")) {
+                    return; // Kullanıcı iptal ederse işlemi durdur
+                }
+            }
+
+            // Dosyayı indirme işlemi
+            const blob = new Blob([fmtIcerik], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            
+            // Dosya adını anket başlığından türetme (Türkçe karakterleri ve boşlukları temizleyerek)
+            const dosyaAdi = anketBasligi.toLowerCase()
+                .replace(/[^a-z0-9]/g, '-') // Geçersiz karakterleri tire ile değiştir
+                .replace(/-+/g, '-') // Birden fazla tireyi tek tire yap
+                .replace(/^-|-$/g, ''); // Başta ve sondaki tireleri kaldır
+                
+            a.href = url;
+            a.download = `${dosyaAdi || 'anket'}.fmt`;
+            document.body.appendChild(a);
+            a.click();
+            
+            // Oluşturulan geçici elementleri temizleme
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Olay dinleyicilerini ekleme
+        soruSayisiInput.addEventListener('input', cevapAnahtariniOlustur);
+        secenekSayisiInput.addEventListener('change', cevapAnahtariniOlustur);
+        indirBtn.addEventListener('click', fmtDosyasiniIndir);
+
+        // Sayfa ilk yüklendiğinde formu oluştur
+        document.addEventListener('DOMContentLoaded', cevapAnahtariniOlustur);
+    </script>
+</body>
+</html>
+
