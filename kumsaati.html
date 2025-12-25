@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Siyah Kum Saati v1.2.3</title>
+    <title>Siyah Kum Saati v1.2.4</title>
     
     <!-- Google Fonts: Outfit -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -145,6 +145,26 @@
         }
         .close-icon:hover { opacity: 1; }
 
+        /* UYARI MODALI STİLLERİ */
+        #completion-modal {
+            position: fixed; inset: 0; z-index: 999;
+            background: rgba(15, 23, 42, 0.6); /* Koyu perde */
+            backdrop-filter: blur(8px); /* Ekranı bulanıklaştır */
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+        }
+        #completion-modal.visible { opacity: 1; pointer-events: auto; }
+        
+        .modal-content {
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid rgba(45, 212, 191, 0.3);
+            border-radius: 24px; padding: 40px; text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 400px; width: 90%;
+        }
+        #completion-modal.visible .modal-content { transform: scale(1); }
+
         ::-webkit-scrollbar { display: none; }
     </style>
 </head>
@@ -194,12 +214,26 @@
         </div>
 
         <div class="text-center text-[10px] text-teal-200 mb-2 font-medium tracking-wide opacity-60">
-            DİNAMİK FİZİK MOTORU V1.2.3
+            UYARI SİSTEMİ V1.2.4
         </div>
 
         <div class="btn-group">
             <button id="resetBtn" class="action-btn btn-reset">Sıfırla</button>
             <button id="startBtn" class="action-btn btn-start">Başlat</button>
+        </div>
+    </div>
+
+    <!-- TAMAMLAMA UYARISI MODALI -->
+    <div id="completion-modal">
+        <div class="modal-content">
+            <div class="flex justify-center mb-4 text-teal-400">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-16 h-16">
+                    <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            <h2 class="text-3xl font-bold text-white mb-2">Süre Doldu!</h2>
+            <p class="text-slate-300 mb-8">Zamanlayıcı başarıyla tamamlandı.</p>
+            <button onclick="closeModal()" class="action-btn btn-start w-full">Tamam</button>
         </div>
     </div>
 
@@ -212,6 +246,7 @@
     <script>
         // --- UI MANTIĞI ---
         const panel = document.getElementById('settings-panel');
+        const modal = document.getElementById('completion-modal');
         const inputH = document.getElementById('inputH');
         const inputM = document.getElementById('inputM');
         const inputS = document.getElementById('inputS');
@@ -225,10 +260,12 @@
             panel.classList.toggle('active', isPanelOpen);
         }
 
-        // Kullanıcı giriş yaptığında tetiklenen ana fonksiyon
+        function closeModal() {
+            modal.classList.remove('visible');
+        }
+
         function onInputChange() {
             const total = calculateTotalBalls();
-            // Eğer sayaç çalışmıyorsa, değişiklikleri anında uygula (resetle)
             if (!isRunning) {
                 resetTimerLogic();
             }
@@ -238,13 +275,8 @@
             let h = Math.max(0, parseInt(inputH.value) || 0);
             let m = Math.max(0, parseInt(inputM.value) || 0);
             let s = Math.max(0, parseInt(inputS.value) || 0);
-            
-            // Görsel limitler
             if (m > 59) m = 59; 
             if (s > 59) s = 59;
-            
-            // Değerleri geri yazma (opsiyonel, oninput için can sıkıcı olabilir)
-            // Sadece sınırları aşarsa düzeltelim, aksi halde kullanıcı yazarken silmeyelim
             if(parseInt(inputM.value) > 59) inputM.value = 59;
             if(parseInt(inputS.value) > 59) inputS.value = 59;
 
@@ -266,8 +298,7 @@
         let hourglassGroup;
         const dummy = new THREE.Object3D();
         
-        // --- FİZİK DEĞİŞKENLERİ ---
-        let ballRadius = 0.15; // Dinamik değişir
+        let ballRadius = 0.15; 
         const GRAVITY_Y = -0.015; 
         const FRICTION = 0.98;    
         const SUB_STEPS = 8;      
@@ -340,7 +371,6 @@
 
             window.addEventListener('resize', onWindowResize);
             
-            // Başlangıç ayarları
             calculateTotalBalls();
             resetTimerLogic();
         }
@@ -448,7 +478,6 @@
             topPositions = calculateTopPositions(count);
             
             const ballGeo = new THREE.SphereGeometry(ballRadius, 12, 12);
-            // Siyah/Metalik Materyal
             const ballMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.2, metalness: 0.6 });
             
             topBallsMesh = new THREE.InstancedMesh(ballGeo, ballMat, count);
@@ -613,6 +642,7 @@
                 hudLabel.style.color = "#2dd4bf"; 
                 togglePanel(); if(isPanelOpen) togglePanel();
                 lastTime = performance.now();
+                closeModal();
             } else {
                 isRunning = false;
                 hudLabel.innerText = "DURAKLATILDI";
@@ -624,14 +654,13 @@
             isRunning = false;
             hudLabel.innerText = "TAMAMLANDI";
             hudLabel.style.color = "#f87171"; 
+            modal.classList.add('visible');
         }
 
         function resetTimerLogic() {
             const total = calculateTotalBalls();
             totalTime = total > 0 ? total : 60;
             
-            // --- DİNAMİK YARIÇAP HESABI ---
-            // 60 saniye için r=0.15 baz alındı
             const baseCount = 60;
             if (total > baseCount) {
                 ballRadius = 0.15 * Math.pow(baseCount / total, 1/3);
@@ -646,6 +675,7 @@
             updateTimerHUD(currentTime);
             hudLabel.innerText = "HAZIR";
             hudLabel.style.color = "#0f766e"; 
+            closeModal();
             
             hourglassGroup.rotation.z = Math.PI;
             let rotationProgress = 0;
