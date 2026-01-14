@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlackofWheel API Test Arayüzü</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1a2a6c, #2d3748);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .token-section {
+            background-color: #e8f4fd;
+            padding: 20px;
+            border-bottom: 1px solid #d1d8e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .token-info {
+            font-weight: bold;
+            color: #2c5282;
+        }
+        
+        #token-display {
+            background-color: white;
+            padding: 8px 12px;
+            border: 1px solid #cbd5e0;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            word-break: break-all;
+            max-width: 400px;
+        }
+        
+        .clear-token {
+            background-color: #f56565;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .clear-token:hover {
+            background-color: #e53e3e;
+        }
+        
+        .quick-nav {
+            background-color: #edf2f7;
+            padding: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .nav-btn {
+            background-color: #4a5568;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+        
+        .nav-btn:hover {
+            background-color: #2d3748;
+        }
+        
+        .api-section {
+            padding: 25px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .api-section:last-of-type {
+            border-bottom: none;
+        }
+        
+        h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+        }
+        
+        h2::before {
+            content: "";
+            display: inline-block;
+            width: 8px;
+            height: 25px;
+            background-color: #4299e1;
+            margin-right: 10px;
+            border-radius: 2px;
+        }
+        
+        .endpoint-info {
+            background-color: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4299e1;
+        }
+        
+        .method {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-right: 10px;
+        }
+        
+        .method-get {
+            background-color: #68d391;
+            color: #22543d;
+        }
+        
+        .method-post {
+            background-color: #4299e1;
+            color: white;
+        }
+        
+        .endpoint-path {
+            font-family: monospace;
+            font-weight: bold;
+            color: #2d3748;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        button {
+            background-color: #4299e1;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        
+        button:hover {
+            background-color: #3182ce;
+        }
+        
+        button:disabled {
+            background-color: #a0aec0;
+            cursor: not-allowed;
+        }
+        
+        .response-section {
+            margin-top: 25px;
+        }
+        
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .copy-btn {
+            background-color: #38a169;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
+        
+        .copy-btn:hover {
+            background-color: #2f855a;
+        }
+        
+        #response {
+            background-color: #f7fafc;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            padding: 20px;
+            min-height: 150px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #2d3748;
+        }
+        
+        .response-success {
+            border-left: 4px solid #38a169;
+        }
+        
+        .response-error {
+            border-left: 4px solid #f56565;
+        }
+        
+        .required::after {
+            content: " *";
+            color: #f56565;
+        }
+        
+        .note {
+            font-size: 0.9rem;
+            color: #718096;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #718096;
+            font-size: 0.9rem;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .quick-nav {
+                flex-direction: column;
+            }
+            
+            .nav-btn {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+            
+            .token-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .clear-token {
+                margin-top: 10px;
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>BlackofWheel API Test Arayüzü</h1>
+            <p class="subtitle">Versiyon 1.1 • Tüm Uç Noktalar (Complete Reference)</p>
+        </header>
+        
+        <div class="token-section">
+            <div>
+                <div class="token-info">Mevcut Token:</div>
+                <div id="token-display">Token bulunamadı. Lütfen giriş yapın.</div>
+            </div>
+            <button class="clear-token" id="clear-token">Token'ı Temizle</button>
+        </div>
+        
+        <div class="quick-nav">
+            <button class="nav-btn" data-section="auth">Kimlik Doğrulama</button>
+            <button class="nav-btn" data-section="posts">Gönderi Yönetimi</button>
+            <button class="nav-btn" data-section="feed">Akış (Feed)</button>
+            <button class="nav-btn" data-section="likes">Etkileşim (Likes)</button>
+            <button class="nav-btn" data-section="messages">Mesajlaşma</button>
+            <button class="nav-btn" data-section="upload">Dosya Yükleme</button>
+            <button class="nav-btn" data-section="profile">Profil & Arama</button>
+            <button class="nav-btn" data-section="history">İşlem Geçmişi</button>
+        </div>
+        
+        <!-- Kimlik Doğrulama Bölümü -->
+        <section id="auth" class="api-section">
+            <h2>1. Kimlik Doğrulama</h2>
+            
+            <div class="endpoint-info">
+                <span class="method method-post">POST</span>
+                <span class="endpoint-path">/register</span>
+                <p>Yeni kullanıcı kaydı</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="register-username" class="required">Kullanıcı Adı</label>
+                <input type="text" id="register-username" placeholder="ahmet (min 3 karakter, eşsiz olmalı)">
+                
+                <label for="register-email" class="required">E-posta</label>
+                <input type="email" id="register-email" placeholder="ahmet@mail.com">
+                
+                <label for="register-password" class="required">Şifre</label>
+                <input type="password" id="register-password" placeholder="123456 (min 6 karakter)">
+                
+                <button id="register-btn">Kayıt Ol</button>
+            </div>
+            
+            <div class="endpoint-info">
+                <span class="method method-post">POST</span>
+                <span class="endpoint-path">/login</span>
+                <p>Giriş yap ve Token al</p>
+                <p class="note">Önemli: Buradan dönen token değerini saklayın. Diğer tüm isteklerde Header'da gönderilecektir.</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="login-email" class="required">E-posta</label>
+                <input type="email" id="login-email" placeholder="ahmet@mail.com">
+                
+                <label for="login-password" class="required">Şifre</label>
+                <input type="password" id="login-password" placeholder="123456">
+                
+                <button id="login-btn">Giriş Yap</button>
+            </div>
+        </section>
+        
+        <!-- Gönderi Yönetimi Bölümü -->
+        <section id="posts" class="api-section" style="display:none;">
+            <h2>2. Gönderi Yönetimi</h2>
+            
+            <div class="endpoint-info">
+                <span class="method method-post">POST</span>
+                <span class="endpoint-path">/posts</span>
+                <p>Yeni gönderi paylaş</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="post-content" class="required">İçerik</label>
+                <textarea id="post-content" placeholder="Bugün hava çok güzel"></textarea>
+                
+                <label for="post-avatar">Profil Resmi URL'si (Opsiyonel)</label>
+                <input type="text" id="post-avatar" placeholder="https://example.com/avatar.jpg">
+                
+                <button id="post-submit-btn">Gönderi Paylaş</button>
+            </div>
+        </section>
+        
+        <!-- Akış (Feed) Bölümü -->
+        <section id="feed" class="api-section" style="display:none;">
+            <h2>3. Akış (Feed)</h2>
+            
+            <div class="endpoint-info">
+                <span class="method method-get">GET</span>
+                <span class="endpoint-path">/feed</span>
+                <p>Ana sayfa akışını getir</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="feed-user-id" class="required">Kullanıcı ID</label>
+                <input type="number" id="feed-user-id" placeholder="123">
+                
+                <button id="feed-get-btn">Akışı Getir</button>
+            </div>
+        </section>
+        
+        <!-- Etkileşim (Likes) Bölümü -->
+        <section id="likes" class="api-section" style="display:none;">
+            <h2>4. Etkileşim (Likes)</h2>
+            
+            <div class="endpoint-info">
+                <span class="method method-post">POST</span>
+                <span class="endpoint-path">/likes/toggle</span>
+                <p>Beğen / Vazgeç (Toggle) - Aynı gönderiye ilk istekte "Beğenir", ikinci istekte "Beğeniyi Geri Alır"</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="like-post-id" class="required">Gönderi ID</label>
+                <input type="number" id="like-post-id" placeholder="456">
+                
+                <label for="like-user-id" class="required">Kullanıcı ID</label>
+                <input type="number" id="like-user-id" placeholder="123">
+                
+                <button id="like-toggle-btn">Beğen/Vazgeç</button>
+            </div>
+        </section>
+        
+        <!-- Mesajlaşma Bölümü -->
+        <section id="messages" class="api-section" style="display:none;">
+            <h2>5. Özel Mesajlaşma</h2>
+            
+            <div class="endpoint-info">
+                <span class="method method-get">GET</span>
+                <span class="endpoint-path">/messages/{chat_id}</span>
+                <p>Sohbet geçmişini getir</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="get-chat-id" class="required">Sohbet ID (UUID)</label>
+                <input type="text" id="get-chat-id" placeholder="550e8400-e29b-41d4-a716-446655440000">
+                
+                <button id="get-messages-btn">Sohbet Geçmişini Getir</button>
+            </div>
+            
+            <div class="endpoint-info">
+                <span class="method method-post">POST</span>
+                <span class="endpoint-path">/messages</span>
+                <p>Yeni mesaj gönder</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="send-chat-id" class="required">Sohbet ID (UUID)</label>
+                <input type="text" id="send-chat-id" placeholder="550e8400-e29b-41d4-a716-446655440000">
+                
+                <label for="send-sender-id" class="required">Gönderen ID</label>
+                <input type="number" id="send-sender-id" placeholder="123">
+                
+                <label for="send-message-content" class="required">Mesaj İçeriği</label>
+                <textarea id="send-message-content" placeholder="Merhaba, nasılsın?"></textarea>
+                
+                <button id="send-message-btn">Mesaj Gönder</button>
+            </div>
+        </section>
+        
+        <!-- Dosya Yükleme Bölümü -->
+        <section id="upload" class="api-section" style="display:none;">
+            <h2>6. Dosya Yükleme</h2>
+            
+            <div class="endpoint-info">
+                <span class="method method-post">POST</span>
+                <span class="endpoint-path">/upload/image</span>
+                <p>Resim Yükle - Multipart/form-data formatında resim yükler</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="upload-image" class="required">Resim Dosyası</label>
+                <input type="file" id="upload-image" accept="image/*">
+                
+                <button id="upload-btn">Resmi Yükle</button>
+            </div>
+        </section>
+        
+        <!-- Profil ve Arama Bölümü -->
+        <section id="profile" class="api-section" style="display:none;">
+            <h2>7. Profil ve Arama</h2>
+            
+            <div class="endpoint-info">
+                <span class="method method-get">GET</span>
+                <span class="endpoint-path">/search?q={kelime}</span>
+                <p>Kullanıcı ve İçerik Ara (Full-Text) - Veritabanındaki `FullText` indeksleri kullanarak hızlı arama yapar</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="search-query" class="required">Arama Kelimesi</label>
+                <input type="text" id="search-query" placeholder="ahmet">
+                
+                <button id="search-btn">Ara</button>
+            </div>
+            
+            <div class="endpoint-info">
+                <span class="method method-get">GET</span>
+                <span class="endpoint-path">/users/{username}</span>
+                <p>Kullanıcı Profili Getir - Bu isteği attığınızda sistem arka planda "view_profile" logunu kaydeder</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="profile-username" class="required">Kullanıcı Adı</label>
+                <input type="text" id="profile-username" placeholder="ahmet123">
+                
+                <button id="profile-btn">Profili Getir</button>
+            </div>
+        </section>
+        
+        <!-- İşlem Geçmişi Bölümü -->
+        <section id="history" class="api-section" style="display:none;">
+            <h2>8. İşlem Geçmişi</h2>
+            
+            <div class="endpoint-info">
+                <span class="method method-get">GET</span>
+                <span class="endpoint-path">/history</span>
+                <p>Kullanıcının kendi hareket dökümü - Giriş yapan kullanıcının son hareketlerini listeler</p>
+            </div>
+            
+            <div class="form-group">
+                <button id="history-btn">Geçmişi Getir</button>
+            </div>
+        </section>
+        
+        <!-- Yanıt Görüntüleme Bölümü -->
+        <div class="response-section">
+            <div class="response-header">
+                <h2>API Yanıtı</h2>
+                <button class="copy-btn" id="copy-response">Yanıtı Kopyala</button>
+            </div>
+            <div id="response"></div>
+        </div>
+        
+        <footer>
+            <p>BlackofWheel API Entegrasyon Kılavuzu • Versiyon 1.1 • Tüm hakları saklıdır.</p>
+        </footer>
+    </div>
+
+    <script>
+        // API base URL
+        const API_BASE_URL = 'http://blackofwheel.com/api';
+        
+        // DOM Elementleri
+        const tokenDisplay = document.getElementById('token-display');
+        const clearTokenBtn = document.getElementById('clear-token');
+        const responseDiv = document.getElementById('response');
+        const copyResponseBtn = document.getElementById('copy-response');
+        const navBtns = document.querySelectorAll('.nav-btn');
+        const apiSections = document.querySelectorAll('.api-section');
+        
+        // Token yönetimi
+        let currentToken = localStorage.getItem('api_token') || '';
+        
+        // Sayfa yüklendiğinde token kontrolü
+        document.addEventListener('DOMContentLoaded', () => {
+            updateTokenDisplay();
+            showSection('auth'); // Başlangıçta kimlik doğrulama bölümünü göster
+            
+            // Event listener'ları ekle
+            setupEventListeners();
+        });
+        
+        function updateTokenDisplay() {
+            if (currentToken) {
+                tokenDisplay.textContent = currentToken.substring(0, 30) + '...';
+                tokenDisplay.style.color = '#2c5282';
+                tokenDisplay.parentElement.querySelector('.token-info').textContent = 'Mevcut Token:';
+            } else {
+                tokenDisplay.textContent = 'Token bulunamadı. Lütfen giriş yapın.';
+                tokenDisplay.style.color = '#718096';
+                tokenDisplay.parentElement.querySelector('.token-info').textContent = 'Token Durumu:';
+            }
+        }
+        
+        function setupEventListeners() {
+            // Token temizleme
+            clearTokenBtn.addEventListener('click', () => {
+                currentToken = '';
+                localStorage.removeItem('api_token');
+                updateTokenDisplay();
+                showResponse('Token başarıyla temizlendi.', true);
+            });
+            
+            // Yanıt kopyalama
+            copyResponseBtn.addEventListener('click', () => {
+                const responseText = responseDiv.textContent;
+                navigator.clipboard.writeText(responseText).then(() => {
+                    const originalText = copyResponseBtn.textContent;
+                    copyResponseBtn.textContent = 'Kopyalandı!';
+                    setTimeout(() => {
+                        copyResponseBtn.textContent = originalText;
+                    }, 2000);
+                });
+            });
+            
+            // Navigasyon butonları
+            navBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const sectionId = btn.getAttribute('data-section');
+                    showSection(sectionId);
+                });
+            });
+            
+            // Kayıt butonu
+            document.getElementById('register-btn').addEventListener('click', registerUser);
+            
+            // Giriş butonu
+            document.getElementById('login-btn').addEventListener('click', loginUser);
+            
+            // Gönderi paylaşma butonu
+            document.getElementById('post-submit-btn').addEventListener('click', createPost);
+            
+            // Akış getirme butonu
+            document.getElementById('feed-get-btn').addEventListener('click', getFeed);
+            
+            // Beğen butonu
+            document.getElementById('like-toggle-btn').addEventListener('click', toggleLike);
+            
+            // Mesaj geçmişi getirme butonu
+            document.getElementById('get-messages-btn').addEventListener('click', getMessages);
+            
+            // Mesaj gönderme butonu
+            document.getElementById('send-message-btn').addEventListener('click', sendMessage);
+            
+            // Dosya yükleme butonu
+            document.getElementById('upload-btn').addEventListener('click', uploadImage);
+            
+            // Arama butonu
+            document.getElementById('search-btn').addEventListener('click', search);
+            
+            // Profil getirme butonu
+            document.getElementById('profile-btn').addEventListener('click', getProfile);
+            
+            // Geçmiş getirme butonu
+            document.getElementById('history-btn').addEventListener('click', getHistory);
+        }
+        
+        function showSection(sectionId) {
+            // Tüm bölümleri gizle
+            apiSections.forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // İstenen bölümü göster
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.style.display = 'block';
+                
+                // Aktif navigasyon butonunu vurgula
+                navBtns.forEach(btn => {
+                    if (btn.getAttribute('data-section') === sectionId) {
+                        btn.style.backgroundColor = '#4299e1';
+                    } else {
+                        btn.style.backgroundColor = '#4a5568';
+                    }
+                });
+            }
+        }
+        
+        function showResponse(message, isSuccess = true) {
+            responseDiv.textContent = typeof message === 'object' ? JSON.stringify(message, null, 2) : message;
+            responseDiv.className = isSuccess ? 'response-success' : 'response-error';
+            responseDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // API İstek Fonksiyonları
+        
+        async function registerUser() {
+            const username = document.getElementById('register-username').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            
+            if (!username || !email || !password) {
+                showResponse('Lütfen tüm zorunlu alanları doldurun.', false);
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+                });
+                
+                const data = await response.json();
+                showResponse(data);
+            } catch (error) {
+                showResponse(`Hata: ${error.message}`, false);
+            }
+        }
+        
+        async function loginUser() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (!email || !password) {
+                showResponse('Lütfen e-posta ve şifre girin.', false);
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+                });
+                
+                const data = await response.json();
+                showResponse(data);
+                
+                // Token'ı kaydet
+                if (data.status === 200 && data.data && data.data.token) {
+                    currentToken = data.data.token;
+                    localStorage.setItem('api_token', currentToken);
+                    updateTokenDisplay();
+                    showResponse(`Giriş başarılı! Token kaydedildi.\n${JSON.stringify(data, null, 2)}`, true);
+                }
+            } catch (error) {
+                showResponse(`Hata: ${error.message}`, false);
+            }
+        }
+        
+        async function createPost() {
+            if (!currentToken) {
+                showResponse('Önce giriş yapmalısınız!', false);
+                return;
+            }
+            
+            const content = document.getElementById('post-content').value;
+            const avatarUrl = document.getElementById('post-avatar').value;
+            
+            if (!content) {
+                showResponse('Lütfen gönderi içeriği girin.', false);
+                return;
+            }
+            
+            try {
+                let body = `content=${encodeURIComponent(content)}`;
+                if (avatarUrl) {
+                    body += `&user_avatar_url=${encodeURIComponent(avatarUrl)}`;
+                }
+                
+                const response = await fetch(`${API_BASE_URL}/posts`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`,
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: body
+                });
+                
+                const data = await response.json();
+                showResponse(data);
+            } catch (error) {
+                showResponse(`Hata: ${error.message}`, false);
+            }
+        }
+        
+        async function getFeed() {
+            const userId = document.getElementById('feed-user-id').value;
+            
+            if (!userId) {
+                showResponse('Lütfen kullanıcı ID girin.', false);
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/feed?user_id=${userId}`, {
+                    method: 'GET',
+                    headers: currentToken ? {
+                        'Authorization': `Bearer ${currentToken}`,
+                    } : {}
+                });
+                
+                const data = await response.json();
+                showResponse(data);
+            } catch (error) {
+                showResponse(`Hata: ${error.message}`, false);
+            }
+        }
+        
+        async function toggleLike() {
+            const postId = document.getElementById('like-post-id').value;
+            const userId = document.getElementById('like-user-id').value;
+            
+            if (!postId || !userId) {
+                showResponse('Lütfen gönderi ID ve kullanıcı ID girin.', false);
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/likes/toggle`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `post_id=${postId}&user_id=${userId}`
+                });
+                
+                const data = await response.json();
+                showResponse(data);
+            } catch (error) {
+                showResponse(`Hata: ${error.message}`, false);
+            }
+        }
+        
+        async function getMessages() {
+            const chatId = document.getElementById('get-chat-id').value;
+            
+            if (!chatId) {
+                showResponse('Lütfen sohbet ID girin.', false);
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/messages/${chatId}`, {
+                    method: 'GET',
+                    headers: currentToken ? {
+                        'Authorization': `Bearer ${currentToken}`,
+                    } : {}
+                });
+                
+                const data = await response.json();
+                showResponse(data);
+            } catch (error) {
+                showResponse(`Hata: ${error.message}`, false);
+            }
+        }
+        
+        async function sendMessage() {
+            const chatId = document.getElementById('send-chat-id').value;
+            const senderId = document.getElementById('send-sender-id').value;
+            const content = document.getElementById('send-message-content').value;
+            
+            if (!chatId || !senderId || !content) {
+                showResponse('Lütfen tüm zorunlu alanları doldurun.', false);
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/messages`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `chat_id=${encodeURIComponent(chatId)}&sender_id=${senderId}&content=${encodeURIComponent(content)}`
+                });
+                
+                const data = await response.json();
+                showResponse(data);
+            } catch (error) {
+                showResponse(`Hata: ${error.message}`, false);
+            }
+        }
+        
+        async function uploadImage() {
+            if (!currentToken) {
+                showResponse('Önce giriş yapmalısınız!', false);
+                return;
+            }
+            
+            const fileInput = document.getElementById('upload-image');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                showResponse('Lütfen bir resim dosyası seçin.', false);
+                return;
+            }
+            
+            try {
+                const formData = new FormData();
+                formData.append('image', file);
+                
+                const response = await fetch(`${API_BASE_URL}/upload/image`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`,
+                    },
+                    body: formData
+                });
+                
+                const data = await response.json();
+                showResponse(data);
+            } catch (error) {
+                showResponse(`Hata: ${error.message}`, false);
+            }
+        }
+        
+        async function search() {
+            const query = document.getElementById('search-query').value;
+            
+            if (!query) {
+                showResponse('Lütfen arama kelimesi girin.', false);
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/search?q=${encodeURIComponent(query)}`, {
+                    method: 'GET',
+                    headers: currentToken ? {
+                        'Authorization': `Bearer ${currentToken}`,
+                    } : {}
+                });
+                
+                const data = await response.json();
+                showResponse(data);
+            } catch (error) {
+                showResponse(`Hata: ${error.message}`, false);
+            }
+        }
+        
+        async function getProfile() {
+            const username = document.getElementById('profile-username').value;
+            
+            if (!username) {
+                showResponse('Lütfen kullanıcı adı girin.', false);
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/users/${encodeURIComponent(username)}`, {
+                    method: 'GET',
+                    headers: currentToken ? {
+                        'Authorization': `Bearer ${currentToken}`,
+                    } : {}
+                });
+                
+                const data = await response.json();
+                showResponse(data);
+            } catch (error) {
+                showResponse(`Hata: ${error.message}`, false);
+            }
+        }
+        
+        async function getHistory() {
+            if (!currentToken) {
+                showResponse('Önce giriş yapmalısınız!', false);
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/history`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`,
+                    }
+                });
+                
+                const data = await response.json();
+                showResponse(data);
+            } catch (error) {
+                showResponse(`Hata: ${error.message}`, false);
+            }
+        }
+    </script>
+</body>
+</html>
