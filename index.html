@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MuhammedSka | Developer & Medical Student</title>
+    <meta name="description" content="Muhammed Şaban Kara - Yazılım Geliştirici ve Tıp Fakültesi Öğrencisi. Projelerim ve yeteneklerim.">
+    <meta name="author" content="MuhammedSka">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="./81029510 (1).png">
+
+    <!-- Tailwind CSS (Modern Styling) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Custom Config for Brand Colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            light: '#bf55ec', 
+                            DEFAULT: '#8e2de2', // Ana mor
+                            dark: '#4a00e0',
+                            black: '#0a0a0a',
+                            surface: '#121212'
+                        }
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4a00e0;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8e2de2;
+        }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .text-gradient {
+            background: linear-gradient(to right, #8e2de2, #bf55ec);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-brand-black text-gray-300 font-sans selection:bg-brand-dark selection:text-white">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 glass border-b-0 border-white/10 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0 flex items-center gap-3">
+                    <img class="h-10 w-10 rounded-lg hover:rotate-12 transition-transform duration-300" src="./81029510 (1).png" alt="Logo">
+                    <span class="font-bold text-xl tracking-wider text-white">Muhammed<span class="text-brand-light">Ska</span></span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#home" class="hover:text-brand-light text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Ana Sayfa</a>
+                        <a href="#about" class="hover:text-brand-light text-gray-300 px-3 py-2 rounded-md text-sm font-medium transition-colors">Hakkımda</a>
+                        <a href="#skills" class="hover:text-brand-light text-gray-300 px-3 py-2 rounded-md text-sm font-medium transition-colors">Yetenekler</a>
+                        <a href="#apps" class="bg-brand-dark hover:bg-brand-DEFAULT text-white px-4 py-2 rounded-full text-sm font-medium transition-all shadow-lg shadow-brand-dark/50">Projeler & İndir</a>
+                        <a href="#contact" class="hover:text-brand-light text-gray-300 px-3 py-2 rounded-md text-sm font-medium transition-colors">İletişim</a>
+                    </div>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="-mr-2 flex md:hidden">
+                    <button onclick="toggleMobileMenu()" class="text-gray-400 hover:text-white inline-flex items-center justify-center p-2 rounded-md focus:outline-none">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden bg-brand-surface" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gray-800">
+                <a href="#home" class="text-white block px-3 py-2 rounded-md text-base font-medium">Ana Sayfa</a>
+                <a href="#about" class="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">Hakkımda</a>
+                <a href="#apps" class="text-brand-light block px-3 py-2 rounded-md text-base font-medium">Projeler</a>
+                <a href="#contact" class="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">İletişim</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
+        <!-- Background Blobs -->
+        <div class="absolute top-0 -left-4 w-72 h-72 bg-brand-dark rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+        <div class="absolute top-0 -right-4 w-72 h-72 bg-purple-800 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div class="absolute -bottom-8 left-20 w-72 h-72 bg-brand-light rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col-reverse lg:flex-row items-center">
+            <div class="w-full lg:w-1/2 text-center lg:text-left mt-10 lg:mt-0">
+                <div class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-brand-light uppercase bg-brand-dark/10 rounded-full border border-brand-dark/20">
+                    Welcome to my portfolio
+                </div>
+                <h1 class="text-4xl md:text-6xl font-extrabold text-white tracking-tight mb-4">
+                    Merhaba, ben <br>
+                    <span class="text-gradient">Muhammed Şaban Kara</span>
+                </h1>
+                <p class="text-lg md:text-xl text-gray-400 mb-8 max-w-2xl mx-auto lg:mx-0">
+                    Geleceğin Doktoru & Full Stack Geliştirici. Tıp ve teknolojiyi birleştirerek modern çözümler üretiyorum.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <a href="#apps" class="px-8 py-3 rounded-full bg-brand-DEFAULT text-white font-semibold hover:bg-brand-light transition-all shadow-lg shadow-brand-DEFAULT/30 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-rocket"></i> Uygulamalarımı Gör
+                    </a>
+                    <a href="#contact" class="px-8 py-3 rounded-full glass text-white font-semibold hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+                        İletişime Geç
+                    </a>
+                </div>
+                
+                <!-- Social Links Mini -->
+                <div class="mt-8 flex gap-4 justify-center lg:justify-start">
+                    <a href="https://github.com/Muhammedska" target="_blank" class="text-gray-400 hover:text-white text-2xl transition-colors"><i class="fa-brands fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/muhammed-%C5%9Faban-kara/" target="_blank" class="text-gray-400 hover:text-brand-light text-2xl transition-colors"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="https://discord.gg/PqedRTvGUj" target="_blank" class="text-gray-400 hover:text-indigo-400 text-2xl transition-colors"><i class="fa-brands fa-discord"></i></a>
+                </div>
+            </div>
+            
+            <div class="w-full lg:w-1/2 flex justify-center lg:justify-end relative">
+                <div class="relative w-64 h-64 md:w-80 md:h-80">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-brand-dark to-brand-light rounded-full blur-2xl opacity-50"></div>
+                    <!-- Using the Logo image as the main visual since no profile pic path is valid -->
+                    <img src="./81029510 (1).png" alt="MuhammedSka" class="relative w-full h-full object-contain drop-shadow-2xl z-10 hover:scale-105 transition-transform duration-500">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats / Intro strip -->
+    <div class="border-y border-white/5 bg-brand-surface/50 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto py-8 px-4 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+                <h3 class="text-3xl font-bold text-white">4+</h3>
+                <p class="text-sm text-gray-500 uppercase tracking-wide">Yıllık Deneyim</p>
+            </div>
+            <div>
+                <h3 class="text-3xl font-bold text-white">10+</h3>
+                <p class="text-sm text-gray-500 uppercase tracking-wide">Proje</p>
+            </div>
+            <div>
+                <h3 class="text-3xl font-bold text-white">Tıp</h3>
+                <p class="text-sm text-gray-500 uppercase tracking-wide">Fakültesi</p>
+            </div>
+            <div>
+                <h3 class="text-3xl font-bold text-white">100%</h3>
+                <p class="text-sm text-gray-500 uppercase tracking-wide">Efor</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- About / Timeline Section -->
+    <section id="about" class="py-20 bg-brand-black relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Hakkımda & Yolculuğum</h2>
+                <div class="h-1 w-20 bg-brand-DEFAULT mx-auto rounded-full"></div>
+            </div>
+
+            <div class="relative">
+                <!-- Vertical Line -->
+                <div class="absolute left-1/2 transform -translate-x-1/2 w-0.5 h-full bg-gradient-to-b from-brand-dark via-brand-light to-transparent hidden md:block"></div>
+
+                <div class="space-y-12">
+                    <!-- Timeline Item 1 -->
+                    <div class="flex flex-col md:flex-row items-center justify-between">
+                        <div class="md:w-5/12 text-center md:text-right order-2 md:order-1">
+                            <h3 class="text-xl font-bold text-white">Üniversite Başlangıcı</h3>
+                            <p class="text-brand-light font-medium mb-2">Eylül 2023</p>
+                            <p class="text-gray-400">Çukurova Üniversitesi Tıp Fakültesi'nde eğitimime başladım. Hem tıbbi bilgilerimi hem de yazılım vizyonumu geliştiriyorum.</p>
+                        </div>
+                        <div class="w-8 h-8 rounded-full bg-brand-DEFAULT border-4 border-brand-black z-10 order-1 md:order-2 mb-4 md:mb-0 shadow-[0_0_15px_rgba(142,45,226,0.5)]"></div>
+                        <div class="md:w-5/12 order-3 md:order-3"></div>
+                    </div>
+
+                    <!-- Timeline Item 2 -->
+                    <div class="flex flex-col md:flex-row items-center justify-between">
+                        <div class="md:w-5/12 order-3 md:order-1"></div>
+                        <div class="w-8 h-8 rounded-full bg-brand-dark border-4 border-brand-black z-10 order-1 md:order-2 mb-4 md:mb-0"></div>
+                        <div class="md:w-5/12 text-center md:text-left order-2 md:order-3">
+                            <h3 class="text-xl font-bold text-white">İlk Web Uygulaması</h3>
+                            <p class="text-brand-light font-medium mb-2">Ağustos 2023</p>
+                            <p class="text-gray-400">Ödev Takip, Yoklama ve Sınav yönetimini içeren kapsamlı bir web uygulaması geliştirdim ve yayına aldım.</p>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Item 3 -->
+                    <div class="flex flex-col md:flex-row items-center justify-between">
+                        <div class="md:w-5/12 text-center md:text-right order-2 md:order-1">
+                            <h3 class="text-xl font-bold text-white">Topluluk Yöneticiliği</h3>
+                            <p class="text-brand-light font-medium mb-2">2021 - Günümüz</p>
+                            <p class="text-gray-400">"InTheCode" (Kodların İçinde) Discord topluluğunda yönetici olarak geliştiricilere destek oluyorum.</p>
+                        </div>
+                        <div class="w-8 h-8 rounded-full bg-brand-dark border-4 border-brand-black z-10 order-1 md:order-2 mb-4 md:mb-0"></div>
+                        <div class="md:w-5/12 order-3 md:order-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-20 bg-brand-surface">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Teknik Yetenekler</h2>
+                <p class="text-gray-400">Kullandığım teknolojiler ve araçlar</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                <!-- Skill Card -->
+                <div class="glass p-6 rounded-2xl text-center hover:-translate-y-2 transition-transform duration-300 group cursor-default">
+                    <i class="fa-brands fa-python text-4xl text-yellow-400 mb-4 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="text-white font-bold">Python</h4>
+                    <span class="text-xs text-gray-500">Intermediate</span>
+                </div>
+                
+                <div class="glass p-6 rounded-2xl text-center hover:-translate-y-2 transition-transform duration-300 group cursor-default">
+                    <i class="fa-brands fa-js text-4xl text-yellow-300 mb-4 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="text-white font-bold">JavaScript</h4>
+                    <span class="text-xs text-gray-500">Intermediate</span>
+                </div>
+
+                <div class="glass p-6 rounded-2xl text-center hover:-translate-y-2 transition-transform duration-300 group cursor-default">
+                    <i class="fa-brands fa-php text-4xl text-purple-400 mb-4 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="text-white font-bold">PHP</h4>
+                    <span class="text-xs text-gray-500">Intermediate</span>
+                </div>
+
+                <div class="glass p-6 rounded-2xl text-center hover:-translate-y-2 transition-transform duration-300 group cursor-default">
+                    <i class="fa-brands fa-html5 text-4xl text-orange-500 mb-4 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="text-white font-bold">HTML5 / CSS3</h4>
+                    <span class="text-xs text-gray-500">Advanced</span>
+                </div>
+
+                <div class="glass p-6 rounded-2xl text-center hover:-translate-y-2 transition-transform duration-300 group cursor-default">
+                    <i class="fa-solid fa-database text-4xl text-blue-400 mb-4 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="text-white font-bold">SQL / SQLite</h4>
+                    <span class="text-xs text-gray-500">Intermediate</span>
+                </div>
+
+                <div class="glass p-6 rounded-2xl text-center hover:-translate-y-2 transition-transform duration-300 group cursor-default">
+                    <i class="fa-brands fa-node text-4xl text-green-500 mb-4 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="text-white font-bold">Node.js</h4>
+                    <span class="text-xs text-gray-500">Beginner</span>
+                </div>
+
+                <div class="glass p-6 rounded-2xl text-center hover:-translate-y-2 transition-transform duration-300 group cursor-default">
+                    <i class="fa-solid fa-chart-pie text-4xl text-pink-400 mb-4 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="text-white font-bold">Chart.js</h4>
+                    <span class="text-xs text-gray-500">Beginner</span>
+                </div>
+
+                <div class="glass p-6 rounded-2xl text-center hover:-translate-y-2 transition-transform duration-300 group cursor-default">
+                    <i class="fa-solid fa-pen-nib text-4xl text-blue-600 mb-4 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="text-white font-bold">Photoshop</h4>
+                    <span class="text-xs text-gray-500">Advanced</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- APPS DOWNLOAD SECTION (NEW REQUEST) -->
+    <section id="apps" class="py-24 bg-brand-black relative overflow-hidden">
+        <!-- Decoration -->
+        <div class="absolute right-0 top-1/4 w-96 h-96 bg-brand-DEFAULT rounded-full mix-blend-screen filter blur-[120px] opacity-10"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-white/10 pb-4">
+                <div>
+                    <h2 class="text-3xl md:text-5xl font-bold text-white mb-2">Uygulamalarım</h2>
+                    <p class="text-gray-400">Geliştirdiğim projeleri inceleyin ve indirin.</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <a href="https://github.com/Muhammedska" class="text-brand-light hover:text-white transition-colors text-sm font-semibold flex items-center gap-2">
+                        Tümünü GitHub'da Gör <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- App Card 1 -->
+                <div class="glass rounded-3xl overflow-hidden border border-white/10 hover:border-brand-DEFAULT/50 transition-all duration-300 group">
+                    <div class="h-48 bg-gray-800 relative overflow-hidden">
+                        <!-- Placeholder for App Image -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-6">
+                            <div class="bg-brand-DEFAULT p-3 rounded-xl shadow-lg">
+                                <i class="fa-solid fa-graduation-cap text-2xl text-white"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-1">Homework Tracker</h3>
+                                <span class="text-xs font-mono text-brand-light bg-brand-dark/20 px-2 py-1 rounded">Web App</span>
+                            </div>
+                            <span class="px-2 py-1 rounded text-xs font-bold bg-green-500/20 text-green-400">v1.2</span>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-6 leading-relaxed">
+                            Öğrenciler için geliştirilmiş ödev, yoklama ve sınav takip sistemi. Bildirim sistemi ile entegre çalışır.
+                        </p>
+                        
+                        <div class="flex gap-3">
+                            <button class="flex-1 bg-white text-black py-3 rounded-xl font-bold hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-download"></i> İndir
+                            </button>
+                            <button class="px-4 py-3 glass rounded-xl text-white hover:bg-white/10 transition-colors">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- App Card 2 -->
+                <div class="glass rounded-3xl overflow-hidden border border-white/10 hover:border-brand-DEFAULT/50 transition-all duration-300 group">
+                    <div class="h-48 bg-gray-800 relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-6">
+                            <div class="bg-blue-600 p-3 rounded-xl shadow-lg">
+                                <i class="fa-solid fa-robot text-2xl text-white"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-1">Discord Bot Manager</h3>
+                                <span class="text-xs font-mono text-brand-light bg-brand-dark/20 px-2 py-1 rounded">Node.js</span>
+                            </div>
+                            <span class="px-2 py-1 rounded text-xs font-bold bg-green-500/20 text-green-400">Stable</span>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-6 leading-relaxed">
+                            InTheCode topluluğu için geliştirilmiş moderasyon ve eğlence botu. Sunucu yönetimini otomatikleştirir.
+                        </p>
+                        
+                        <div class="flex gap-3">
+                            <button class="flex-1 bg-white text-black py-3 rounded-xl font-bold hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
+                                <i class="fa-brands fa-github"></i> Kaynak Kod
+                            </button>
+                            <button class="px-4 py-3 glass rounded-xl text-white hover:bg-white/10 transition-colors">
+                                <i class="fa-solid fa-link"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- App Card 3 (Placeholder) -->
+                <div class="glass rounded-3xl overflow-hidden border border-white/10 hover:border-brand-DEFAULT/50 transition-all duration-300 group">
+                    <div class="h-48 bg-gray-800 relative overflow-hidden flex items-center justify-center">
+                        <i class="fa-solid fa-code text-6xl text-gray-700"></i>
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                            <span class="text-sm font-bold uppercase tracking-widest text-white border border-white/30 px-4 py-2 rounded-full backdrop-blur-md">Çok Yakında</span>
+                        </div>
+                    </div>
+                    <div class="p-6 opacity-75">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-1">Med-Assist Mobile</h3>
+                                <span class="text-xs font-mono text-brand-light bg-brand-dark/20 px-2 py-1 rounded">Mobile</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-6 leading-relaxed">
+                            Tıp öğrencileri için not alma ve anatomi atlası uygulaması. Geliştirme aşamasında.
+                        </p>
+                        
+                        <div class="flex gap-3">
+                            <button disabled class="flex-1 bg-gray-700 text-gray-400 py-3 rounded-xl font-bold cursor-not-allowed flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-lock"></i> Beklemede
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Social / Footer -->
+    <section id="contact" class="py-20 bg-gradient-to-b from-brand-surface to-black text-center">
+        <div class="max-w-4xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-white mb-8">İletişime Geç</h2>
+            <p class="text-gray-400 mb-12">Projeler, iş birlikleri veya sadece merhaba demek için sosyal medya hesaplarımı kullanabilirsiniz.</p>
+
+            <div class="flex flex-wrap justify-center gap-6 mb-12">
+                <a href="https://www.linkedin.com/in/muhammed-%C5%9Faban-kara/" class="w-16 h-16 rounded-full glass flex items-center justify-center text-2xl text-white hover:bg-[#0077b5] hover:scale-110 transition-all duration-300">
+                    <i class="fa-brands fa-linkedin-in"></i>
+                </a>
+                <a href="https://github.com/Muhammedska" class="w-16 h-16 rounded-full glass flex items-center justify-center text-2xl text-white hover:bg-[#333] hover:scale-110 transition-all duration-300">
+                    <i class="fa-brands fa-github"></i>
+                </a>
+                <a href="https://discord.gg/PqedRTvGUj" class="w-16 h-16 rounded-full glass flex items-center justify-center text-2xl text-white hover:bg-[#5865F2] hover:scale-110 transition-all duration-300">
+                    <i class="fa-brands fa-discord"></i>
+                </a>
+                <a href="https://www.instagram.com/cozeltisoftware/" class="w-16 h-16 rounded-full glass flex items-center justify-center text-2xl text-white hover:bg-pink-600 hover:scale-110 transition-all duration-300">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+                <a href="mailto:contact@muhammedska.com" class="w-16 h-16 rounded-full glass flex items-center justify-center text-2xl text-white hover:bg-green-600 hover:scale-110 transition-all duration-300">
+                    <i class="fa-solid fa-envelope"></i>
+                </a>
+            </div>
+
+            <footer class="border-t border-white/10 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+                    <p>&copy; 2023 - 2026 MuhammedSka. Tüm hakları saklıdır.</p>
+                    <p class="mt-2 md:mt-0">Designed with <i class="fa-solid fa-heart text-brand-DEFAULT animate-pulse"></i> by Çözelti Software</p>
+                </div>
+            </footer>
+        </div>
+    </section>
+
+    <!-- Simple JS for Mobile Menu & Navbar Scroll -->
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 20) {
+                navbar.classList.add('bg-brand-black/90', 'shadow-lg');
+            } else {
+                navbar.classList.remove('bg-brand-black/90', 'shadow-lg');
+            }
+        });
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>
