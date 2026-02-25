@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hücre Kültürü Parametreleri · Zoom & Export</title>
+    <!-- Pure.css (sadece temel stiller için, mobil grid kullanılmıyor) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+            background: #f4f7fb;
+            color: #1a2634;
+            line-height: 1.5;
+            padding: 2rem 1.5rem;
+            min-width: 1200px; /* desktop odaklı */
+        }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 20px 40px -12px rgba(0,20,40,0.25);
+            overflow: hidden;
+            padding: 1.8rem 1.8rem 2.2rem 1.8rem;
+        }
+        h1 {
+            font-weight: 600;
+            font-size: 2.2rem;
+            letter-spacing: -0.02em;
+            margin: 0 0 0.2rem 0;
+            background: linear-gradient(145deg, #0B2A4A, #1B4A6F);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .sub {
+            font-size: 1rem;
+            color: #2c3e4f;
+            margin-bottom: 1.5rem;
+            border-left: 5px solid #4b8bb4;
+            padding-left: 1.2rem;
+            background: #eef3f9;
+            border-radius: 0 40px 40px 0;
+            width: fit-content;
+            padding: 0.6rem 2rem 0.6rem 1.5rem;
+        }
+        /* kontrol paneli (butonlar) */
+        .table-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            margin-bottom: 1.2rem;
+            flex-wrap: wrap;
+        }
+        .table-toolbar .pure-button {
+            font-size: 0.85rem;
+            padding: 0.6em 1.2em;
+            border-radius: 40px;
+            background: #eef3f9;
+            color: #1f3a5f;
+            font-weight: 500;
+            border: 1px solid #c8d6e5;
+            transition: all 0.1s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .table-toolbar .pure-button:hover {
+            background: #dde7f2;
+            border-color: #98b3d1;
+            box-shadow: 0 4px 6px rgba(0,20,40,0.08);
+        }
+        .pure-button-primary {
+            background: #1f3a5f !important;
+            color: white !important;
+            border-color: #10243e !important;
+        }
+        .pure-button-primary:hover {
+            background: #2b4b78 !important;
+        }
+        .font-indicator {
+            background: #f8fbfe;
+            border-radius: 40px;
+            padding: 0.4rem 1.2rem;
+            font-size: 0.8rem;
+            border: 1px solid #b9cee8;
+            color: #1f3a5f;
+            margin-right: auto; /* sola yasla */
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+        /* tablo sarmalayıcı */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 0 -0.2rem;
+            border-radius: 18px;
+            border: 1px solid #d9e2ec;
+            background: white;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.02);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;  /* başlangıç değeri */
+            min-width: 1400px;
+            table-layout: auto;
+            white-space: normal;
+        }
+        th {
+            background: #1f3a5f;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 16px 10px;
+            border-right: 1px solid #335b89;
+            text-align: left;
+            vertical-align: middle;
+        }
+        th:last-child {
+            border-right: none;
+        }
+        td {
+            padding: 14px 10px;
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        td:last-child {
+            border-right: none;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        td:first-child {
+            background-color: #f6faff;
+            font-weight: 500;
+            border-right: 2px solid #cbd6e6;
+        }
+        tr:hover td {
+            background-color: #f6fbff;
+        }
+        tr:hover td:first-child {
+            background-color: #e3efff;
+        }
+        td:nth-child(2) {
+            font-weight: 600;
+            color: #0c2c47;
+        }
+        td:nth-child(3) {
+            color: #254e6b;
+        }
+        td:nth-child(4) {
+            color: #1a3a4a;
+        }
+        td:nth-child(5) {
+            color: #1e4158;
+        }
+        .badge-note {
+            background: #eaf2fc;
+            border-radius: 50px;
+            padding: 0.3rem 1rem;
+            font-size: 0.75rem;
+            color: #1f4a7a;
+            display: inline-block;
+            margin-top: 1.5rem;
+            border: 1px solid #bed4f0;
+        }
+        .legend-sensor {
+            background: #dff0d8;
+            color: #1d6320;
+            padding: 0.2rem 0.6rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-right: 0.5rem;
+            border: 1px solid #9dc49b;
+        }
+        .legend-micro {
+            background: #fee2d4;
+            color: #a3410b;
+            padding: 0.2rem 0.6rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-right: 0.5rem;
+            border: 1px solid #f9ac88;
+        }
+        .legend-bio {
+            background: #fdefd4;
+            color: #996d24;
+            padding: 0.2rem 0.6rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-right: 0.5rem;
+            border: 1px solid #edc282;
+        }
+        .footer-notes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.8rem;
+            margin-top: 2rem;
+            background: #eaf0f9;
+            padding: 1.5rem 2rem;
+            border-radius: 24px;
+            font-size: 0.85rem;
+        }
+        .footer-notes p {
+            margin-bottom: 0.4rem;
+        }
+        .note-title {
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #1f3a5f;
+            letter-spacing: 0.03em;
+            border-bottom: 2px solid #a7c0db;
+            padding-bottom: 0.3rem;
+            margin-bottom: 0.7rem;
+        }
+        .sensor-list, .micro-list, .bio-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem 1.2rem;
+        }
+        .sensor-list li, .micro-list li, .bio-list li {
+            font-size: 0.8rem;
+            background: white;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+        hr {
+            border: none;
+            border-top: 2px dashed #c0cfdf;
+            margin: 1.5rem 0 0.5rem 0;
+        }
+        /* zoom butonları için geçiş */
+        table, th, td {
+            transition: font-size 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🔬 Hücre kültürü parametre rehberi</h1>
+    <div class="sub">Ölçülebilen tüm parametreler · sensör, mikroskop, biyokimyasal yöntemler</div>
+
+    <!-- ARAÇ ÇUBUĞU: zoom in/out ve export butonları + font boyut göstergesi -->
+    <div class="table-toolbar">
+        <span class="font-indicator" id="fontSizeDisplay">🔤 0.85 rem</span>
+        <button class="pure-button" id="zoomOutBtn" title="Font boyutunu küçült">− Zoom Out</button>
+        <button class="pure-button" id="zoomInBtn" title="Font boyutunu büyüt">+ Zoom In</button>
+        <button class="pure-button pure-button-primary" id="exportBtn" title="Tabloyu CSV olarak dışa aktar">📥 Export (CSV)</button>
+    </div>
+
+    <!-- YATAY KAYDIRMALI TABLO -->
+    <div class="table-wrapper">
+        <table id="dataTable">
+            <thead>
+            <tr>
+                <th>Kategori</th>
+                <th>Parametre</th>
+                <th>Ölçüm Yöntemi / Sensör Türü</th>
+                <th>İfade Ettiği Anlam / Biyolojik Önemi</th>
+                <th>Tipik Kullanım Alanları</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Fiziksel Çevre (6 satır) -->
+            <tr><td>Fiziksel Çevre</td><td>Sıcaklık</td><td>Termistör, RTD, termokupl</td><td>Hücre metabolizması için optimal fiziksel koşul (memeli: 37°C)</td><td>Tüm kültürlerde rutin izleme, inkübatör kontrolü</td></tr>
+            <tr><td>Fiziksel Çevre</td><td>pH (Asitlik)</td><td>Cam elektrot, ISFET sensör, optik sensör</td><td>Metabolizma sonucu ortam asitlenmesi; hücre sağlığı için kritik</td><td>Metabolik aktivite takibi, besiyeri değişim zamanı, stres yanıtı</td></tr>
+            <tr><td>Fiziksel Çevre</td><td>Çözünmüş Oksijen (DO)</td><td>Clark tipi elektrot, optik sensör</td><td>Oksijen tüketim hızı (OCR); aerobik solunum göstergesi</td><td>Mitokondriyal fonksiyon, hipoksi çalışmaları, biyoreaktör kontrolü</td></tr>
+            <tr><td>Fiziksel Çevre</td><td>Çözünmüş CO₂</td><td>CO₂ sensörü (örn. Severinghaus)</td><td>Hücre solunumu, bikarbonat tamponu ile ilişkili; pH’ı etkiler</td><td>Metabolik hız, kültür ortamı dengesi</td></tr>
+            <tr><td>Fiziksel Çevre</td><td>Osmolalite</td><td>Donma noktası osmometre</td><td>Hücre içi-dışı sıvı dengesi; hücre hacmi ve fonksiyonu</td><td>Besiyeri hazırlama, ilaç formülasyonları</td></tr>
+            <!-- Canlılık / Proliferasyon -->
+            <tr><td>Canlılık / Proliferasyon</td><td>Hücre Sayısı / Yoğunluğu</td><td>Hemasitometre, otomatik hücre sayıcı, kapasitans sensörü</td><td>Büyüme hızı, çoğalma kapasitesi; canlı hücre miktarı</td><td>Deney standardizasyonu, pasaj, toksisite testleri</td></tr>
+            <tr><td>Canlılık / Proliferasyon</td><td>Canlılık (Viability)</td><td>Tripan mavisi, floresan boyalar (FDA/PI), ATP ölçümü (luminometre)</td><td>Hücrelerin ne kadarının canlı olduğu; toksik etkinin temel göstergesi</td><td>Sitotoksisite testleri (ilaç, kimyasal), kalite kontrol</td></tr>
+            <tr><td>Canlılık / Proliferasyon</td><td>Sitotoksisite (Hücre Ölümü)</td><td>LDH salınımı, Annexin V, TUNEL, propidyum iyodür</td><td>Hücre zarı hasarı (nekroz) veya programlı hücre ölümü (apoptoz)</td><td>Toksik madde taraması, enfeksiyon, kanser tedavisi</td></tr>
+            <tr><td>Canlılık / Proliferasyon</td><td>Proliferasyon / Çoğalma</td><td>MTT, MTS, WST-1 (metabolik aktivite), BrdU/Edu (DNA sentezi), Ki-67</td><td>Hücrelerin bölünme hızı, mitotik aktivite</td><td>Büyüme faktörü etkisi, kanser hücresi agresifliği, ilaç etkinliği</td></tr>
+            <tr><td>Canlılık / Proliferasyon</td><td>Hücre Döngüsü Analizi</td><td>Akış sitometrisi (PI boyama)</td><td>Hücrelerin G1, S, G2/M fazlarındaki dağılımı</td><td>Kanser biyolojisi, senesens, ilaç mekanizması</td></tr>
+            <!-- Fonksiyon / Fizyoloji -->
+            <tr><td>Fonksiyon / Fizyoloji</td><td>Bariyer Bütünlüğü (TEER)</td><td>Elektriksel empedans ölçümü (volt-ohm metre)</td><td>Epitel/endotel tabakasının sıkılığı, geçirgenliği</td><td>İlaç geçirgenliği, inflamasyon, enfeksiyon, toksisite</td></tr>
+            <tr><td>Fonksiyon / Fizyoloji</td><td>Siliyer Atım Frekansı (CBF)</td><td>Yüksek hızlı kamera + görüntü analizi <span style="color:#a3410b;">(mikroskop)</span></td><td>Solunum epitelinde silia hareket hızı; mukosiliyer klirens</td><td>Akciğer hastalıkları (PCD, KOAH, astım), toksik etki</td></tr>
+            <tr><td>Fonksiyon / Fizyoloji</td><td>Hücre Göçü / İnvazyon</td><td>Transwell, yara iyileşmesi (scratch), real-time hücre analizi</td><td>Hareket ve doku içine girme yeteneği (metastaz, onarım)</td><td>Kanser metastazı, immün göçü, yara iyileşmesi</td></tr>
+            <tr><td>Fonksiyon / Fizyoloji</td><td>Kasılma (Kontraksiyon)</td><td>Silikon membran analizi, manyetik partikül, mikroskopi</td><td>Kalp/düz kas hücrelerinin kasılma gücü ve frekansı</td><td>Kardiyotoksisite, solunum yolu reaktivitesi (astım)</td></tr>
+            <tr><td>Fonksiyon / Fizyoloji</td><td>Aksiyon Potansiyeli</td><td>Mikroelektrot dizileri (MEA), patch-klamp</td><td>Uyarılabilir hücrelerin (nöron/kas) elektriksel aktivitesi</td><td>Nörotoksisite, kardiyak güvenlik, nörodejenerasyon</td></tr>
+            <!-- Metabolik Parametreler -->
+            <tr><td>Metabolik</td><td>Glikoz Tüketimi</td><td>Enzimatik biyosensör (glikoz oksidaz), ticari kitler</td><td>Enerji üretimi için glikoz kullanım hızı; metabolik hız</td><td>Kanser metabolizması, diyabet, besiyeri optimizasyonu</td></tr>
+            <tr><td>Metabolik</td><td>Laktat Üretimi</td><td>Enzimatik biyosensör (laktat oksidaz), kitler</td><td>Anaerobik/aerobik glikoliz sonucu laktat miktarı</td><td>Metabolik stres, tümör mikroçevresi, biyoproses</td></tr>
+            <tr><td>Metabolik</td><td>Oksijen Tüketim Hızı (OCR)</td><td>Seahorse analizörü (optik sensörlü plaka), Clark elektrot</td><td>Mitokondriyal solunum, oksidatif fosforilasyon aktivitesi</td><td>Mitokondriyal fonksiyon, metabolik yeniden programlama</td></tr>
+            <tr><td>Metabolik</td><td>Ekstraselüler Asitleşme Hızı (ECAR)</td><td>Seahorse analizörü</td><td>Glikoliz kaynaklı laktat + proton salınımı</td><td>Glikolitik akış, kanser metabolizması</td></tr>
+            <tr><td>Metabolik</td><td>ATP Seviyesi</td><td>Luminometre (luciferin-lusiferaz)</td><td>Hücresel enerji yükü; canlılık ve fonksiyon temeli</td><td>Sitotoksisite, mitokondriyal hastalıklar, metabolik durum</td></tr>
+            <tr><td>Metabolik</td><td>Reaktif Oksijen Türleri (ROS)</td><td>Floresan boyalar (DCFH-DA), luminol, genetik sensörler</td><td>Oksidatif stres düzeyi; hasar, sinyal, yaşlanma</td><td>Antioksidan testleri, inflamasyon, toksisite</td></tr>
+            <tr><td>Metabolik</td><td>İyon Konsantrasyonları (Ca²⁺, Na⁺, K⁺, Cl⁻)</td><td>İyon seçici elektrotlar, floresan indikatörler (Fura-2, Fluo-4)</td><td>Sinyal iletimi (Ca²⁺), iyon kanal aktivitesi, membran potansiyeli</td><td>Nöron aktivitesi, kas kasılması, reseptör fonksiyonu</td></tr>
+            <!-- Moleküler / Biyokimya -->
+            <tr><td>Moleküler / Biyokimya</td><td>Gen Ekspresyonu (mRNA)</td><td>qRT-PCR, mikroarray, RNA-Seq</td><td>Genlerin açılıp kapanması; hücre kimliği, stres yanıtı</td><td>Hastalık mekanizmaları, ilaç etki mekanizması, biyobelirteç</td></tr>
+            <tr><td>Moleküler / Biyokimya</td><td>Protein Ekspresyonu</td><td>Western blot, ELISA, multipleks, kütle spektrometrisi</td><td>Protein miktarı, post-translasyonel modifikasyonlar</td><td>Sinyal yolları, hücre fonksiyonu, biyobelirteç doğrulama</td></tr>
+            <tr><td>Moleküler / Biyokimya</td><td>Sitokin / Kemokin Salınımı</td><td>ELISA, ELISpot, multipleks analiz, sitokin bead array</td><td>İnflamatuar/immünomodülatör molekül salınımı</td><td>İmmün yanıt, inflamasyon, enfeksiyon, aşı geliştirme</td></tr>
+            <tr><td>Moleküler / Biyokimya</td><td>Ekstraselüler Matriks Bileşenleri</td><td>Western blot, immünositokimya, ELISA (kollajen, fibronektin)</td><td>Hücrelerin ürettiği destek doku elemanları</td><td>Yara iyileşmesi, fibrozis, kanser mikroçevresi</td></tr>
+            <tr><td>Moleküler / Biyokimya</td><td>DNA Hasarları</td><td>Comet assay, γH2AX boyama, mikronükleus testi</td><td>Genotoksik stres, mutajenite</td><td>Kanser, yaşlanma, toksikoloji</td></tr>
+            <!-- Hücre-Hücre Etkileşimleri -->
+            <tr><td>Hücre‑Hücre Etkileşimleri</td><td>Hücre Adezyonu</td><td>Adezyon testleri (yapışan hücre sayısı), yüzey plazmon rezonansı (SPR)</td><td>Hücrelerin birbirine veya ECM’ye tutunma yeteneği</td><td>Kanser invazyonu, doku mühendisliği, biyomalzeme testi</td></tr>
+            <tr><td>Hücre‑Hücre Etkileşimleri</td><td>Ko‑kültür Etkileşimleri</td><td>Transwell, direkt temas, akış sitometrisi (ayrım sonrası)</td><td>Farklı hücre tiplerinin birbirini etkilemesi (epitel+immün)</td><td>İmmünoloji, tümör mikroçevresi, doku homeostazı</td></tr>
+            <!-- Görüntüleme / Morfoloji -->
+            <tr><td>Görüntüleme / Morfoloji</td><td>Hücre Morfolojisi (şekil, yayılma)</td><td>Faz kontrast/floresan mikroskop + görüntü analizi</td><td>Hücre sağlığı, farklılaşma, sitoskeletal düzen</td><td>Kalitatif değerlendirme, ilaç etkisi, hücre tipi tanımlama</td></tr>
+            <tr><td>Görüntüleme / Morfoloji</td><td>Hücre İskeleti Düzeni (Aktin, Mikrotübül)</td><td>Floresan boyama (faloidin, tübulin antikoru) + mikroskop</td><td>Hücre şekli, hareket, bölünme ve iç organizasyon</td><td>Hücre göçü, mitoz, ilaç mekanizması</td></tr>
+            <tr><td>Görüntüleme / Morfoloji</td><td>Organel Yapısı (Mitokondri, ER, Golgi)</td><td>Spesifik floresan boyalar (MitoTracker, ER‑Tracker) + konfokal</td><td>Organel sağlığı, stres yanıtı, otofaji</td><td>Mitokondriyal hastalıklar, nörodejenerasyon, metabolik stres</td></tr>
+            <tr><td>Görüntüleme / Morfoloji</td><td>3D Organoid Yapısı</td><td>Konfokal, iki‑foton, mikrotom + histoloji</td><td>Organoid iç yapısı, hücre katmanları, farklılaşma</td><td>Gelişim biyolojisi, kanser, kistik fibrozis, ilaç testi</td></tr>
+            <!-- Mekanik Parametreler -->
+            <tr><td>Mekanik Parametreler</td><td>Hücre Sertliği (Elastikiyet)</td><td>Atomik kuvvet mikroskobu (AFM), manyetik burulma sitometresi</td><td>Hücre iskeleti ve sağlığı; kanser hücreleri genelde yumuşak</td><td>Kanser tanı, mekanobiyoloji, hücre farklılaşması</td></tr>
+            <tr><td>Mekanik Parametreler</td><td>Viskoelastisite</td><td>Mikropipet aspirasyonu, optik cımbız</td><td>Hücrenin mekanik uyaranlara tepkisi, deforme olabilirliği</td><td>Hücre fizyolojisi, doku mühendisliği</td></tr>
+            <!-- Özel Fonksiyonel Parametreler -->
+            <tr><td>Özel Fonksiyonel</td><td>Reseptör Aktivasyonu / Bağlanması</td><td>Radyoaktif ligand bağlama, FRET, BRET (genetik sensörler)</td><td>Reseptörün ligandına bağlanma afinitesi, aktivasyon kinetiği</td><td>İlaç keşfi, sinyal iletimi</td></tr>
+            <tr><td>Özel Fonksiyonel</td><td>İyon Kanalı Akımları</td><td>Patch‑klamp, planar patch‑klamp, talyum akış analizi</td><td>İyon kanallarının açılıp kapanması, iletkenlik</td><td>Nörofarmakoloji, kardiyak güvenlik, ağrı araştırmaları</td></tr>
+            <tr><td>Özel Fonksiyonel</td><td>Sekresyon (Hormon, Enzim)</td><td>ELISA, RIA, enzimatik testler (amilaz, insülin)</td><td>Hücrenin sentezleyip dışarı saldığı maddeler</td><td>Endokrinoloji, sindirim fizyolojisi, immün yanıt</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Lejant -->
+    <hr>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin: 1.2rem 0 0.5rem 0;">
+        <span class="legend-sensor">🟢 Sensör / mikroskopsuz ölçülebilir</span>
+        <span class="legend-micro">🔴 Mikroskopi gerektirir</span>
+        <span class="legend-bio">🟠 Moleküler biyoloji tekniği</span>
+    </div>
+
+    <!-- Alt notlar -->
+    <div class="footer-notes">
+        <div style="flex: 2; min-width: 300px;">
+            <div class="note-title">📡 Sensörlerle (mikroskopsuz) ölçülen parametreler</div>
+            <ul class="sensor-list">
+                <li>Sıcaklık</li><li>pH</li><li>Çözünmüş O₂/CO₂</li><li>Osmolalite</li><li>Kapasitans (hücre yoğunluğu)</li>
+                <li>TEER</li><li>Glikoz/Laktat (biyosensör)</li><li>ATP (luminometre)</li><li>OCR/ECAR (Seahorse)</li>
+                <li>İyon seçici elektrotlar</li><li>Genetik biyosensörler (Ca²⁺, cAMP)</li>
+            </ul>
+        </div>
+        <div style="flex:1.5; min-width: 240px;">
+            <div class="note-title">🔎 Mikroskopi gerektirenler</div>
+            <ul class="micro-list">
+                <li>Morfoloji</li><li>Hücre göçü (canlı)</li><li>Siliyer atım</li><li>Floresan boyamalar</li>
+                <li>Organel yapısı</li><li>3D organoid</li><li>AFM (mekanik)</li>
+            </ul>
+        </div>
+        <div style="flex:1.5; min-width: 240px;">
+            <div class="note-title">🧪 Moleküler biyoloji teknikleri</div>
+            <ul class="bio-list">
+                <li>qPCR / RNA-Seq</li><li>Western blot / ELISA</li><li>Sitokin multipleks</li>
+                <li>DNA hasar testleri</li><li>Akış sitometrisi</li><li>Patch-klamp</li>
+            </ul>
+        </div>
+    </div>
+
+    <p style="margin-top: 1.8rem; font-size:0.8rem; color:#4a5e73; border-top:1px solid #ced9e8; padding-top:1rem; text-align:right;">
+        ⚙️ Tablo kontrolleri: font yakınlaştır/uzaklaştır, CSV export  •  v2.0
+    </p>
+</div>
+
+<!-- JavaScript: zoom in/out ve export işlevleri -->
+<script>
+    (function() {
+        const table = document.getElementById('dataTable');
+        // tablonun font boyutunu root (rem) cinsinden değiştirelim, ama doğrudan inline style ile px veya rem atayabiliriz.
+        // Başlangıç değeri 0.85rem (tabloda style ile tanımlı). Ama tablodaki .85rem'i alıp artırmak için 
+        // mevcut değeri parse edip üzerine ekleyelim. Daha kolay: "rem" kullanmaya devam edelim, ama değeri saklayalım.
+        let currentFontSize = 0.85; // rem cinsinden başlangıç
+        const minFont = 0.5;
+        const maxFont = 2.0;
+        const step = 0.05;
+
+        const displaySpan = document.getElementById('fontSizeDisplay');
+
+        function updateTableFont(size) {
+            // size rem olarak verilecek, tabloya uygula
+            table.style.fontSize = size + 'rem';
+            // ayrıca th ve td'ler ayrı ayrı mı? tablo geneli yeterli
+            displaySpan.innerText = `🔤 ${size.toFixed(2)} rem`;
+        }
+
+        // Zoom In
+        document.getElementById('zoomInBtn').addEventListener('click', function() {
+            if (currentFontSize < maxFont) {
+                currentFontSize = Math.min(maxFont, currentFontSize + step);
+                updateTableFont(currentFontSize);
+            }
+        });
+
+        // Zoom Out
+        document.getElementById('zoomOutBtn').addEventListener('click', function() {
+            if (currentFontSize > minFont) {
+                currentFontSize = Math.max(minFont, currentFontSize - step);
+                updateTableFont(currentFontSize);
+            }
+        });
+
+        // Export CSV (tüm satırlar ve başlıklar)
+        document.getElementById('exportBtn').addEventListener('click', function() {
+            const rows = [];
+            // Başlıkları al (thead)
+            const headers = [];
+            const ths = document.querySelectorAll('#dataTable thead th');
+            ths.forEach(th => headers.push(th.innerText.trim()));
+            rows.push(headers);
+
+            // Gövde satırları (tbody tr)
+            const bodyRows = document.querySelectorAll('#dataTable tbody tr');
+            bodyRows.forEach(tr => {
+                const rowData = [];
+                const tds = tr.querySelectorAll('td');
+                tds.forEach(td => rowData.push(td.innerText.trim()));
+                rows.push(rowData);
+            });
+
+            // CSV'ye çevir (her hücreyi tırnak içine al, içindeki tırnakları çift tırnak yap)
+            function escapeCSV(cell) {
+                if (cell === null || cell === undefined) return '';
+                let str = String(cell);
+                // Çift tırnakları iki katına çıkar
+                str = str.replace(/"/g, '""');
+                // Eğer virgül, tırnak veya yeni satır içeriyorsa tırnakla çevir (her ihtimale karşı tümünü tırnakla)
+                return `"${str}"`;
+            }
+
+            const csvContent = rows.map(row => row.map(cell => escapeCSV(cell)).join(',')).join('\n');
+
+            // Dosya indir
+            const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' }); // BOM ekle (Türkçe karakterler için)
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.href = url;
+            link.setAttribute('download', 'hucre_kulturu_parametreleri.csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        });
+
+        // Başlangıç fontunu göster
+        updateTableFont(currentFontSize);
+    })();
+</script>
+</body>
+</html>
