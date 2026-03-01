@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Tarih Düzenleyici</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased p-6">
+
+    <div class="max-w-6xl mx-auto space-y-6">
+        
+        <!-- Başlık Alanı -->
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200 text-center">
+            <h1 class="text-3xl font-bold text-blue-600 mb-2">
+                <i class="fa-solid fa-file-csv mr-2"></i> CSV Tarih Düzenleyici
+            </h1>
+            <p class="text-gray-500">
+                Noktalı virgülle (;) ayrılmış CSV dosyanızı yükleyin. Tarih sütunu otomatik düzeltilecek ve yeni bir başlık eklenecektir.
+            </p>
+        </div>
+
+        <!-- Yükleme ve Aksiyon Alanı -->
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200 flex flex-col md:flex-row items-center gap-4">
+            <div class="flex-1 w-full">
+                <label class="block text-sm font-medium text-gray-700 mb-2">CSV Dosyası Seçin</label>
+                <input type="file" id="fileInput" accept=".csv" class="block w-full text-sm text-gray-500
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-md file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-blue-50 file:text-blue-700
+                    hover:file:bg-blue-100 cursor-pointer border rounded-md border-gray-300 p-2" />
+            </div>
+            
+            <div id="statusArea" class="hidden flex-1 flex flex-col items-center justify-center">
+                <div class="text-green-600 font-semibold mb-2">
+                    <i class="fa-solid fa-check-circle mr-1"></i> İşlem Tamamlandı!
+                </div>
+                <button id="downloadBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow transition duration-200 flex items-center font-medium">
+                    <i class="fa-solid fa-download mr-2"></i> Düzenlenmiş Dosyayı İndir
+                </button>
+            </div>
+        </div>
+
+        <!-- Tablo Önizleme Alanı -->
+        <div id="previewContainer" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hidden">
+            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-gray-700">Tablo Önizlemesi</h3>
+                <span class="text-xs text-gray-500 font-medium px-2 py-1 bg-gray-200 rounded-full" id="rowCountBadge"></span>
+            </div>
+            
+            <div class="overflow-x-auto max-h-[500px]">
+                <table class="min-w-full text-left border-collapse">
+                    <thead id="tableHead" class="bg-gray-100 sticky top-0 shadow-sm z-10">
+                        <!-- Başlıklar buraya gelecek -->
+                    </thead>
+                    <tbody id="tableBody" class="divide-y divide-gray-200">
+                        <!-- Veriler buraya gelecek -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="tableNotice" class="text-center py-3 bg-blue-50 text-blue-600 text-sm hidden">
+                <i class="fa-solid fa-info-circle mr-1"></i> Performans için sadece ilk 50 satır gösterilmektedir. İndirilen dosyada tüm veriler mevcuttur.
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Hedef başlık (Python kodunuzdaki liste)
+        const TARGET_HEADER = ["KURUL_NO", "TARİH", "", "GÜN", "SAAT", "DERS", "ÖĞRETİM_ÜYESİ", "T/P", "BÖLÜM", "TEMA", "HAFTA"];
+        
+        // Global değişkenler
+        let processedCSVData = [];
+        let originalFileName = "";
+
+        // Elementleri Seç
+        const fileInput = document.getElementById('fileInput');
+        const statusArea = document.getElementById('statusArea');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const previewContainer = document.getElementById('previewContainer');
+        const tableHead = document.getElementById('tableHead');
+        const tableBody = document.getElementById('tableBody');
+        const rowCountBadge = document.getElementById('rowCountBadge');
+        const tableNotice = document.getElementById('tableNotice');
+
+        // Dosya seçildiğinde tetiklenir
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            originalFileName = file.name;
+            const reader = new FileReader();
+
+            // Dosya okuma işlemi
+            reader.onload = function(event) {
+                const text = event.target.result;
+                processCSV(text);
+            };
+
+            // Türkçe karakter sorunlarını önlemek için UTF-8 veya ISO-8859-9/Windows-1254 okuma yapılabilir.
+            // Python kodunuzda UTF-8 belirttiğiniz için burada da standart olarak bırakıyoruz.
+            reader.readAsText(file, 'UTF-8');
+        });
+
+        // Tırnak içindeki noktalı virgülleri bozmadan CSV'yi ayrıştıran fonksiyon
+        function parseCSVText(text) {
+            let rows = [];
+            let currentRow = [];
+            let currentCell = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < text.length; i++) {
+                let char = text[i];
+                if (char === '"' && text[i+1] === '"') { // Çift tırnak escape durumu
+                    currentCell += '"';
+                    i++;
+                } else if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ';' && !inQuotes) { // Noktalı virgül (Hücre sonu)
+                    currentRow.push(currentCell);
+                    currentCell = '';
+                } else if (char === '\n' && !inQuotes) { // Satır sonu
+                    currentRow.push(currentCell);
+                    rows.push(currentRow);
+                    currentRow = [];
+                    currentCell = '';
+                } else if (char !== '\r') {
+                    currentCell += char;
+                }
+            }
+            if (currentRow.length > 0 || currentCell !== '') {
+                currentRow.push(currentCell);
+                rows.push(currentRow);
+            }
+            return rows;
+        }
+
+        // CSV İşleme Mantığı (Python kodunun JS karşılığı)
+        function processCSV(text) {
+            const parsedRows = parseCSVText(text);
+            processedCSVData = [TARGET_HEADER]; // İlk satır bizim özel başlığımız
+            let dataCount = 0;
+
+            for (let i = 0; i < parsedRows.length; i++) {
+                let row = parsedRows[i];
+                
+                // Eğer satır tamamen boşsa atla (Python: if not row: continue)
+                if (row.length === 0 || (row.length === 1 && row[0].trim() === "")) {
+                    continue;
+                }
+
+                // Tarih Sütunu (Index 1) Kontrolü
+                if (row.length > 1 && row[1]) {
+                    let dateStr = row[1].trim();
+                    
+                    // . / veya - ile ayrılmış tarihleri tespit et
+                    let parts = dateStr.split(/[.\/-]/); 
+                    
+                    if (parts.length === 3) {
+                        // Sayısal değerler içerdiğinden emin ol ki yanlışlıkla başlık metinlerini formatlamayalım
+                        if(!isNaN(parseInt(parts[0])) && !isNaN(parseInt(parts[1]))) {
+                            // zfill(2) karşılığı -> padStart(2, '0')
+                            let day = parts[0].padStart(2, '0');
+                            let month = parts[1].padStart(2, '0');
+                            let year = parts[2];
+                            
+                            // Yıl 2 haneliyse 4 haneye tamamla (Opsiyonel iyileştirme)
+                            if (year.length === 2) {
+                                year = "20" + year; 
+                            }
+                            
+                            row[1] = `${day}.${month}.${year}`;
+                        }
+                    }
+                }
+                processedCSVData.push(row);
+                dataCount++;
+            }
+
+            // İşlem bittiğinde arayüzü güncelle
+            renderTable(processedCSVData);
+            statusArea.classList.remove('hidden');
+            rowCountBadge.textContent = `${dataCount} Satır İşlendi`;
+            previewContainer.classList.remove('hidden');
+        }
+
+        // Tabloyu Ekrana Çizme
+        function renderTable(rows) {
+            tableHead.innerHTML = '';
+            tableBody.innerHTML = '';
+
+            if (rows.length === 0) return;
+
+            // Başlık Satırını (Index 0) Çiz
+            const trHead = document.createElement('tr');
+            rows[0].forEach(cell => {
+                const th = document.createElement('th');
+                th.className = "px-4 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider whitespace-nowrap border-b-2 border-gray-200";
+                th.textContent = cell;
+                trHead.appendChild(th);
+            });
+            tableHead.appendChild(trHead);
+
+            // Veri Satırlarını Çiz (Performans için max 50 satır gösterilir)
+            const limit = Math.min(rows.length, 51); 
+            for (let i = 1; i < limit; i++) {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-blue-50 transition-colors";
+                
+                rows[i].forEach((cell, index) => {
+                    const td = document.createElement('td');
+                    td.className = "px-4 py-2 border-b border-gray-100 text-sm text-gray-700 whitespace-nowrap";
+                    
+                    // Tarih sütunu ise (Index 1), görsel olarak vurgula
+                    if(index === 1 && cell.includes('.')) {
+                        td.innerHTML = `<span class="bg-green-100 text-green-800 font-medium px-2 py-1 rounded">${cell}</span>`;
+                    } else {
+                        td.textContent = cell;
+                    }
+                    tr.appendChild(td);
+                });
+                tableBody.appendChild(tr);
+            }
+
+            // 50'den fazla satır varsa uyarıyı göster
+            if (rows.length > 51) {
+                tableNotice.classList.remove('hidden');
+            } else {
+                tableNotice.classList.add('hidden');
+            }
+        }
+
+        // CSV Dosyası Oluşturma ve İndirme
+        downloadBtn.addEventListener('click', function() {
+            if (processedCSVData.length === 0) return;
+
+            // JS dizisini CSV stringine dönüştür
+            const csvContent = processedCSVData.map(row => {
+                return row.map(cell => {
+                    if (cell === null || cell === undefined) return '';
+                    let cellStr = String(cell);
+                    // Tırnak işaretlerini veya ayırıcıları koruma mantığı
+                    if (cellStr.includes(';') || cellStr.includes('\n') || cellStr.includes('"')) {
+                        return `"${cellStr.replace(/"/g, '""')}"`;
+                    }
+                    return cellStr;
+                }).join(';');
+            }).join('\n');
+
+            // UTF-8 BOM ekleyerek Excel'in Türkçe karakterleri doğru tanımasını sağla
+            const bom = new Uint8Array([0xEF, 0xBB, 0xBF]); 
+            const blob = new Blob([bom, csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            
+            // Dosya adı mantığı (Python: "date_correct" + FILE)
+            const newFileName = "date_correct_" + originalFileName;
+
+            // Geçici bir a etiketi oluşturarak indirmeyi tetikle
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', newFileName);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        });
+
+    </script>
+</body>
+</html>
+
