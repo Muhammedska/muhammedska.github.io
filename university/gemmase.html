@@ -5,25 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hekim 4.0: Yapay Zekâ Çağında Tıp Eğitimi ve Pratiği</title>
     
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Google Fonts: Playfair Display (Classic), Inter (Modern), Fira Code (Tech) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     
+    <!-- Tailwind Config -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        brand: {
-                            dark: '#0f172a',    // Medical/Trusted - primary
-                            tech: '#0ea5e9',    // Digital/AI - secondary
-                            accent: '#fbbf24',  // Classic/Value - yellow accent
-                            light: '#f8fafc'    // Background light
+                        medical: {
+                            dark: '#0B1120',    // Deep dark blue (Modern Tech)
+                            card: '#111827',    // Slightly lighter dark
+                            gold: '#D4AF37',    // Classic Gold
+                            cyan: '#00F0FF',    // Tech Cyan
                         }
                     },
                     fontFamily: {
-                        serif: ['Playfair Display', 'serif'], // Classic headings
-                        sans: ['Inter', 'sans-serif'],     // Modern body
+                        classic: ['"Playfair Display"', 'serif'],
+                        modern: ['"Inter"', 'sans-serif'],
+                        tech: ['"Fira Code"', 'monospace'],
                     }
                 }
             }
@@ -31,588 +40,759 @@
     </script>
     
     <style>
-        /* Smooth scrolling */
-        html { scroll-behavior: smooth; }
-        
-        /* Three.js Canvas styling */
-        #canvas-container {
-            position: absolute;
+        body {
+            background-color: #0B1120;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        /* Three.js Canvas Container */
+        #bg-canvas {
+            position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
+            width: 100vw;
             height: 100vh;
             z-index: -1;
-            background: radial-gradient(circle at center, #1e293b 0%, #020617 100%);
+            pointer-events: none;
         }
 
-        /* Glassmorphism for cards */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        /* Glassmorphism Classic-Tech Cards */
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.2); /* Faint gold border */
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(0, 240, 255, 0.05);
+            transition: all 0.4s ease;
         }
 
-        /* Specific text styles to match input precisely */
-        .panel-meta { font-size: 0.85rem; color: #cbd5e1; }
-        .yenilikci-oge { color: #fbbf24; font-style: italic; font-weight: 600; }
-        .sub-heading { color: #cbd5e1; }
+        .glass-panel:hover {
+            border-color: rgba(0, 240, 255, 0.4); /* Cyan border on hover */
+            box-shadow: 0 4px 30px rgba(0, 240, 255, 0.1), inset 0 0 20px rgba(0, 240, 255, 0.05);
+        }
+
+        /* Gradient Texts */
+        .text-gradient-gold {
+            background: linear-gradient(to right, #D4AF37, #F3E5AB);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .text-gradient-cyan {
+            background: linear-gradient(to right, #00F0FF, #3B82F6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Initial state for elements to be animated */
+        .animate-me {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        /* Timeline vertical line */
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 20px;
+            width: 2px;
+            background: linear-gradient(to bottom, #D4AF37 0%, #00F0FF 50%, #D4AF37 100%);
+            opacity: 0.3;
+        }
+        @media (min-width: 768px) {
+            .timeline-line::before {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
     </style>
 </head>
-<body class="bg-brand-light text-slate-800 font-sans antialiased overflow-x-hidden">
+<body class="font-modern antialiased selection:bg-medical-cyan selection:text-medical-dark">
 
-    <section id="hero" class="relative w-full h-screen flex items-center justify-center overflow-hidden">
-        <div id="canvas-container"></div>
-        
-        <div class="relative z-10 text-center px-4 max-w-5xl mx-auto hero-content opacity-0 text-white">
-            <span class="text-brand-tech font-semibold tracking-widest uppercase text-sm mb-4 block">Dijital Çağın Eşiğinde:</span>
-            <h1 class="font-serif text-5xl md:text-7xl font-bold mb-6 leading-tight">
-                Hekim 4.0 <br>
-                <span class="text-brand-accent text-3xl md:text-5xl">Yapay Zekâ Çağında Tıp Eğitimi ve Pratiği</span>
-            </h1>
-            <p class="text-lg md:text-xl text-slate-300 mb-10 max-w-2xl mx-auto">
-                Tıbbın evrimindeki en büyük kırılma noktasına tanık olun. Doktorluk mesleği ölüyor mu, yoksa teknolojiyle yeniden mi doğuyor?
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#register" class="px-8 py-4 bg-brand-tech hover:bg-sky-400 text-white rounded-full font-semibold transition-all shadow-[0_0_20px_rgba(14,165,233,0.4)]">Kayıt Ol</a>
-                <a href="#program" class="px-8 py-4 bg-transparent border border-white hover:bg-white hover:text-brand-dark text-white rounded-full font-semibold transition-all">Programı İncele</a>
+    <!-- 3D BACKGROUND -->
+    <div id="bg-canvas"></div>
+
+    <!-- HERO SECTION -->
+    <header class="relative min-h-screen flex items-center justify-center pt-20 pb-12 px-4">
+        <div class="max-w-5xl mx-auto text-center z-10 animate-me">
+            <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-medical-cyan/30 bg-medical-cyan/10 text-medical-cyan font-tech text-sm mb-8 tracking-widest uppercase backdrop-blur-sm">
+                <i class="bi bi-cpu"></i> Dijital Çağın Eşiğinde
             </div>
-        </div>
-    </section>
-
-    <section class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                <div class="intro-left opacity-0">
-                    <h2 class="font-serif text-3xl md:text-4xl font-bold text-brand-dark mb-6">Yapay Zekâ Neden Bir Sonraki Devrim?</h2>
-                    <p class="text-slate-600 mb-6">Sempozyumun amacı ve beklenen çıktılar üzerine odaklanarak, dijital dönüşümün tıptaki etkilerini keşfedin.</p>
-                    <div class="space-y-4 text-sm text-slate-700">
-                        <p><strong><i class="bi bi-people-fill text-brand-tech"></i> Hedef Kitle:</strong> Tıp fakültesi öğrencileri, akademisyenler, klinisyenler, sağlık yöneticileri, yapay zekâ mühendisleri, etik uzmanları, hukukçular, hasta temsilcileri</p>
-                        <p><strong><i class="bi bi-clock-fill text-brand-tech"></i> Süre:</strong> 2 gün (Yoğunlaştırılmış tek gün seçeneği de sunulabilir)</p>
-                        <p><strong><i class="bi bi-translate text-brand-tech"></i> Dil:</strong> Türkçe (İngilizce simultane tercüme seçeneği ile)</p>
-                    </div>
-                </div>
-                <div class="intro-right opacity-0 bg-slate-50 p-8 rounded-2xl shadow-sm border border-slate-100">
-                    <h3 class="font-serif text-2xl font-semibold mb-6 text-brand-dark">Sempozyumun Yenilikçi Unsurları</h3>
-                    <ul class="space-y-3 text-sm text-slate-700 list-disc list-outside ml-5">
-                        <li>Canlı yapay zekâ demostrasyonları</li>
-                        <li>İnteraktif etik simülasyonları</li>
-                        <li>Kodlama atölyesi</li>
-                        <li>Ortak müfredat tasarımı çalıştayı</li>
-                        <li>Dijital mahremiyet oyunu</li>
-                        <li>Öğrenci hackathon’u</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="program" class="py-20 bg-slate-50 border-t border-slate-200">
-        <div class="max-w-5xl mx-auto px-4">
-            <div class="text-center mb-16 section-title opacity-0">
-                <h2 class="font-serif text-3xl md:text-4xl font-bold text-brand-dark mb-4">Sempozyum Programı</h2>
-                <div class="h-1 w-20 bg-brand-accent mx-auto"></div>
-            </div>
-
-            <div class="space-y-12 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
-                
-                <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                    <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-brand-dark text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 font-bold">1</div>
-                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded border border-slate-200 bg-white shadow-sm program-day-header opacity-0">
-                        <h3 class="font-bold text-lg text-brand-tech mb-1">GÜN 1: Geçmişten Geleceğe Tıbbın Dönüşümü</h3>
-                    </div>
-                </div>
-
-                <div class="w-full space-y-8 pl-12 md:pl-0 program-content-day1 opacity-0">
-                    
-                    <div class="relative glass-card p-6 rounded-2xl flex items-start gap-4">
-                        <span class="text-brand-tech font-bold text-sm">08.30 – 09.00</span>
-                        <div>
-                            <p class="font-semibold text-brand-dark text-base">Kayıt & Karşılama</p>
-                        </div>
-                    </div>
-
-                    <div class="relative glass-card p-6 rounded-2xl flex items-start gap-4">
-                        <span class="text-brand-tech font-bold text-sm">09.00 – 09.30</span>
-                        <div>
-                            <p class="font-semibold text-brand-dark text-base">Açılış Konuşması</p>
-                            <p class="font-serif text-lg font-bold text-brand-tech mt-2">“Hipokrat’tan Yapay Zekâya: Tıbbın Evriminde Kırılma Noktaları”</p>
-                            <p class="panel-meta mt-1">- Tıp tarihindeki büyük dönüşümler (mikroskop, aşı, antibiyotik, görüntüleme)</p>
-                        </div>
-                    </div>
-
-                    <div class="relative glass-card p-6 rounded-2xl flex items-start gap-4">
-                        <span class="text-brand-tech font-bold text-sm">09.30 – 11.00</span>
-                        <div>
-                            <p class="font-semibold text-brand-dark text-base">0 Panel: Modern Çağ ve Tıp – Bugünü Anlamak</p>
-                            <p class="font-serif text-lg font-bold text-brand-tech mt-2">“Dijital Stetoskop: Yazılım ve Yapay Zekâ Tıbbın Neresinde?”</p>
-                            
-                            <div class="mt-4 space-y-1 text-sm text-slate-700">
-                                <p class="font-semibold text-brand-dark">Alt Başlıklar:</p>
-                                <p>- Yazılım nedir, neden tıpla ilişkilendiriliyor? (Temel kavramlar ve tıpta yazılımın tarihçesi)</p>
-                                <p>- Güncel yapay zekâ uygulamaları: Görüntüleme, patoloji, genomik, klinik karar destek sistemleri</p>
-                                <p>- Türkiye’den ve dünyadan başarılı örnekler (start-up’lar, araştırma projeleri)</p>
-                                <p>- Yapay zekâ tıbbın neresinde hata yapabilir? Sınırlar ve riskler</p>
-                            </div>
-
-                            <div class="mt-4 text-sm panel-meta space-y-1">
-                                <p><strong>Konuşmacılar:</strong> Tıp bilişimi uzmanı, radyolog, yapay zekâ mühendisi, sağlık girişimcisi</p>
-                                <p class="yenilikci-oge"><i class="bi bi-cpu"></i> Yenilikçi Öğe: Canlı demo – Bir yapay zekâ modelinin akciğer grafisinde nodül tespiti yapması, ardından bir radyologla karşılaştırmalı değerlendirme</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="relative glass-card p-6 rounded-2xl flex items-start gap-4">
-                        <span class="text-brand-tech font-bold text-sm">11.15 – 12.45</span>
-                        <div>
-                            <p class="font-semibold text-brand-dark text-base">edata Nasıl Entegre Edilmeli? Yeni Bir Bölümün Temelleri”</p>
-                            
-                            <div class="mt-4 space-y-1 text-sm text-slate-700">
-                                <p class="font-semibold text-brand-dark">Alt Başlıklar:</p>
-                                <p>- Mevcut tıp eğitimi müfredatının dijital çağa uyumu</p>
-                                <p>- Yapay zekâ okuryazarlığı: Tıp öğrencileri hangi yetkinlikleri kazanmalı?</p>
-                                <p>- Yapay zekâ destekli eğitim araçları (sanal hastalar, simülasyonlar, kişiselleştirilmiş öğrenme)</p>
-                                <p>- Tıp fakültelerinde yeni bir anabilim dalı: “Dijital Tıp ve Yapay Zekâ” – müfredat önerisi, ders içerikleri, kariyer yolları</p>
-                            </div>
-
-                            <div class="mt-4 text-sm panel-meta space-y-1">
-                                <p><strong>Format:</strong> Önce 3 kısa sunum (20’şer dakika), ardından moderatörlü tartışma</p>
-                                <p><strong>Konuşmacılar:</strong> Tıp eğitimi uzmanı (siz), yapay zekâ eğitmeni, tıp öğrencisi temsilcisi, YÖK temsilcisi (davetli)</p>
-                                <p class="yenilikci-oge"><i class="bi bi-clipboard-check"></i> Yenilikçi Öğe: Katılımcılara anlık anketle “Tıp eğitiminde zorunlu kodlama dersi olmalı mı?” sorusu yöneltilir, sonuçlar panelde tartışılır.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="relative glass-card p-6 rounded-2xl flex items-start gap-4">
-                        <span class="text-brand-tech font-bold text-sm">12.45 – 14.00</span>
-                        <div>
-                            <p class="font-semibold text-brand-dark text-base">Öğle Yemeği & Poster Sunumları</p>
-                            <p class="panel-meta mt-1">- Tıpta yapay zekâ konulu araştırma posterleri (öğrenci ve genç araştırmacılara açık çağrı)</p>
-                            <p class="panel-meta">- Sağlık teknolojileri fuarcığı (start-up’ların ürünlerini sergilemesi)</p>
-                        </div>
-                    </div>
-
-                    <div class="relative glass-card p-6 rounded-2xl flex items-start gap-4">
-                        <span class="text-brand-tech font-bold text-sm">14.00 – 17.00</span>
-                        <div>
-                            <p class="font-semibold text-brand-dark text-base">Paralel Atölyeler</p>
-                            <p class="panel-meta mt-1">(Katılımcılar birini seçer)</p>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                                <div class="bg-slate-50 p-5 rounded-xl border border-slate-100 space-y-2 text-sm">
-                                    <p class="font-bold text-brand-tech">Atölye 1 (Temel Seviye):</p>
-                                    <p class="font-semibold text-brand-dark">“Tıp Öğrencileri İçin Temel Kodlama: Python ile Tıbbi Veri Analizi”</p>
-                                    <p>- Python’a giriş, veri yapıları, basit istatistik</p>
-                                    <p>- Gerçek bir tıbbi veri seti (örneğin diyabet verisi) üzerinde uygulama</p>
-                                    <p class="panel-meta mt-2 text-xs"><strong>Eğitmen:</strong> Siz (tıp eğitimi uzmanı, kodlama bilen) + yardımcı eğitmenler</p>
-                                    <p class="font-semibold text-brand-tech mt-1 text-xs">Hedef: Katılımcıların temel kodlama mantığını kavraması ve tıbbi veriyle ilk tanışması</p>
-                                </div>
-                                <div class="bg-slate-50 p-5 rounded-xl border border-slate-100 space-y-2 text-sm">
-                                    <p class="font-bold text-brand-tech">Atölye 2 (İleri Seviye):</p>
-                                    <p class="font-semibold text-brand-dark">“Klinik Karar Destek Sistemleri Geliştirme: Bir Vaka Çalışması”</p>
-                                    <p>- Makine öğrenmesi modelleri oluşturma (Python, scikit-learn)</p>
-                                    <p>- Gerçek bir klinik problem (örneğin sepsis tahmini) üzerinde ekip çalışması</p>
-                                    <p class="panel-meta mt-2 text-xs"><strong>Eğitmen:</strong> Veri bilimci + klinisyen</p>
-                                </div>
-                                <div class="bg-slate-50 p-5 rounded-xl border border-slate-100 space-y-2 text-sm">
-                                    <p class="font-bold text-brand-tech">Atölye 3:</p>
-                                    <p class="font-semibold text-brand-dark">“Dijital Etik Vaka Çalışması: Yapay Zekâ Karar Verirken Kim Sorumlu?”</p>
-                                    <p>- Etik ikilem senaryoları (örneğin yapay zekânın hatalı teşhisi, veri gizliliği ihlali)</p>
-                                    <p>- Rol-play ile farklı paydaşların (doktor, hasta, yazılımcı, hastane yöneticisi) bakış açılarını anlama</p>
-                                    <p class="panel-meta mt-2 text-xs"><strong>Kolaylaştırıcı:</strong> Etik uzmanı + hukukçu</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="relative glass-card p-6 rounded-2xl flex items-start gap-4">
-                        <span class="text-brand-tech font-bold text-sm">19.00 – 21.00</span>
-                        <div>
-                            <p class="font-semibold text-brand-dark text-base">Akşam Etkinliği (İsteğe Bağlı):</p>
-                            <p class="font-serif text-lg font-bold text-brand-tech mt-2">“Geleceğin Hekimi” Temalı Kısa Film Gösterimi ve Söyleşi</p>
-                            <p class="panel-meta mt-1">- Yapay zekâ ve tıp temalı kısa filmler (öğrenciler tarafından çekilmiş olabilir)</p>
-                            <p class="panel-meta">- Ardından yönetmen ve oyuncularla söyleşi</p>
-                        </div>
-                    </div>
-
-                </div> <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                    <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-brand-dark text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 font-bold">2</div>
-                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded border border-slate-200 bg-white shadow-sm program-day-header opacity-0">
-                        <h3 class="font-bold text-lg text-brand-tech mb-1">GÜN 2: MESLEĞİN GELECEĞİ, ETİK VE KORUNMA</h3>
-                    </div>
-                </div>
-
-                <div class="w-full space-y-8 pl-12 md:pl-0 program-content-day2 opacity-0">
-                    
-                    <div class="relative glass-card p-6 rounded-2xl flex items-start gap-4">
-                        <span class="text-brand-tech font-bold text-sm">09.00 – 09.30</span>
-                        <div>
-                            <p class="font-semibold text-brand-dark text-base">Güne Başlarken:</p>
-                            <p class="panel-meta mt-1">- Önceki günün özeti, günün hedefleri</p>
-                        </div>
-                    </div>
-
-                    <div class="relative glass-card p-6 rounded-2xl flex items-start gap-4">
-                        <span class="text-brand-tech font-bold text-sm">09.30 – 11.00</span>
-                        <div>
-                            <p class="font-semibold text-brand-dark text-base">Panel: Doktorluk Mesleği Ölüyor mu? Yoksa Dönüşüyor mu?</p>
-                            <p class="font-serif text-lg font-bold text-brand-tech mt-2">“Doktor 2.0: Teknisyen mi, Hekim mi?”</p>
-                            
-                            <div class="mt-4 space-y-1 text-sm text-slate-700">
-                                <p class="font-semibold text-brand-dark">Alt Başlıklar:</p>
-                                <p>- Sağlık sektörünün güncelinde gelişenler doktorları nasıl etkileyecek?</p>
-                                <p>- Doktor artık teknisyen gibi mi olacak?</p>
-                                <p>- Doktorluk diye bir meslek kalacak mı?</p>
-                                <p>- İnsan doktorun yapay zekâ karşısında artı değerleri: empati, etik karar verme, bütüncül bakış</p>
-                                <p>- Geleceğin doktoru: Hangi yetkinlikler öne çıkacak? (İletişim, veri yorumlama, teknoloji yönetimi)</p>
-                                <p>- Kendimizi nasıl bu konuda geliştirmeliyiz?</p>
-                            </div>
-
-                            <div class="mt-4 text-sm panel-meta space-y-1">
-                                <p><strong>Konuşmacılar:</strong> Klinisyen (farklı branşlardan), tıp eğitimi uzmanı (siz), hasta derneği temsilcisi, yapay zekâ etik uzmanı</p>
-                                <p class="yenilikci-oge"><i class="bi bi-bar-chart-line"></i> Yenilikçi Öğe: Salon ortamında bir “gelecek oylaması” – “Yapay zekâ 20 yıl içinde doktorların %50’sinden fazlasının işini elinden alır mı?” Evet/Hayır, sonuçlar anlık grafiklenir ve panelistler yorumlar.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="relative glass-card p-6 rounded-2xl flex items-start gap-4">
-                        <span class="text-brand-tech font-bold text-sm">11.15 – 12.45</span>
-                        <div>
-                            <p class="font-semibold text-brand-dark text-base">Konferans: İsviçre Çakısı Hekim</p>
-                            <p class="font-serif text-lg font-bold text-brand-tech mt-2">“Yapay Zekâyı Düşman Konumundan Dost Konumuna Almak: Çok Yönlü Hekimin Yol Haritası”</p>
-                            
-                            <div class="mt-4 space-y-1 text-sm text-slate-700">
-                                <p class="font-semibold text-brand-dark">İçerik:</p>
-                                <p>- İsviçre çakısı metaforu: Tıp bilgisi, iletişim becerileri, veri okuryazarlığı, temel kodlama, yapay zekâ okuryazarlığı</p>
-                                <p>- Yapay zekâ araçlarını etkin kullanma stratejileri (klinikte, araştırmada, eğitimde)</p>
-                                <p>- Yapay zekâ ile işbirliği yapmanın psikolojisi: Dirençten kabule, kabule işbirliğine</p>
-                                <p>- Kendi kendine öğrenme kaynakları, online kurslar, topluluklar</p>
-                            </div>
-
-                            <div class="mt-4 text-sm panel-meta">
-                                <p><strong>Konuşmacı:</strong> Siz (tıp eğitimi uzmanı, kodlama bilen) + belki bir genç doktor (yapay zekâyı aktif kullanan)</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="relative glass-card p-6 rounded-2xl flex items-start gap-4">
-                        <span class="text-brand-tech font-bold text-sm">14.00 – 15.30</span>
-                        <div>
-                            <p class="font-semibold text-brand-dark text-base">Panel: Dijital Etik ve Veri Gizliliği</p>
-                            <p class="font-serif text-lg font-bold text-brand-tech mt-2">“Gelişen Dünyada Etik ve Verilerimizin Gizliliği: Kime Güvenelim?”</p>
-                            
-                            <div class="mt-4 space-y-1 text-sm text-slate-700">
-                                <p class="font-semibold text-brand-dark">Alt Başlıklar:</p>
-                                <p>- Sağlık verilerinin toplanması, işlenmesi ve paylaşılmasında etik ilkeler</p>
-                                <p>- Yapay zekâ modellerinin eğitiminde kullanılan verilerin mahremiyeti (anonimleştirme yeterli mi?)</p>
-                                <p>- Hasta mahremiyeti ile tıbbi ilerleme arasındaki denge</p>
-                                <p>- Türkiye’den ve dünyadan yasal düzenlemeler (KVKK, GDPR, HIPAA)</p>
-                                <p>- Yapay zekâ kararlarının şeffaflığı ve açıklanabilirliği (black box sorunu)</p>
-                            </div>
-
-                            <div class="mt-4 text-sm panel-meta">
-                                <p><strong>Konuşmacılar:</strong> Hukukçu (sağlık hukuku), etik uzmanı, hasta hakları derneği temsilcisi, veri güvenliği uzmanı</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="relative glass-card p-6 rounded-2xl flex items-start gap-4">
-                        <span class="text-brand-tech font-bold text-sm">15.45 – 17.15</span>
-                        <div>
-                            <p class="font-semibold text-brand-dark text-base">İnteraktif Oturum: Kendimizi ve Verilerimizi Nasıl Koruruz?</p>
-                            <p class="font-serif text-lg font-bold text-brand-tech mt-2">“Dijital Kale: Hekimler İçin Dijital Mahremiyet Stratejileri”</p>
-                            
-                            <div class="mt-4 text-sm text-slate-700">
-                                <p><strong>Format:</strong> Oyunlaştırılmış atölye</p>
-                                <p>- Katılımcılar küçük gruplara ayrılır.</p>
-                                <p>- Her gruba bir senaryo verilir (örneğin: “Hastanenizin veri tabanı hacklendi, hasta kayıtları sızdırıldı. Ne yapardınız?” veya “Bir yapay zekâ uygulamasına hasta verilerini yüklemek istiyorsunuz. Hangi güvenlik önlemlerini alırsınız?”)</p>
-                                <p>- Gruplar çözümlerini geliştirir, ardından tüm salonla paylaşır. Uzmanlar geri bildirim verir.</p>
-                                <p>- Pratik ipuçları: Güçlü şifreler, iki faktörlü doğrulama, VPN kullanımı, hangi verilerin paylaşılmaması gerektiği, güvenilir yazılım sertifikaları</p>
-                            </div>
-
-                            <div class="mt-4 text-sm panel-meta">
-                                <p><strong>Kolaylaştırıcılar:</strong> Veri güvenliği uzmanı, etik uzmanı, siz</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="relative glass-card p-6 rounded-2xl flex items-start gap-4">
-                        <span class="text-brand-tech font-bold text-sm">17.15 – 18.00</span>
-                        <div>
-                            <p class="font-semibold text-brand-dark text-base">Kapanış Oturumu: Ortak Akıl ve Sonuç Bildirgesi</p>
-                            <p class="font-serif text-lg font-bold text-brand-tech mt-2">“Geleceğin Tıbbını Birlikte Yazalım”</p>
-                            <p class="panel-meta mt-1">- İki günün özeti, öne çıkan fikirler</p>
-                            <p class="panel-meta">- Katılımcılardan gelen önerilerle “Tıp Eğitiminde Dijital Dönüşüm İçin 10 Madde” bildirgesinin oluşturulması (interaktif, anlık oylama)</p>
-                            <p class="panel-meta">- Kapanış konuşması ve teşekkürler</p>
-                        </div>
-                    </div>
-
-                </div> </div>
-            </div>
-    </section>
-
-    <section id="innovations" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="text-center mb-16 section-title opacity-0">
-                <h2 class="font-serif text-3xl md:text-4xl font-bold text-brand-dark mb-4">Sempozyumun Yenilikçi Yönleri</h2>
-                <div class="h-1 w-20 bg-brand-accent mx-auto"></div>
-                <p class="text-brand-tech font-semibold text-lg mt-4">(BİR İLK YARATMAK İÇİN)</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 innovations-cards opacity-0">
-                <div class="bg-slate-50 p-6 rounded-xl border border-slate-100 flex flex-col gap-3">
-                    <i class="bi bi-person-workspace text-3xl text-brand-accent"></i>
-                    <p class="font-semibold text-brand-dark">1. Canlı Yapay Zekâ – İnsan Karşılaştırması:</p>
-                    <p class="text-sm text-slate-600">Bir radyolog ile yapay zekânın aynı vakaları eş zamanlı yorumlaması, seyircinin de interaktif oylamayla katılımı.</p>
-                </div>
-                <div class="bg-slate-50 p-6 rounded-xl border border-slate-100 flex flex-col gap-3">
-                    <i class="bi bi-code-square text-3xl text-brand-tech"></i>
-                    <p class="font-semibold text-brand-dark">2. Tıp Öğrencileri İçin Kodlama Atölyesi:</p>
-                    <p class="text-sm text-slate-600">Tıp fakültesi bünyesinde, doğrudan öğrencilere yönelik uygulamalı kodlama eğitimi veren ilk sempozyum atölyesi olabilir.</p>
-                </div>
-                <div class="bg-slate-50 p-6 rounded-xl border border-slate-100 flex flex-col gap-3">
-                    <i class="bi bi-briefcase-fill text-3xl text-brand-accent"></i>
-                    <p class="font-semibold text-brand-dark">3. Etik Rol-Play Atölyesi:</p>
-                    <p class="text-sm text-slate-600">Katılımcıların aktif olarak etik ikilemleri canlandırdığı, tiyatral bir öğrenme deneyimi.</p>
-                </div>
-                <div class="bg-slate-50 p-6 rounded-xl border border-slate-100 flex flex-col gap-3">
-                    <i class="bi bi-shield-lock-fill text-3xl text-brand-tech"></i>
-                    <p class="font-semibold text-brand-dark">4. Dijital Mahremiyet Oyunu:</p>
-                    <p class="text-sm text-slate-600">Veri güvenliği konusunu sıkıcı slaytlar yerine eğlenceli senaryolarla öğreten interaktif oturum.</p>
-                </div>
-                <div class="bg-slate-50 p-6 rounded-xl border border-slate-100 flex flex-col gap-3">
-                    <i class="bi bi-journal-text text-3xl text-brand-accent"></i>
-                    <p class="font-semibold text-brand-dark">5. Ortak Müfredat Tasarımı:</p>
-                    <p class="text-sm text-slate-600">Katılımcıların görüşleriyle şekillenen, somut bir çıktı (bildirge) üretilmesi.</p>
-                </div>
-                <div class="bg-slate-50 p-6 rounded-xl border border-slate-100 flex flex-col gap-3">
-                    <i class="bi bi-award-fill text-3xl text-brand-tech"></i>
-                    <p class="font-semibold text-brand-dark">6. Öğrenci Katılımı:</p>
-                    <p class="text-sm text-slate-600">Poster sunumları, kısa film yarışması, hackathon gibi etkinliklerle öğrencilerin aktif rol alması.</p>
-                </div>
-                <div class="bg-slate-50 p-6 rounded-xl border border-slate-100 flex flex-col gap-3 lg:col-span-2">
-                    <i class="bi bi-building-fill text-3xl text-brand-accent"></i>
-                    <p class="font-semibold text-brand-dark">7. Disiplinlerarası Konuşmacı Kadrosu:</p>
-                    <p class="text-sm text-slate-600">Tıp, mühendislik, hukuk, etik, hasta temsiliyetini bir araya getiren ilk kapsamlı sempozyum.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="register" class="py-20 bg-slate-50 border-t border-slate-200">
-        <div class="max-w-5xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
             
-            <div class="reg-left opacity-0">
-                <h3 class="font-serif text-3xl font-bold text-brand-dark mb-6">Uygulama Önerileri & Kayıt</h3>
-                <p class="text-slate-600 mb-6">Geleceğin tıp profesyonelleri ve teknoloji uzmanları, Hekim 4.0'da buluşuyor.</p>
+            <h1 class="font-classic text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight">
+                <span class="text-white drop-shadow-lg">Hekim 4.0</span><br>
+                <span class="text-gradient-gold text-3xl md:text-5xl lg:text-6xl mt-4 block">Yapay Zekâ Çağında<br>Tıp Eğitimi ve Pratiği</span>
+            </h1>
+            
+            <p class="text-lg md:text-xl text-slate-300 mb-12 max-w-2xl mx-auto font-light leading-relaxed">
+                Yapay zekâ neden bir sonraki devrim? Geçmişten geleceğe tıbbın dönüşümüne, mesleğin geleceğine ve etik değerlere tanıklık edin.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-6 justify-center">
+                <a href="#register" class="px-8 py-4 bg-medical-cyan text-medical-dark hover:bg-white hover:shadow-[0_0_30px_rgba(0,240,255,0.6)] rounded-sm font-semibold transition-all duration-300 tracking-wide font-tech text-sm">
+                    KAYIT OL _>
+                </a>
+                <a href="#program" class="px-8 py-4 bg-transparent border border-medical-gold text-medical-gold hover:bg-medical-gold hover:text-medical-dark rounded-sm font-semibold transition-all duration-300 font-classic tracking-wider">
+                    PROGRAMI İNCELE
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- INTRO & TARGET AUDIENCE -->
+    <section class="py-20 relative z-10 border-t border-medical-gold/20 bg-medical-dark/50">
+        <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-12 gap-12">
+            
+            <!-- Info Box -->
+            <div class="md:col-span-5 glass-panel p-8 rounded-lg animate-me">
+                <h2 class="font-classic text-3xl font-bold text-white mb-6 border-b border-medical-gold/30 pb-4">Sempozyum Künyesi</h2>
                 
-                <ul class="space-y-4 text-sm text-slate-700">
-                    <li><strong><i class="bi bi-tag-fill text-brand-accent"></i> Kayıt Ücreti:</strong> Öğrencilerden düşük, profesyonellerden makul bir ücret alınabilir; sponsorluklarla desteklenebilir.</li>
-                    <li><strong><i class="bi bi-laptop text-brand-tech"></i> Çevrimiçi Katılım:</strong> Hibrit model daha geniş kitleye ulaşmayı sağlar.</li>
-                    <li><strong><i class="bi bi-file-earmark-diff-fill text-brand-accent"></i> Sertifika:</strong> "Dijital Tıp ve Yapay Zekâ Farkındalık Sertifikası" verilebilir.</li>
-                    <li><strong><i class="bi bi-book-half text-brand-tech"></i> Bildiri Kitabı:</strong> Sunum özetleri ISBN’li bir e-kitap olarak yayınlanabilir.</li>
-                    <li><strong><i class="bi bi-hash text-brand-accent"></i> Sosyal Medya:</strong> #Hekim4point0 etiketiyle paylaşımlar teşvik edilebilir.</li>
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="font-tech text-medical-cyan text-xs uppercase tracking-widest mb-2"><i class="bi bi-people"></i> Hedef Kitle</h3>
+                        <p class="text-slate-300 text-sm leading-relaxed">Tıp fakültesi öğrencileri, akademisyenler, klinisyenler, sağlık yöneticileri, yapay zekâ mühendisleri, etik uzmanları, hukukçular, hasta temsilcileri</p>
+                    </div>
+                    <div>
+                        <h3 class="font-tech text-medical-cyan text-xs uppercase tracking-widest mb-2"><i class="bi bi-clock-history"></i> Süre</h3>
+                        <p class="text-slate-300 text-sm">2 gün (Yoğunlaştırılmış tek gün seçeneği de sunulabilir)</p>
+                    </div>
+                    <div>
+                        <h3 class="font-tech text-medical-cyan text-xs uppercase tracking-widest mb-2"><i class="bi bi-translate"></i> Dil</h3>
+                        <p class="text-slate-300 text-sm">Türkçe (İngilizce simultane tercüme seçeneği ile)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Innovations List -->
+            <div class="md:col-span-7 glass-panel p-8 rounded-lg animate-me">
+                <h2 class="font-classic text-3xl font-bold text-white mb-6 border-b border-medical-cyan/30 pb-4">Yenilikçi Unsurlar</h2>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="flex items-start gap-3">
+                        <i class="bi bi-check2-square text-medical-gold mt-1"></i>
+                        <span class="text-slate-300 text-sm">Canlı yapay zekâ demostrasyonları</span>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i class="bi bi-check2-square text-medical-gold mt-1"></i>
+                        <span class="text-slate-300 text-sm">İnteraktif etik simülasyonları</span>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i class="bi bi-check2-square text-medical-gold mt-1"></i>
+                        <span class="text-slate-300 text-sm">Kodlama atölyesi</span>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i class="bi bi-check2-square text-medical-gold mt-1"></i>
+                        <span class="text-slate-300 text-sm">Ortak müfredat tasarımı çalıştayı</span>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i class="bi bi-check2-square text-medical-gold mt-1"></i>
+                        <span class="text-slate-300 text-sm">Dijital mahremiyet oyunu</span>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i class="bi bi-check2-square text-medical-gold mt-1"></i>
+                        <span class="text-slate-300 text-sm">Öğrenci hackathon’u</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- PROGRAM SECTION -->
+    <section id="program" class="py-24 relative z-10 bg-gradient-to-b from-medical-dark via-[#0d1425] to-medical-dark">
+        <div class="max-w-6xl mx-auto px-4">
+            
+            <div class="text-center mb-20 animate-me">
+                <h2 class="font-classic text-4xl md:text-5xl font-bold text-white mb-4">Sempozyum Programı</h2>
+                <div class="h-px w-24 bg-gradient-to-r from-transparent via-medical-gold to-transparent mx-auto"></div>
+            </div>
+
+            <div class="timeline-line relative">
+                
+                <!-- GÜN 1 BAŞLIK -->
+                <div class="relative flex items-center justify-center mb-12 animate-me">
+                    <div class="bg-medical-card border border-medical-gold px-8 py-3 rounded-sm z-10 shadow-[0_0_20px_rgba(212,175,55,0.2)]">
+                        <h3 class="font-classic text-2xl font-bold text-gradient-gold">1. GÜN: GEÇMİŞTEN GELECEĞE TIBBIN DÖNÜŞÜMÜ</h3>
+                    </div>
+                </div>
+
+                <!-- 1. Gün İçerikleri -->
+                <div class="space-y-8">
+                    
+                    <!-- Item 1 -->
+                    <div class="relative flex flex-col md:flex-row items-center md:justify-between w-full group animate-me">
+                        <div class="hidden md:block w-5/12"></div>
+                        <div class="absolute left-[20px] md:left-1/2 w-4 h-4 rounded-full bg-medical-dark border-2 border-medical-cyan transform -translate-x-1/2 z-10 shadow-[0_0_10px_#00F0FF]"></div>
+                        <div class="w-full md:w-5/12 pl-12 md:pl-0">
+                            <div class="glass-panel p-6 rounded-lg">
+                                <span class="font-tech text-medical-cyan block mb-2 text-sm">08.30 – 09.00</span>
+                                <h4 class="font-bold text-white text-lg">Kayıt & Karşılama</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="relative flex flex-col md:flex-row-reverse items-center md:justify-between w-full group animate-me">
+                        <div class="hidden md:block w-5/12"></div>
+                        <div class="absolute left-[20px] md:left-1/2 w-4 h-4 rounded-full bg-medical-dark border-2 border-medical-gold transform -translate-x-1/2 z-10"></div>
+                        <div class="w-full md:w-5/12 pl-12 md:pl-0 text-left md:text-right">
+                            <div class="glass-panel p-6 rounded-lg">
+                                <span class="font-tech text-medical-gold block mb-2 text-sm">09.00 – 09.30</span>
+                                <h4 class="font-bold text-white text-lg">Açılış Konuşması</h4>
+                                <p class="font-classic text-medical-cyan mt-2 mb-3 italic">“Hipokrat’tan Yapay Zekâya: Tıbbın Evriminde Kırılma Noktaları”</p>
+                                <p class="text-sm text-slate-400">- Tıp tarihindeki büyük dönüşümler (mikroskop, aşı, antibiyotik, görüntüleme)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 3 (Panel 1) -->
+                    <div class="relative flex flex-col md:flex-row items-center md:justify-between w-full group animate-me">
+                        <div class="hidden md:block w-5/12"></div>
+                        <div class="absolute left-[20px] md:left-1/2 w-4 h-4 rounded-full bg-medical-dark border-2 border-medical-cyan transform -translate-x-1/2 z-10"></div>
+                        <div class="w-full md:w-5/12 pl-12 md:pl-0">
+                            <div class="glass-panel p-6 rounded-lg border-l-4 border-l-medical-cyan">
+                                <h4 class="font-bold text-white text-lg">0 Panel: Modern Çağ ve Tıp – Bugünü Anlamak</h4>
+                                <p class="font-classic text-medical-gold mt-2 mb-4 text-lg">“Dijital Stetoskop: Yazılım ve Yapay Zekâ Tıbbın Neresinde?”</p>
+                                
+                                <div class="text-sm text-slate-300 space-y-2 mb-4">
+                                    <p class="font-semibold text-white">Alt Başlıklar:</p>
+                                    <ul class="list-disc pl-4 space-y-1 text-slate-400">
+                                        <li>Yazılım nedir, neden tıpla ilişkilendiriliyor? (Temel kavramlar ve tıpta yazılımın tarihçesi)</li>
+                                        <li>Güncel yapay zekâ uygulamaları: Görüntüleme, patoloji, genomik, klinik karar destek sistemleri</li>
+                                        <li>Türkiye’den ve dünyadan başarılı örnekler (start-up’lar, araştırma projeleri)</li>
+                                        <li>Yapay zekâ tıbbın neresinde hata yapabilir? Sınırlar ve riskler</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-black/30 p-3 rounded text-xs space-y-2">
+                                    <p><strong class="text-medical-cyan">Konuşmacılar:</strong> Tıp bilişimi uzmanı, radyolog, yapay zekâ mühendisi, sağlık girişimcisi</p>
+                                    <p class="text-medical-gold"><i class="bi bi-lightbulb-fill"></i> <strong>Yenilikçi Öğe:</strong> Canlı demo – Bir yapay zekâ modelinin akciğer grafisinde nodül tespiti yapması, ardından bir radyologla karşılaştırmalı değerlendirme</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 4 (Panel 2) -->
+                    <div class="relative flex flex-col md:flex-row-reverse items-center md:justify-between w-full group animate-me">
+                        <div class="hidden md:block w-5/12"></div>
+                        <div class="absolute left-[20px] md:left-1/2 w-4 h-4 rounded-full bg-medical-dark border-2 border-medical-gold transform -translate-x-1/2 z-10"></div>
+                        <div class="w-full md:w-5/12 pl-12 md:pl-0 text-left">
+                            <div class="glass-panel p-6 rounded-lg border-r-4 border-r-medical-gold">
+                                <p class="font-classic text-medical-cyan mt-2 mb-4 text-lg">edata Nasıl Entegre Edilmeli? Yeni Bir Bölümün Temelleri”</p>
+                                
+                                <div class="text-sm text-slate-300 space-y-2 mb-4">
+                                    <p class="font-semibold text-white">Alt Başlıklar:</p>
+                                    <ul class="list-disc pl-4 space-y-1 text-slate-400">
+                                        <li>Mevcut tıp eğitimi müfredatının dijital çağa uyumu</li>
+                                        <li>Yapay zekâ okuryazarlığı: Tıp öğrencileri hangi yetkinlikleri kazanmalı?</li>
+                                        <li>Yapay zekâ destekli eğitim araçları (sanal hastalar, simülasyonlar, kişiselleştirilmiş öğrenme)</li>
+                                        <li>Tıp fakültelerinde yeni bir anabilim dalı: “Dijital Tıp ve Yapay Zekâ” – müfredat önerisi, ders içerikleri, kariyer yolları</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-black/30 p-3 rounded text-xs space-y-2">
+                                    <p><strong>Format:</strong> Önce 3 kısa sunum (20’şer dakika), ardından moderatörlü tartışma</p>
+                                    <p><strong class="text-medical-gold">Konuşmacılar:</strong> Tıp eğitimi uzmanı (siz), yapay zekâ eğitmeni, tıp öğrencisi temsilcisi, YÖK temsilcisi (davetli)</p>
+                                    <p class="text-medical-cyan"><i class="bi bi-bar-chart-fill"></i> <strong>Yenilikçi Öğe:</strong> Katılımcılara anlık anketle “Tıp eğitiminde zorunlu kodlama dersi olmalı mı?” sorusu yöneltilir, sonuçlar panelde tartışılır.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 5 -->
+                    <div class="relative flex flex-col md:flex-row items-center md:justify-between w-full group animate-me">
+                        <div class="hidden md:block w-5/12"></div>
+                        <div class="absolute left-[20px] md:left-1/2 w-4 h-4 rounded-full bg-medical-dark border-2 border-medical-cyan transform -translate-x-1/2 z-10"></div>
+                        <div class="w-full md:w-5/12 pl-12 md:pl-0">
+                            <div class="glass-panel p-6 rounded-lg">
+                                <span class="font-tech text-medical-cyan block mb-2 text-sm">12.45 – 14.00</span>
+                                <h4 class="font-bold text-white text-lg">Öğle Yemeği & Poster Sunumları</h4>
+                                <ul class="list-disc pl-4 mt-2 text-sm text-slate-400">
+                                    <li>Tıpta yapay zekâ konulu araştırma posterleri (öğrenci ve genç araştırmacılara açık çağrı)</li>
+                                    <li>Sağlık teknolojileri fuarcığı (start-up’ların ürünlerini sergilemesi)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 6 (Atölyeler) -->
+                    <div class="relative flex flex-col w-full group animate-me">
+                        <div class="absolute left-[20px] md:left-1/2 w-4 h-4 rounded-full bg-medical-dark border-2 border-medical-gold transform -translate-x-1/2 z-10"></div>
+                        <div class="w-full pl-12 md:pl-0 md:text-center mt-2 md:mt-8 mb-6">
+                            <span class="font-tech text-medical-gold text-sm block">14.00 – 17.00</span>
+                            <h4 class="font-classic text-2xl text-white font-bold inline-block border-b border-medical-cyan pb-2">Paralel Atölyeler</h4>
+                            <p class="text-xs text-slate-500 mt-2">(Katılımcılar birini seçer)</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full pl-12 md:pl-0">
+                            <!-- Atölye 1 -->
+                            <div class="glass-panel p-5 rounded-lg border-t-2 border-t-medical-cyan">
+                                <h5 class="font-bold text-medical-cyan mb-1">Atölye 1 (Temel Seviye):</h5>
+                                <p class="font-classic text-white text-sm italic mb-3">“Tıp Öğrencileri İçin Temel Kodlama: Python ile Tıbbi Veri Analizi”</p>
+                                <ul class="text-xs text-slate-400 space-y-1 mb-3">
+                                    <li>- Python’a giriş, veri yapıları, basit istatistik</li>
+                                    <li>- Gerçek bir tıbbi veri seti (örneğin diyabet verisi) üzerinde uygulama</li>
+                                </ul>
+                                <div class="text-[11px] text-slate-300 bg-black/40 p-2 rounded">
+                                    <p><strong class="text-medical-gold">Eğitmen:</strong> Siz (tıp eğitimi uzmanı, kodlama bilen) + yardımcı eğitmenler</p>
+                                    <p class="mt-1"><strong class="text-medical-cyan">Hedef:</strong> Katılımcıların temel kodlama mantığını kavraması ve tıbbi veriyle ilk tanışması</p>
+                                </div>
+                            </div>
+                            <!-- Atölye 2 -->
+                            <div class="glass-panel p-5 rounded-lg border-t-2 border-t-medical-gold">
+                                <h5 class="font-bold text-medical-gold mb-1">Atölye 2 (İleri Seviye):</h5>
+                                <p class="font-classic text-white text-sm italic mb-3">“Klinik Karar Destek Sistemleri Geliştirme: Bir Vaka Çalışması”</p>
+                                <ul class="text-xs text-slate-400 space-y-1 mb-3">
+                                    <li>- Makine öğrenmesi modelleri oluşturma (Python, scikit-learn)</li>
+                                    <li>- Gerçek bir klinik problem (örneğin sepsis tahmini) üzerinde ekip çalışması</li>
+                                </ul>
+                                <div class="text-[11px] text-slate-300 bg-black/40 p-2 rounded mt-auto">
+                                    <p><strong class="text-medical-cyan">Eğitmen:</strong> Veri bilimci + klinisyen</p>
+                                </div>
+                            </div>
+                            <!-- Atölye 3 -->
+                            <div class="glass-panel p-5 rounded-lg border-t-2 border-t-white">
+                                <h5 class="font-bold text-white mb-1">Atölye 3:</h5>
+                                <p class="font-classic text-medical-cyan text-sm italic mb-3">“Dijital Etik Vaka Çalışması: Yapay Zekâ Karar Verirken Kim Sorumlu?”</p>
+                                <ul class="text-xs text-slate-400 space-y-1 mb-3">
+                                    <li>- Etik ikilem senaryoları (örneğin yapay zekânın hatalı teşhisi, veri gizliliği ihlali)</li>
+                                    <li>- Rol-play ile farklı paydaşların (doktor, hasta, yazılımcı, hastane yöneticisi) bakış açılarını anlama</li>
+                                </ul>
+                                <div class="text-[11px] text-slate-300 bg-black/40 p-2 rounded mt-auto">
+                                    <p><strong class="text-medical-gold">Kolaylaştırıcı:</strong> Etik uzmanı + hukukçu</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 7 -->
+                    <div class="relative flex flex-col md:flex-row items-center md:justify-between w-full group animate-me pt-8">
+                        <div class="hidden md:block w-5/12"></div>
+                        <div class="absolute left-[20px] md:left-1/2 w-4 h-4 rounded-full bg-medical-dark border-2 border-medical-cyan transform -translate-x-1/2 z-10 shadow-[0_0_15px_#00F0FF]"></div>
+                        <div class="w-full md:w-5/12 pl-12 md:pl-0">
+                            <div class="glass-panel p-6 rounded-lg bg-medical-cyan/5">
+                                <span class="font-tech text-medical-cyan block mb-2 text-sm">19.00 – 21.00</span>
+                                <h4 class="font-bold text-white text-lg">Akşam Etkinliği (İsteğe Bağlı):</h4>
+                                <p class="font-classic text-medical-gold mt-1 mb-2 italic">“Geleceğin Hekimi” Temalı Kısa Film Gösterimi ve Söyleşi</p>
+                                <ul class="list-disc pl-4 text-sm text-slate-400">
+                                    <li>Yapay zekâ ve tıp temalı kısa filmler (öğrenciler tarafından çekilmiş olabilir)</li>
+                                    <li>Ardından yönetmen ve oyuncularla söyleşi</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- GÜN 2 BAŞLIK -->
+                <div class="relative flex items-center justify-center my-16 animate-me">
+                    <div class="bg-medical-card border border-medical-cyan px-8 py-3 rounded-sm z-10 shadow-[0_0_20px_rgba(0,240,255,0.2)]">
+                        <h3 class="font-classic text-2xl font-bold text-gradient-cyan">2. GÜN: MESLEĞİN GELECEĞİ, ETİK VE KORUNMA</h3>
+                    </div>
+                </div>
+
+                <!-- 2. Gün İçerikleri -->
+                <div class="space-y-8">
+                    
+                    <!-- Item 2.1 -->
+                    <div class="relative flex flex-col md:flex-row items-center md:justify-between w-full group animate-me">
+                        <div class="hidden md:block w-5/12"></div>
+                        <div class="absolute left-[20px] md:left-1/2 w-4 h-4 rounded-full bg-medical-dark border-2 border-medical-cyan transform -translate-x-1/2 z-10"></div>
+                        <div class="w-full md:w-5/12 pl-12 md:pl-0">
+                            <div class="glass-panel p-6 rounded-lg">
+                                <span class="font-tech text-medical-cyan block mb-2 text-sm">09.00 – 09.30</span>
+                                <h4 class="font-bold text-white text-lg">Güne Başlarken:</h4>
+                                <p class="text-sm text-slate-400 mt-1">Önceki günün özeti, günün hedefleri</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 2.2 -->
+                    <div class="relative flex flex-col md:flex-row-reverse items-center md:justify-between w-full group animate-me">
+                        <div class="hidden md:block w-5/12"></div>
+                        <div class="absolute left-[20px] md:left-1/2 w-4 h-4 rounded-full bg-medical-dark border-2 border-medical-gold transform -translate-x-1/2 z-10"></div>
+                        <div class="w-full md:w-5/12 pl-12 md:pl-0 text-left md:text-right">
+                            <div class="glass-panel p-6 rounded-lg border-r-4 border-r-medical-gold">
+                                <span class="font-tech text-medical-gold block mb-2 text-sm">09.30 – 11.00</span>
+                                <h4 class="font-bold text-white text-lg">Panel: Doktorluk Mesleği Ölüyor mu? Yoksa Dönüşüyor mu?</h4>
+                                <p class="font-classic text-medical-cyan mt-2 mb-4 text-lg">“Doktor 2.0: Teknisyen mi, Hekim mi?”</p>
+                                
+                                <div class="text-sm text-slate-300 space-y-2 mb-4 md:text-right text-left">
+                                    <p class="font-semibold text-white">Alt Başlıklar (istenen başlıklar doğrultusunda):</p>
+                                    <ul class="list-none space-y-1 text-slate-400">
+                                        <li>- Sağlık sektörünün güncelinde gelişenler doktorları nasıl etkileyecek?</li>
+                                        <li>- Doktor artık teknisyen gibi mi olacak?</li>
+                                        <li>- Doktorluk diye bir meslek kalacak mı?</li>
+                                        <li>- İnsan doktorun yapay zekâ karşısında artı değerleri: empati, etik karar verme, bütüncül bakış</li>
+                                        <li>- Geleceğin doktoru: Hangi yetkinlikler öne çıkacak? (İletişim, veri yorumlama, teknoloji yönetimi)</li>
+                                        <li>- Kendimizi nasıl bu konuda geliştirmeliyiz?</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-black/30 p-3 rounded text-xs space-y-2 text-left">
+                                    <p><strong class="text-medical-gold">Konuşmacılar:</strong> Klinisyen (farklı branşlardan), tıp eğitimi uzmanı (siz), hasta derneği temsilcisi, yapay zekâ etik uzmanı</p>
+                                    <p class="text-medical-cyan"><i class="bi bi-pie-chart-fill"></i> <strong>Yenilikçi Öğe:</strong> Salon ortamında bir “gelecek oylaması” – “Yapay zekâ 20 yıl içinde doktorların %50’sinden fazlasının işini elinden alır mı?” Evet/Hayır, sonuçlar anlık grafiklenir ve panelistler yorumlar.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 2.3 Kahve -->
+                    <div class="relative flex flex-col md:flex-row items-center md:justify-between w-full group animate-me">
+                        <div class="hidden md:block w-5/12"></div>
+                        <div class="absolute left-[20px] md:left-1/2 w-4 h-4 rounded-full bg-medical-dark border-2 border-slate-500 transform -translate-x-1/2 z-10"></div>
+                        <div class="w-full md:w-5/12 pl-12 md:pl-0">
+                            <div class="py-2 px-4 border border-slate-700 rounded-lg text-slate-400 inline-block text-sm">
+                                <i class="bi bi-cup-hot"></i> <span class="font-tech ml-2">11.00 – 11.15</span> Kahve Arası
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 2.4 Konferans -->
+                    <div class="relative flex flex-col md:flex-row items-center md:justify-between w-full group animate-me">
+                        <div class="hidden md:block w-5/12"></div>
+                        <div class="absolute left-[20px] md:left-1/2 w-4 h-4 rounded-full bg-medical-dark border-2 border-medical-cyan transform -translate-x-1/2 z-10"></div>
+                        <div class="w-full md:w-5/12 pl-12 md:pl-0">
+                            <div class="glass-panel p-6 rounded-lg border-l-4 border-l-medical-cyan">
+                                <span class="font-tech text-medical-cyan block mb-2 text-sm">11.15 – 12.45</span>
+                                <h4 class="font-bold text-white text-lg">Konferans: İsviçre Çakısı Hekim</h4>
+                                <p class="font-classic text-medical-gold mt-2 mb-4 text-lg">“Yapay Zekâyı Düşman Konumundan Dost Konumuna Almak: Çok Yönlü Hekimin Yol Haritası”</p>
+                                
+                                <div class="text-sm text-slate-300 space-y-2 mb-4">
+                                    <p class="font-semibold text-white">İçerik:</p>
+                                    <ul class="list-disc pl-4 space-y-1 text-slate-400">
+                                        <li>İsviçre çakısı metaforu: Tıp bilgisi, iletişim becerileri, veri okuryazarlığı, temel kodlama, yapay zekâ okuryazarlığı</li>
+                                        <li>Yapay zekâ araçlarını etkin kullanma stratejileri (klinikte, araştırmada, eğitimde)</li>
+                                        <li>Yapay zekâ ile işbirliği yapmanın psikolojisi: Dirençten kabule, kabule işbirliğine</li>
+                                        <li>Kendi kendine öğrenme kaynakları, online kurslar, topluluklar</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-black/30 p-3 rounded text-xs">
+                                    <p><strong class="text-medical-cyan">Konuşmacı:</strong> Siz (tıp eğitimi uzmanı, kodlama bilen) + belki bir genç doktor (yapay zekâyı aktif kullanan)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 2.5 Yemek -->
+                    <div class="relative flex flex-col md:flex-row-reverse items-center md:justify-between w-full group animate-me">
+                        <div class="hidden md:block w-5/12"></div>
+                        <div class="absolute left-[20px] md:left-1/2 w-4 h-4 rounded-full bg-medical-dark border-2 border-slate-500 transform -translate-x-1/2 z-10"></div>
+                        <div class="w-full md:w-5/12 pl-12 md:pl-0 text-left md:text-right">
+                            <div class="py-2 px-4 border border-slate-700 rounded-lg text-slate-400 inline-block text-sm">
+                                <i class="bi bi-egg-fried"></i> <span class="font-tech ml-2">12.45 – 14.00</span> Öğle Yemeği & Networking
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 2.6 Panel -->
+                    <div class="relative flex flex-col md:flex-row-reverse items-center md:justify-between w-full group animate-me">
+                        <div class="hidden md:block w-5/12"></div>
+                        <div class="absolute left-[20px] md:left-1/2 w-4 h-4 rounded-full bg-medical-dark border-2 border-medical-gold transform -translate-x-1/2 z-10"></div>
+                        <div class="w-full md:w-5/12 pl-12 md:pl-0 text-left md:text-right">
+                            <div class="glass-panel p-6 rounded-lg border-r-4 border-r-medical-gold">
+                                <span class="font-tech text-medical-gold block mb-2 text-sm">14.00 – 15.30</span>
+                                <h4 class="font-bold text-white text-lg">Panel: Dijital Etik ve Veri Gizliliği</h4>
+                                <p class="font-classic text-medical-cyan mt-2 mb-4 text-lg">“Gelişen Dünyada Etik ve Verilerimizin Gizliliği: Kime Güvenelim?”</p>
+                                
+                                <div class="text-sm text-slate-300 space-y-2 mb-4 md:text-right text-left">
+                                    <p class="font-semibold text-white">Alt Başlıklar:</p>
+                                    <ul class="list-none space-y-1 text-slate-400">
+                                        <li>- Sağlık verilerinin toplanması, işlenmesi ve paylaşılmasında etik ilkeler</li>
+                                        <li>- Yapay zekâ modellerinin eğitiminde kullanılan verilerin mahremiyeti (anonimleştirme yeterli mi?)</li>
+                                        <li>- Hasta mahremiyeti ile tıbbi ilerleme arasındaki denge</li>
+                                        <li>- Türkiye’de ve dünyada yasal düzenlemeler (KVKK, GDPR, HIPAA)</li>
+                                        <li>- Yapay zekâ kararlarının şeffaflığı ve açıklanabilirliği (black box sorunu)</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-black/30 p-3 rounded text-xs text-left">
+                                    <p><strong class="text-medical-gold">Konuşmacılar:</strong> Hukukçu (sağlık hukuku), etik uzmanı, hasta hakları derneği temsilcisi, veri güvenliği uzmanı</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 2.7 Kahve -->
+                    <div class="relative flex flex-col md:flex-row items-center md:justify-between w-full group animate-me">
+                        <div class="hidden md:block w-5/12"></div>
+                        <div class="absolute left-[20px] md:left-1/2 w-4 h-4 rounded-full bg-medical-dark border-2 border-slate-500 transform -translate-x-1/2 z-10"></div>
+                        <div class="w-full md:w-5/12 pl-12 md:pl-0">
+                            <div class="py-2 px-4 border border-slate-700 rounded-lg text-slate-400 inline-block text-sm">
+                                <i class="bi bi-cup-hot"></i> <span class="font-tech ml-2">15.30 – 15.45</span> Kahve Arası
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 2.8 İnteraktif -->
+                    <div class="relative flex flex-col md:flex-row items-center md:justify-between w-full group animate-me">
+                        <div class="hidden md:block w-5/12"></div>
+                        <div class="absolute left-[20px] md:left-1/2 w-4 h-4 rounded-full bg-medical-dark border-2 border-medical-cyan transform -translate-x-1/2 z-10"></div>
+                        <div class="w-full md:w-5/12 pl-12 md:pl-0">
+                            <div class="glass-panel p-6 rounded-lg border-l-4 border-l-medical-cyan">
+                                <span class="font-tech text-medical-cyan block mb-2 text-sm">15.45 – 17.15</span>
+                                <h4 class="font-bold text-white text-lg">İnteraktif Oturum: Kendimizi ve Verilerimizi Nasıl Koruruz?</h4>
+                                <p class="font-classic text-medical-gold mt-2 mb-4 text-lg">“Dijital Kale: Hekimler İçin Dijital Mahremiyet Stratejileri”</p>
+                                
+                                <div class="text-sm text-slate-300 space-y-2 mb-4">
+                                    <p class="font-semibold text-white">Format: <span class="font-normal text-slate-400">Oyunlaştırılmış atölye</span></p>
+                                    <ul class="list-disc pl-4 space-y-1 text-slate-400">
+                                        <li>Katılımcılar küçük gruplara ayrılır.</li>
+                                        <li>Her gruba bir senaryo verilir (örneğin: “Hastanenizin veri tabanı hacklendi, hasta kayıtları sızdırıldı. Ne yapardınız?” veya “Bir yapay zekâ uygulamasına hasta verilerini yüklemek istiyorsunuz. Hangi güvenlik önlemlerini alırsınız?”)</li>
+                                        <li>Gruplar çözümlerini geliştirir, ardından tüm salonla paylaşır. Uzmanlar geri bildirim verir.</li>
+                                        <li>Pratik ipuçları: Güçlü şifreler, iki faktörlü doğrulama, VPN kullanımı, hangi verilerin paylaşılmaması gerektiği, güvenilir yazılım sertifikaları</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-black/30 p-3 rounded text-xs">
+                                    <p><strong class="text-medical-cyan">Kolaylaştırıcılar:</strong> Veri güvenliği uzmanı, etik uzmanı, siz</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 2.9 Kapanış -->
+                    <div class="relative flex flex-col md:flex-row-reverse items-center md:justify-between w-full group animate-me">
+                        <div class="hidden md:block w-5/12"></div>
+                        <div class="absolute left-[20px] md:left-1/2 w-4 h-4 rounded-full bg-medical-dark border-2 border-medical-gold transform -translate-x-1/2 z-10 shadow-[0_0_15px_#D4AF37]"></div>
+                        <div class="w-full md:w-5/12 pl-12 md:pl-0 text-left md:text-right">
+                            <div class="glass-panel p-6 rounded-lg bg-medical-gold/5">
+                                <span class="font-tech text-medical-gold block mb-2 text-sm">17.15 – 18.00</span>
+                                <h4 class="font-bold text-white text-lg">Kapanış Oturumu: Ortak Akıl ve Sonuç Bildirgesi</h4>
+                                <p class="font-classic text-medical-cyan mt-2 mb-4 italic">“Geleceğin Tıbbını Birlikte Yazalım”</p>
+                                
+                                <ul class="list-none space-y-1 text-sm text-slate-400">
+                                    <li>- İki günün özeti, öne çıkan fikirler</li>
+                                    <li>- Katılımcılardan gelen önerilerle “Tıp Eğitiminde Dijital Dönüşüm İçin 10 Madde” bildirgesinin oluşturulması (interaktif, anlık oylama)</li>
+                                    <li>- Kapanış konuşması ve teşekkürler</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INNOVATIONS GRID -->
+    <section class="py-24 relative z-10 bg-medical-dark border-y border-medical-gold/20">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="text-center mb-16 animate-me">
+                <h2 class="font-classic text-3xl md:text-4xl font-bold text-white mb-2">Sempozyumun Yenilikçi Yönleri</h2>
+                <p class="font-tech text-medical-cyan text-sm tracking-widest uppercase">(BİR İLK YARATMAK İÇİN)</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- 1 -->
+                <div class="glass-panel p-6 rounded animate-me hover:-translate-y-2">
+                    <div class="text-3xl text-medical-cyan mb-4"><i class="bi bi-robot"></i></div>
+                    <h3 class="font-bold text-white mb-2 text-lg">1. Canlı Yapay Zekâ – İnsan Karşılaştırması</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Bir radyolog ile yapay zekânın aynı vakaları eş zamanlı yorumlaması, seyircinin de interaktif oylamayla katılımı.</p>
+                </div>
+                <!-- 2 -->
+                <div class="glass-panel p-6 rounded animate-me hover:-translate-y-2">
+                    <div class="text-3xl text-medical-gold mb-4"><i class="bi bi-code-square"></i></div>
+                    <h3 class="font-bold text-white mb-2 text-lg">2. Tıp Öğrencileri İçin Kodlama Atölyesi</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Tıp fakültesi bünyesinde, doğrudan öğrencilere yönelik uygulamalı kodlama eğitimi veren ilk sempozyum atölyesi olabilir.</p>
+                </div>
+                <!-- 3 -->
+                <div class="glass-panel p-6 rounded animate-me hover:-translate-y-2">
+                    <div class="text-3xl text-medical-cyan mb-4"><i class="bi bi-person-lines-fill"></i></div>
+                    <h3 class="font-bold text-white mb-2 text-lg">3. Etik Rol-Play Atölyesi</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Katılımcıların aktif olarak etik ikilemleri canlandırdığı, tiyatral bir öğrenme deneyimi.</p>
+                </div>
+                <!-- 4 -->
+                <div class="glass-panel p-6 rounded animate-me hover:-translate-y-2">
+                    <div class="text-3xl text-medical-gold mb-4"><i class="bi bi-shield-lock"></i></div>
+                    <h3 class="font-bold text-white mb-2 text-lg">4. Dijital Mahremiyet Oyunu</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Veri güvenliği konusunu sıkıcı slaytlar yerine eğlenceli senaryolarla öğreten interaktif oturum.</p>
+                </div>
+                <!-- 5 -->
+                <div class="glass-panel p-6 rounded animate-me hover:-translate-y-2">
+                    <div class="text-3xl text-medical-cyan mb-4"><i class="bi bi-journal-check"></i></div>
+                    <h3 class="font-bold text-white mb-2 text-lg">5. Ortak Müfredat Tasarımı</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Katılımcıların görüşleriyle şekillenen, somut bir çıktı (bildirge) üretilmesi.</p>
+                </div>
+                <!-- 6 & 7 (Span 2 columns mostly) -->
+                <div class="glass-panel p-6 rounded animate-me hover:-translate-y-2 lg:col-span-1">
+                    <div class="text-3xl text-medical-gold mb-4"><i class="bi bi-mortarboard"></i></div>
+                    <h3 class="font-bold text-white mb-2 text-lg">6. Öğrenci Katılımı</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Poster sunumları, kısa film yarışması, hackathon gibi etkinliklerle öğrencilerin aktif rol alması.</p>
+                </div>
+                <div class="glass-panel p-6 rounded animate-me hover:-translate-y-2 md:col-span-2 lg:col-span-3 border border-medical-cyan/50 bg-medical-cyan/5">
+                    <div class="flex flex-col md:flex-row items-center gap-6">
+                        <div class="text-5xl text-medical-cyan"><i class="bi bi-diagram-3"></i></div>
+                        <div>
+                            <h3 class="font-bold text-white mb-2 text-xl">7. Disiplinlerarası Konuşmacı Kadrosu</h3>
+                            <p class="text-sm text-slate-300 leading-relaxed">Tıp, mühendislik, hukuk, etik, hasta temsiliyetini bir araya getiren ilk kapsamlı sempozyum.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER & REGISTRATION -->
+    <footer id="register" class="relative z-10 pt-24 pb-12 bg-[#050810] border-t-4 border-medical-gold">
+        <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-16 mb-16 animate-me">
+            
+            <div>
+                <h3 class="font-classic text-3xl text-white font-bold mb-6 border-b border-medical-cyan/30 pb-4">Uygulama Önerileri</h3>
+                <ul class="space-y-4 text-sm text-slate-400 font-modern">
+                    <li class="flex gap-3"><i class="bi bi-tag text-medical-gold text-lg"></i> <p><strong class="text-white">Kayıt Ücreti:</strong> Öğrencilerden düşük, profesyonellerden makul bir ücret alınabilir; sponsorluklarla (teknoloji firmaları, ilaç şirketleri) desteklenebilir.</p></li>
+                    <li class="flex gap-3"><i class="bi bi-broadcast text-medical-cyan text-lg"></i> <p><strong class="text-white">Çevrimiçi Katılım:</strong> Hibrit model (hem yüz yüze hem canlı yayın) daha geniş kitleye ulaşmayı sağlar.</p></li>
+                    <li class="flex gap-3"><i class="bi bi-award text-medical-gold text-lg"></i> <p><strong class="text-white">Sertifika:</strong> Katılımcılara “Dijital Tıp ve Yapay Zekâ Farkındalık Sertifikası” verilebilir.</p></li>
+                    <li class="flex gap-3"><i class="bi bi-book text-medical-cyan text-lg"></i> <p><strong class="text-white">Bildiri Kitabı:</strong> Sunum özetleri ve poster bildirileri ISBN’li bir e-kitap olarak yayınlanabilir.</p></li>
+                    <li class="flex gap-3"><i class="bi bi-hash text-medical-gold text-lg"></i> <p><strong class="text-white">Sosyal Medya:</strong> Etkinlik öncesi ve sırasında #Hekim4point0 etiketiyle paylaşımlar teşvik edilebilir.</p></li>
                 </ul>
             </div>
 
-            <div class="reg-right opacity-0 glass-card p-10 rounded-2xl text-center text-white bg-brand-dark">
-                <i class="bi bi-person-plus-fill text-5xl text-brand-tech"></i>
-                <h4 class="font-serif text-2xl font-bold mt-4 mb-3">Sempozyuma Kayıt Olun</h4>
-                <p class="text-sm text-slate-300 mb-8">Disiplinlerarası ortak akıl ile geleceğin tıbbını birlikte yazalım.</p>
-                <button class="w-full px-8 py-4 bg-brand-tech hover:bg-sky-400 rounded-full font-bold text-lg transition-all shadow-lg">Kayıt Ekranına Git <i class="bi bi-arrow-right-short ml-1"></i></button>
-                <p class="text-xs text-brand-accent mt-4">Kısa Süreliğine Sınırlı Erken Kayıt Fırsatı!</p>
+            <div class="glass-panel p-10 rounded-lg text-center flex flex-col justify-center border-t-4 border-t-medical-cyan">
+                <h4 class="font-classic text-2xl font-bold text-white mb-4">Geleceğin Tıbbında Yerinizi Alın</h4>
+                <p class="text-slate-400 text-sm mb-8">Klasik değerleri korurken, teknolojik dönüşüme öncülük eden bu eşsiz deneyimi kaçırmayın.</p>
+                <button class="w-full py-4 bg-medical-gold text-medical-dark hover:bg-white font-bold tracking-wider transition-colors duration-300 mb-4">
+                    HEMEN KAYIT OL
+                </button>
+                <p class="font-tech text-xs text-medical-cyan">#Hekim4point0</p>
             </div>
 
         </div>
-    </section>
 
-    <footer class="bg-brand-dark text-white py-16 border-t-[6px] border-brand-accent">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <h2 class="font-serif text-3xl font-bold mb-3 text-brand-light">Hekim 4.0</h2>
-            <p class="text-sm text-slate-400 mb-10 max-w-xl mx-auto">Yapay Zekâ Çağında Tıp Eğitimi ve Pratiği Sempozyumu. Tıbbın geleceği, ortak akıl ve disiplinlerarası işbirliği ile şekilleniyor.</p>
-            
-            <div class="mt-16 pt-8 border-t border-slate-800 text-xs text-slate-500 flex flex-col md:flex-row justify-between items-center">
-                <p>&copy; 2026 Hekim 4.0 Sempozyumu Organizasyonu. Tüm hakları saklıdır. Bu landing page, sağlanan sempozyum içeriğini eksiksiz sunmaktadır.</p>
-                <div class="flex space-x-4 mt-4 md:mt-0">
-                    <a href="#" class="hover:text-white transition-colors"><i class="bi bi-twitter-x"></i></a>
-                    <a href="#" class="hover:text-white transition-colors"><i class="bi bi-linkedin"></i></a>
-                    <a href="#" class="hover:text-white transition-colors"><i class="bi bi-instagram"></i></a>
-                </div>
-            </div>
+        <div class="max-w-6xl mx-auto px-4 text-center border-t border-slate-800 pt-8 text-xs text-slate-500 font-tech animate-me">
+            <p>&copy; 2026 Hekim 4.0 Sempozyumu. Tüm Hakları Saklıdır.</p>
         </div>
     </footer>
 
+    <!-- Three.js Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    
+    <!-- Anime.js Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
 
     <script>
-        // --- 1. THREE.JS BACKDROP ---
-        // Sahne, Kamera ve Renderer
+        // --- 1. THREE.JS MODERN/CLASSIC HYBRID BACKGROUND ---
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        // Fog to blend deep space
+        scene.fog = new THREE.FogExp2(0x0B1120, 0.05);
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         
         renderer.setSize(window.innerWidth, window.innerHeight);
-        document.getElementById('canvas-container').appendChild(renderer.domElement);
+        document.getElementById('bg-canvas').appendChild(renderer.domElement);
 
-        // Geometri ve Materyal (Soyut, siber-biyolojik yapı)
-        const geometry = new THREE.IcosahedronGeometry(1.5, 4);
-        const material = new THREE.MeshBasicMaterial({
-            color: '#0ea5e9', // Tech cyan
-            wireframe: true,
-            transparent: true,
-            opacity: 0.2
-        });
-        const techIco = new THREE.Mesh(geometry, material);
-        scene.add(techIco);
+        // Core Object: An Astrolabe / Neural Core mix
+        const coreGroup = new THREE.Group();
+        scene.add(coreGroup);
 
-        // Arka plan noktacıkları (Dijital veri bulutu)
+        // Classic Gold Rings (Astrolabe style)
+        const ringMaterial = new THREE.MeshBasicMaterial({ color: 0xD4AF37, wireframe: true, transparent: true, opacity: 0.15 });
+        for(let i=0; i<3; i++) {
+            const ringGeo = new THREE.TorusGeometry(10 + (i*2), 0.05, 16, 100);
+            const ring = new THREE.Mesh(ringGeo, ringMaterial);
+            ring.rotation.x = Math.random() * Math.PI;
+            ring.rotation.y = Math.random() * Math.PI;
+            ring.userData = { speedX: (Math.random()-0.5)*0.002, speedY: (Math.random()-0.5)*0.002 };
+            coreGroup.add(ring);
+        }
+
+        // Tech Cyan Particles (Data flow inside)
         const particlesGeometry = new THREE.BufferGeometry();
-        const particlesCount = 2000;
+        const particlesCount = 3000;
         const posArray = new Float32Array(particlesCount * 3);
 
         for(let i = 0; i < particlesCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 10;
+            // Sphere distribution
+            const r = 15 * Math.cbrt(Math.random());
+            const theta = Math.random() * 2 * Math.PI;
+            const phi = Math.acos(2 * Math.random() - 1);
+            
+            posArray[i*3] = r * Math.sin(phi) * Math.cos(theta);
+            posArray[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+            posArray[i*3+2] = r * Math.cos(phi);
         }
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
         const particlesMaterial = new THREE.PointsMaterial({
-            size: 0.015,
-            color: '#fbbf24', // Accent gold
+            size: 0.05,
+            color: 0x00F0FF,
             transparent: true,
-            opacity: 0.6
+            opacity: 0.4,
+            blending: THREE.AdditiveBlending
         });
         const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-        scene.add(particlesMesh);
+        coreGroup.add(particlesMesh);
 
-        camera.position.z = 4;
+        camera.position.z = 25;
 
-        // Mouse Parallax Etkisi
+        // Subtle Mouse Parallax
         let mouseX = 0, mouseY = 0;
+        let targetX = 0, targetY = 0;
+
         document.addEventListener('mousemove', (e) => {
-            mouseX = (e.clientX / window.innerWidth - 0.5) * 0.1;
-            mouseY = (e.clientY / window.innerHeight - 0.5) * 0.1;
+            mouseX = (e.clientX - window.innerWidth/2);
+            mouseY = (e.clientY - window.innerHeight/2);
         });
 
-        // Animasyon Döngüsü
+        // Animation Loop
         function animate() {
             requestAnimationFrame(animate);
             
-            techIco.rotation.x += 0.001;
-            techIco.rotation.y += 0.0015;
+            // Rotate Rings
+            coreGroup.children.forEach(child => {
+                if(child.type === "Mesh") {
+                    child.rotation.x += child.userData.speedX;
+                    child.rotation.y += child.userData.speedY;
+                }
+            });
+
+            // Rotate Particles slightly
             particlesMesh.rotation.y += 0.0005;
 
-            // Parallax mouse follow
-            techIco.position.x += (mouseX - techIco.position.x) * 0.05;
-            techIco.position.y += (-mouseY - techIco.position.y) * 0.05;
+            // Parallax Ease
+            targetX = mouseX * 0.001;
+            targetY = mouseY * 0.001;
+            coreGroup.rotation.y += 0.05 * (targetX - coreGroup.rotation.y);
+            coreGroup.rotation.x += 0.05 * (targetY - coreGroup.rotation.x);
 
             renderer.render(scene, camera);
         }
         animate();
 
-        // Responsive Resizing
+        // Handle Resize
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // --- 2. ANIME.JS SCROLL REVEAL ANIMATIONS ---
+        // --- 2. FIXED ANIME.JS SCROLL REVEAL ---
+        // Bu yapı her `.animate-me` classına sahip elementi tarar ve görünür olduğunda kendi başına animasyon oynatır.
+        // Böylece parent/child görünmezlik çatışmaları sıfırlanır.
         
-        // Initial Hero Animation
-        anime({
-            targets: '.hero-content',
-            opacity: [0, 1],
-            translateY: [50, 0],
-            duration: 1500,
-            easing: 'easeOutExpo',
-            delay: 300
-        });
+        document.addEventListener("DOMContentLoaded", () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -50px 0px', // Tetiklenme noktası (ekranın biraz altı)
+                threshold: 0.1
+            };
 
-        // Function to create IntersectionObserver and trigger animations
-        const revealOnScroll = (target, animationProps) => {
-            const observer = new IntersectionObserver((entries) => {
+            const observer = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        anime({ targets: entry.target, ...animationProps });
+                        anime({
+                            targets: entry.target,
+                            opacity: [0, 1],
+                            translateY: [40, 0],
+                            duration: 1200,
+                            easing: 'easeOutQuart'
+                        });
+                        // Element animasyonu aldıktan sonra izlemeyi bırak
                         observer.unobserve(entry.target);
                     }
                 });
-            }, { threshold: 0.1 }); // Reveal when 10% visible
-            
-            document.querySelectorAll(target).forEach(el => observer.observe(el));
-        };
+            }, observerOptions);
 
-        // --- 3. SCROLL REVEAL DEFINITIONS ---
-
-        // Section Titles
-        revealOnScroll('.section-title', {
-            opacity: [0, 1],
-            translateY: [30, 0],
-            duration: 1200,
-            easing: 'easeOutExpo'
-        });
-
-        // Intro Text (Left & Right)
-        revealOnScroll('.intro-left', {
-            opacity: [0, 1],
-            translateX: [-50, 0],
-            duration: 1200,
-            easing: 'easeOutExpo'
-        });
-        revealOnScroll('.intro-right', {
-            opacity: [0, 1],
-            translateX: [50, 0],
-            duration: 1200,
-            easing: 'easeOutExpo',
-            delay: 200
-        });
-
-        // Program Day Headers (GÜN 1 / GÜN 2)
-        revealOnScroll('.program-day-header', {
-            opacity: [0, 1],
-            translateX: [-30, 0],
-            duration: 1000,
-            easing: 'easeOutExpo'
-        });
-
-        // Program Contents (Staggered load)
-        const animateProgramContent = (selector) => {
-            revealOnScroll(selector, {
-                opacity: [0, 1],
-                targets: (el) => el.querySelectorAll('.glass-card'), // Target individual cards
-                delay: anime.stagger(150),
-                translateY: [40, 0],
-                duration: 1000,
-                easing: 'easeOutElastic(1, .8)'
-            });
-        };
-        animateProgramContent('.program-content-day1');
-        animateProgramContent('.program-content-day2');
-
-        // Innovations Cards (Staggered)
-        revealOnScroll('.innovations-cards', {
-            opacity: [0, 1],
-            targets: (el) => el.querySelectorAll('div'),
-            delay: anime.stagger(150, {start: 300}), // Start after section title
-            scale: [0.8, 1],
-            translateY: [40, 0],
-            duration: 1000,
-            easing: 'easeOutBack'
-        });
-
-        // Registration Info (Left & Right)
-        revealOnScroll('.reg-left', {
-            opacity: [0, 1],
-            translateY: [40, 0],
-            duration: 1200,
-            easing: 'easeOutExpo'
-        });
-        revealOnScroll('.reg-right', {
-            opacity: [0, 1],
-            translateY: [40, 0],
-            duration: 1200,
-            easing: 'easeOutExpo',
-            delay: 200
+            // Tüm animasyon alacak elementleri gözlemle
+            const animateElements = document.querySelectorAll('.animate-me');
+            animateElements.forEach(el => observer.observe(el));
         });
 
     </script>
