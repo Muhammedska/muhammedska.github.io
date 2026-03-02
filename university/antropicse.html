@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hekim 4.0 — Yapay Zekâ Çağında Tıp Eğitimi ve Pratiği</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-pale: #F5E9C9;
+    --navy: #0A1628;
+    --navy-mid: #0E2040;
+    --navy-light: #142850;
+    --cream: #F8F4EC;
+    --red-accent: #8B1A1A;
+    --text-body: #1A1A2E;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Cormorant Garamond', serif;
+    background: var(--cream);
+    color: var(--text-body);
+    overflow-x: hidden;
+  }
+
+  /* NOISE TEXTURE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(10, 22, 40, 0.92);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(201, 168, 76, 0.2);
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(248, 244, 236, 0.7);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  .nav-cta {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--navy);
+    background: var(--gold);
+    padding: 0.55rem 1.4rem;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+
+  .nav-cta:hover {
+    background: var(--gold-light);
+    transform: translateY(-1px);
+  }
+
+  /* HERO */
+  #hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background: var(--navy);
+  }
+
+  #three-canvas {
+    position: absolute;
+    inset: 0;
+    opacity: 0.5;
+  }
+
+  .hero-grid-lines {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 10;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 8rem 3rem 5rem;
+    width: 100%;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid rgba(201,168,76,0.4);
+    padding: 0.4rem 1rem;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+  }
+
+  .hero-tag .dot {
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(201,168,76,0.6);
+    margin-bottom: 1rem;
+    opacity: 0;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(3.5rem, 7vw, 7rem);
+    line-height: 0.95;
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+    opacity: 0;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-title .version {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(3rem, 6vw, 6rem);
+    color: var(--gold);
+    display: block;
+    line-height: 1;
+  }
+
+  .hero-subtitle {
+    font-size: 1.4rem;
+    font-weight: 300;
+    font-style: italic;
+    color: rgba(248,244,236,0.65);
+    margin: 1.5rem 0 2.5rem;
+    max-width: 620px;
+    line-height: 1.6;
+    opacity: 0;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 3rem;
+    flex-wrap: wrap;
+    opacity: 0;
+  }
+
+  .hero-meta-item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-meta-label {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(201,168,76,0.5);
+    margin-bottom: 0.3rem;
+  }
+
+  .hero-meta-value {
+    font-size: 1.05rem;
+    font-weight: 400;
+    color: var(--cream);
+  }
+
+  .hero-cta-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 3rem;
+    opacity: 0;
+  }
+
+  .btn-primary {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--navy);
+    background: var(--gold);
+    padding: 1rem 2.5rem;
+    text-decoration: none;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-primary:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(201,168,76,0.3);
+  }
+
+  .btn-outline {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: transparent;
+    padding: 1rem 2.5rem;
+    text-decoration: none;
+    border: 1px solid rgba(201,168,76,0.5);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  .btn-outline:hover {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.08);
+  }
+
+  .hero-decoration {
+    position: absolute;
+    right: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 380px;
+    height: 380px;
+    opacity: 0;
+  }
+
+  .hero-decoration svg { width: 100%; height: 100%; }
+
+  /* ABOUT STRIP */
+  .about-strip {
+    background: var(--gold);
+    padding: 1.2rem 3rem;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .strip-inner {
+    display: flex;
+    gap: 4rem;
+    animation: marquee 30s linear infinite;
+    white-space: nowrap;
+  }
+
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .strip-item {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .strip-item::after {
+    content: '◆';
+    font-size: 0.5rem;
+  }
+
+  /* SECTION SHARED */
+  section { position: relative; }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-label::before {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(2.2rem, 4vw, 3.5rem);
+    line-height: 1.1;
+    color: var(--navy);
+  }
+
+  .section-title em { font-style: italic; color: var(--red-accent); }
+
+  /* ABOUT */
+  #about {
+    background: var(--cream);
+    padding: 8rem 3rem;
+  }
+
+  .about-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: start;
+  }
+
+  .about-left {}
+
+  .about-desc {
+    font-size: 1.2rem;
+    line-height: 1.9;
+    color: rgba(26,26,46,0.75);
+    margin-top: 2rem;
+    font-weight: 300;
+  }
+
+  .about-right {
+    padding-top: 4rem;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.2);
+  }
+
+  .stat-item {
+    background: var(--cream);
+    padding: 2rem;
+    transition: background 0.3s;
+  }
+
+  .stat-item:hover { background: rgba(201,168,76,0.06); }
+
+  .stat-number {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(26,26,46,0.5);
+  }
+
+  .target-list {
+    margin-top: 3rem;
+    border-top: 1px solid rgba(201,168,76,0.2);
+  }
+
+  .target-item {
+    padding: 0.9rem 0;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.95rem;
+    color: rgba(26,26,46,0.7);
+    font-weight: 300;
+  }
+
+  .target-item i {
+    color: var(--gold);
+    font-size: 0.85rem;
+    width: 20px;
+  }
+
+  /* PROGRAM TABS */
+  #program {
+    background: var(--navy);
+    padding: 8rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #program::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .program-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  .program-inner .section-title { color: var(--cream); }
+  .program-inner .section-title em { color: var(--gold); }
+
+  .day-tabs {
+    display: flex;
+    gap: 0;
+    margin: 3rem 0 2rem;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+  }
+
+  .day-tab {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(248,244,236,0.4);
+    padding: 1rem 2.5rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+
+  .day-tab.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+
+  .day-tab:hover:not(.active) {
+    color: rgba(248,244,236,0.7);
+  }
+
+  .day-content { display: none; }
+  .day-content.active { display: block; }
+
+  .day-header {
+    padding: 2rem 0 1.5rem;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    margin-bottom: 0;
+  }
+
+  .day-header h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--gold-light);
+  }
+
+  .session {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 2rem;
+    padding: 2rem 0;
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+    transition: background 0.2s;
+  }
+
+  .session:hover {
+    background: rgba(201,168,76,0.03);
+    padding-left: 0.5rem;
+    margin-left: -0.5rem;
+  }
+
+  .session-time {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    padding-top: 0.2rem;
+    flex-shrink: 0;
+  }
+
+  .session-badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.7rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid;
+  }
+
+  .badge-opening { color: #6DB6A0; border-color: rgba(109,182,160,0.4); background: rgba(109,182,160,0.08); }
+  .badge-panel { color: #7BA7D4; border-color: rgba(123,167,212,0.4); background: rgba(123,167,212,0.08); }
+  .badge-workshop { color: #D4A574; border-color: rgba(212,165,116,0.4); background: rgba(212,165,116,0.08); }
+  .badge-conference { color: #C98B8B; border-color: rgba(201,139,139,0.4); background: rgba(201,139,139,0.08); }
+  .badge-interactive { color: #A0C8A0; border-color: rgba(160,200,160,0.4); background: rgba(160,200,160,0.08); }
+  .badge-special { color: var(--gold-light); border-color: rgba(232,201,122,0.4); background: rgba(232,201,122,0.08); }
+  .badge-lunch { color: rgba(248,244,236,0.4); border-color: rgba(248,244,236,0.15); background: transparent; }
+  .badge-close { color: #B8A0D4; border-color: rgba(184,160,212,0.4); background: rgba(184,160,212,0.08); }
+
+  .session-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  .session-subtitle {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: rgba(248,244,236,0.5);
+    margin-bottom: 0.8rem;
+    font-weight: 300;
+  }
+
+  .session-bullets {
+    list-style: none;
+    margin-top: 0.7rem;
+  }
+
+  .session-bullets li {
+    font-size: 0.85rem;
+    color: rgba(248,244,236,0.5);
+    font-weight: 300;
+    padding: 0.2rem 0;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .session-bullets li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: rgba(201,168,76,0.4);
+    font-size: 0.7rem;
+  }
+
+  .session-speakers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+  }
+
+  .speaker-tag {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    color: rgba(201,168,76,0.6);
+    border: 1px solid rgba(201,168,76,0.2);
+    padding: 0.2rem 0.6rem;
+  }
+
+  .session-highlight {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    margin-top: 0.8rem;
+    padding: 0.7rem 1rem;
+    background: rgba(201,168,76,0.06);
+    border-left: 2px solid var(--gold);
+    font-size: 0.82rem;
+    color: rgba(248,244,236,0.6);
+    font-style: italic;
+  }
+
+  .session-highlight i { color: var(--gold); margin-top: 0.1rem; flex-shrink: 0; }
+
+  /* PARALLEL WORKSHOPS */
+  .workshops-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1px;
+    background: rgba(201,168,76,0.1);
+    margin-top: 1rem;
+  }
+
+  .workshop-card {
+    background: rgba(14,32,64,0.8);
+    padding: 2rem;
+    transition: background 0.3s;
+  }
+
+  .workshop-card:hover {
+    background: rgba(14,32,64,1);
+  }
+
+  .workshop-num {
+    font-family: var(--mono);
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: rgba(201,168,76,0.15);
+    line-height: 1;
+    margin-bottom: 0.8rem;
+  }
+
+  .workshop-level {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+
+  .workshop-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: var(--cream);
+    line-height: 1.4;
+    margin-bottom: 0.8rem;
+  }
+
+  .workshop-desc {
+    font-size: 0.82rem;
+    color: rgba(248,244,236,0.45);
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  /* INNOVATIONS */
+  #innovations {
+    background: var(--cream);
+    padding: 8rem 3rem;
+  }
+
+  .innovations-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .innovations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2px;
+    margin-top: 4rem;
+    background: rgba(201,168,76,0.15);
+  }
+
+  .innovation-card {
+    background: var(--cream);
+    padding: 2.5rem;
+    border: 1px solid transparent;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .innovation-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s;
+  }
+
+  .innovation-card:hover::before { transform: scaleX(1); }
+
+  .innovation-card:hover { background: rgba(201,168,76,0.04); }
+
+  .innovation-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: rgba(201,168,76,0.12);
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+
+  .innovation-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.2rem;
+  }
+
+  .innovation-icon i {
+    color: var(--gold);
+    font-size: 1rem;
+  }
+
+  .innovation-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--navy);
+    margin-bottom: 0.8rem;
+  }
+
+  .innovation-desc {
+    font-size: 0.92rem;
+    color: rgba(26,26,46,0.6);
+    font-weight: 300;
+    line-height: 1.75;
+  }
+
+  /* PRACTICAL INFO */
+  #info {
+    background: var(--navy);
+    padding: 7rem 3rem;
+  }
+
+  .info-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .info-inner .section-title { color: var(--cream); }
+  .info-inner .section-title em { color: var(--gold); }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-top: 4rem;
+    background: rgba(201,168,76,0.1);
+  }
+
+  .info-card {
+    background: rgba(14,32,64,0.9);
+    padding: 2.5rem 2rem;
+  }
+
+  .info-card-icon {
+    font-size: 1.5rem;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+  }
+
+  .info-card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cream);
+    margin-bottom: 0.8rem;
+  }
+
+  .info-card-text {
+    font-size: 0.9rem;
+    color: rgba(248,244,236,0.5);
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  /* REGISTRATION */
+  #register {
+    background: var(--cream);
+    padding: 8rem 3rem;
+    position: relative;
+  }
+
+  .register-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .register-inner .section-label {
+    justify-content: center;
+  }
+
+  .register-inner .section-label::before { display: none; }
+
+  .register-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 300;
+    color: var(--navy);
+    line-height: 1.1;
+    margin: 1rem 0 1.5rem;
+  }
+
+  .register-title em { font-style: italic; color: var(--gold); }
+
+  .register-desc {
+    font-size: 1.1rem;
+    color: rgba(26,26,46,0.6);
+    font-weight: 300;
+    line-height: 1.8;
+    margin-bottom: 3rem;
+  }
+
+  .hashtag {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.2);
+    padding: 0.5rem 1.2rem;
+    display: inline-block;
+    margin-top: 2rem;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--navy);
+    border-top: 1px solid rgba(201,168,76,0.15);
+    padding: 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .footer-brand {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+
+  .footer-text {
+    font-size: 0.8rem;
+    color: rgba(248,244,236,0.3);
+    font-family: var(--mono);
+    letter-spacing: 0.05em;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .footer-links a {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(248,244,236,0.35);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .footer-links a:hover { color: var(--gold); }
+
+  /* SCROLL REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* DIVIDER */
+  .ornament-divider {
+    text-align: center;
+    padding: 2rem 0;
+    color: var(--gold);
+    opacity: 0.3;
+    font-size: 1rem;
+    letter-spacing: 2rem;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--navy); }
+  ::-webkit-scrollbar-thumb { background: var(--gold); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links, .nav-cta { display: none; }
+    .hero-content { padding: 7rem 1.5rem 4rem; }
+    .hero-decoration { display: none; }
+    .about-inner { grid-template-columns: 1fr; gap: 3rem; }
+    .about-right { padding-top: 0; }
+    #about, #program, #innovations, #info, #register { padding: 5rem 1.5rem; }
+    .session { grid-template-columns: 100px 1fr; gap: 1rem; }
+    .workshops-grid { grid-template-columns: 1fr; }
+    .info-grid { grid-template-columns: 1fr 1fr; }
+    footer { flex-direction: column; text-align: center; }
+  }
+
+  @media (max-width: 600px) {
+    .stat-grid { grid-template-columns: 1fr 1fr; }
+    .info-grid { grid-template-columns: 1fr; }
+    .session { grid-template-columns: 1fr; gap: 0.5rem; }
+    .session-time { font-size: 0.6rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">HEKİM 4.0</a>
+  <ul class="nav-links">
+    <li><a href="#about">Hakkında</a></li>
+    <li><a href="#program">Program</a></li>
+    <li><a href="#innovations">Yenilikler</a></li>
+    <li><a href="#info">Bilgi</a></li>
+  </ul>
+  <a href="#register" class="nav-cta">Kayıt Ol</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="three-canvas"></canvas>
+  <div class="hero-grid-lines"></div>
+
+  <div class="hero-content">
+    <div class="hero-tag">
+      <span class="dot"></span>
+      <span>Tıp Fakültesi Sempozyumu · 2 Günlük</span>
+    </div>
+
+    <p class="hero-eyebrow">Uluslararası Tıp Sempozyumu</p>
+
+    <h1 class="hero-title">
+      <em>Hekim</em>
+      <span class="version">4.0</span>
+    </h1>
+
+    <p class="hero-subtitle">Yapay Zekâ Çağında Tıp Eğitimi ve Pratiği</p>
+
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Süre</span>
+        <span class="hero-meta-value">2 Gün</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Dil</span>
+        <span class="hero-meta-value">TR / EN Simultane</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Format</span>
+        <span class="hero-meta-value">Hibrit (Yüz yüze + Online)</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Hashtag</span>
+        <span class="hero-meta-value" style="color: var(--gold); font-family: var(--mono); font-size: 0.85rem;">#Hekim4point0</span>
+      </div>
+    </div>
+
+    <div class="hero-cta-group">
+      <a href="#register" class="btn-primary"><i class="bi bi-arrow-right"></i> Hemen Kayıt Ol</a>
+      <a href="#program" class="btn-outline"><i class="bi bi-calendar3"></i> Programı İncele</a>
+    </div>
+  </div>
+
+  <!-- Decorative SVG -->
+  <div class="hero-decoration" id="heroDecoration">
+    <svg viewBox="0 0 380 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="190" cy="190" r="180" stroke="rgba(201,168,76,0.08)" stroke-width="1"/>
+      <circle cx="190" cy="190" r="140" stroke="rgba(201,168,76,0.12)" stroke-width="1"/>
+      <circle cx="190" cy="190" r="100" stroke="rgba(201,168,76,0.18)" stroke-width="1"/>
+      <circle cx="190" cy="190" r="60" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+
+      <!-- Cross/medical symbol -->
+      <rect x="178" y="120" width="24" height="140" rx="2" fill="rgba(201,168,76,0.15)"/>
+      <rect x="120" y="178" width="140" height="24" rx="2" fill="rgba(201,168,76,0.15)"/>
+
+      <!-- Circuit dots -->
+      <circle cx="190" cy="50" r="4" fill="rgba(201,168,76,0.4)"/>
+      <circle cx="330" cy="190" r="4" fill="rgba(201,168,76,0.4)"/>
+      <circle cx="190" cy="330" r="4" fill="rgba(201,168,76,0.4)"/>
+      <circle cx="50" cy="190" r="4" fill="rgba(201,168,76,0.4)"/>
+
+      <!-- Circuit lines -->
+      <line x1="190" y1="50" x2="190" y2="120" stroke="rgba(201,168,76,0.25)" stroke-width="1"/>
+      <line x1="330" y1="190" x2="260" y2="190" stroke="rgba(201,168,76,0.25)" stroke-width="1"/>
+      <line x1="190" y1="330" x2="190" y2="260" stroke="rgba(201,168,76,0.25)" stroke-width="1"/>
+      <line x1="50" y1="190" x2="120" y2="190" stroke="rgba(201,168,76,0.25)" stroke-width="1"/>
+
+      <!-- Rotating outer marks -->
+      <g id="rotatingMarks">
+        <line x1="190" y1="10" x2="190" y2="25" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+        <line x1="280.4" y1="36.5" x2="273.5" y2="48.4" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+        <line x1="343.5" y1="99.6" x2="331.6" y2="106.5" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+        <line x1="370" y1="190" x2="355" y2="190" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+        <line x1="343.5" y1="280.4" x2="331.6" y2="273.5" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+        <line x1="280.4" y1="343.5" x2="273.5" y2="331.6" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+        <line x1="190" y1="370" x2="190" y2="355" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+        <line x1="99.6" y1="343.5" x2="106.5" y2="331.6" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+        <line x1="36.5" y1="280.4" x2="48.4" y2="273.5" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+        <line x1="10" y1="190" x2="25" y2="190" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+        <line x1="36.5" y1="99.6" x2="48.4" y2="106.5" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+        <line x1="99.6" y1="36.5" x2="106.5" y2="48.4" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+      </g>
+
+      <!-- DNA helix simplified -->
+      <path d="M160 155 Q190 170 220 155 Q190 140 160 155Z" fill="rgba(201,168,76,0.2)"/>
+      <path d="M160 195 Q190 210 220 195 Q190 180 160 195Z" fill="rgba(201,168,76,0.2)"/>
+      <path d="M160 235 Q190 250 220 235 Q190 220 160 235Z" fill="rgba(201,168,76,0.2)"/>
+    </svg>
+  </div>
+</section>
+
+<!-- MARQUEE STRIP -->
+<div class="about-strip">
+  <div class="strip-inner">
+    <span class="strip-item">Canlı Yapay Zekâ Demonstrasyonları</span>
+    <span class="strip-item">İnteraktif Etik Simülasyonları</span>
+    <span class="strip-item">Kodlama Atölyesi</span>
+    <span class="strip-item">Ortak Müfredat Tasarımı</span>
+    <span class="strip-item">Dijital Mahremiyet Oyunu</span>
+    <span class="strip-item">Öğrenci Hackathon'u</span>
+    <span class="strip-item">Poster Sunumları</span>
+    <span class="strip-item">Networking</span>
+    <span class="strip-item">Canlı Yapay Zekâ Demonstrasyonları</span>
+    <span class="strip-item">İnteraktif Etik Simülasyonları</span>
+    <span class="strip-item">Kodlama Atölyesi</span>
+    <span class="strip-item">Ortak Müfredat Tasarımı</span>
+    <span class="strip-item">Dijital Mahremiyet Oyunu</span>
+    <span class="strip-item">Öğrenci Hackathon'u</span>
+    <span class="strip-item">Poster Sunumları</span>
+    <span class="strip-item">Networking</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-inner">
+    <div class="about-left reveal">
+      <p class="section-label">Sempozyum Hakkında</p>
+      <h2 class="section-title">Tıbbın<br><em>Dönüşümüne</em><br>Ortak Ol</h2>
+      <p class="about-desc">
+        Yapay zekânın tıp pratiğini köklü biçimde dönüştürdüğü bu çağda, hekimler ve tıp öğrencileri için yeni bir yol haritası çizmek amacıyla bir araya geliyoruz. Hekim 4.0 Sempozyumu; tıp, teknoloji, etik ve hukuku tek çatı altında buluşturan, disiplinlerarası ve yenilikçi bir platform sunmaktadır.
+      </p>
+
+      <div class="target-list">
+        <div class="target-item"><i class="bi bi-mortarboard-fill"></i> Tıp Fakültesi Öğrencileri</div>
+        <div class="target-item"><i class="bi bi-person-workspace"></i> Akademisyenler</div>
+        <div class="target-item"><i class="bi bi-heart-pulse-fill"></i> Klinisyenler</div>
+        <div class="target-item"><i class="bi bi-building-fill-gear"></i> Sağlık Yöneticileri</div>
+        <div class="target-item"><i class="bi bi-cpu-fill"></i> Yapay Zekâ Mühendisleri</div>
+        <div class="target-item"><i class="bi bi-scales"></i> Etik Uzmanları & Hukukçular</div>
+        <div class="target-item"><i class="bi bi-people-fill"></i> Hasta Temsilcileri</div>
+      </div>
+    </div>
+
+    <div class="about-right reveal">
+      <div class="stat-grid">
+        <div class="stat-item">
+          <div class="stat-number">2</div>
+          <div class="stat-label">Gün Yoğun Program</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">7+</div>
+          <div class="stat-label">Disiplinlerarası Alan</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">3</div>
+          <div class="stat-label">Paralel Atölye</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">2</div>
+          <div class="stat-label">Dil Seçeneği</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 2.5rem; padding: 2rem; border: 1px solid rgba(201,168,76,0.2); background: rgba(201,168,76,0.03);">
+        <p class="section-label" style="margin-bottom: 0.8rem;">Katılım Avantajları</p>
+        <div class="target-item"><i class="bi bi-award-fill"></i> Dijital Tıp Farkındalık Sertifikası</div>
+        <div class="target-item"><i class="bi bi-book-fill"></i> ISBN'li Bildiri E-Kitabı</div>
+        <div class="target-item"><i class="bi bi-camera-video-fill"></i> Hibrit & Canlı Yayın</div>
+        <div class="target-item"><i class="bi bi-cash-coin"></i> Öğrencilere İndirimli Kayıt</div>
+        <div class="target-item"><i class="bi bi-diagram-3-fill"></i> Sponsorluk Destekli Program</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRAM -->
+<section id="program">
+  <div class="program-inner">
+    <p class="section-label">İki Günlük Program</p>
+    <h2 class="section-title reveal">Kapsamlı <em>Sempozyum</em><br>İçeriği</h2>
+
+    <div class="day-tabs">
+      <button class="day-tab active" onclick="switchDay(1)">1. GÜN</button>
+      <button class="day-tab" onclick="switchDay(2)">2. GÜN</button>
+    </div>
+
+    <!-- DAY 1 -->
+    <div class="day-content active" id="day1">
+      <div class="day-header">
+        <h3>Geçmişten Geleceğe Tıbbın Dönüşümü</h3>
+      </div>
+
+      <div class="session">
+        <div class="session-time">08.30 – 09.00</div>
+        <div>
+          <span class="session-badge badge-special">Kayıt & Karşılama</span>
+          <div class="session-title">Kayıt ve Karşılama</div>
+          <div class="session-subtitle">Sempozyum başlangıç hazırlıkları ve katılımcı oryantasyonu</div>
+        </div>
+      </div>
+
+      <div class="session">
+        <div class="session-time">09.00 – 09.30</div>
+        <div>
+          <span class="session-badge badge-opening">Açılış Konuşması</span>
+          <div class="session-title">Hipokrat'tan Yapay Zekâya: Tıbbın Evriminde Kırılma Noktaları</div>
+          <div class="session-subtitle">Açılış Konuşması</div>
+          <ul class="session-bullets">
+            <li>Tıp tarihindeki büyük dönüşümler: mikroskop, aşı, antibiyotik, görüntüleme teknolojileri</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="session">
+        <div class="session-time">09.30 – 12.45</div>
+        <div>
+          <span class="session-badge badge-panel">Panel</span>
+          <div class="session-title">Dijital Stetoskop: Yazılım ve Yapay Zekâ Tıbbın Neresinde?</div>
+          <div class="session-subtitle">Modern Çağ ve Tıp – Bugünü Anlamak</div>
+          <ul class="session-bullets">
+            <li>Yazılım nedir, neden tıpla ilişkilendiriliyor? Temel kavramlar ve tıpta yazılımın tarihçesi</li>
+            <li>Güncel yapay zekâ uygulamaları: Görüntüleme, patoloji, genomik, klinik karar destek sistemleri</li>
+            <li>Türkiye'den ve dünyadan başarılı örnekler: start-up'lar, araştırma projeleri</li>
+            <li>Yapay zekâ tıbbın neresinde hata yapabilir? Sınırlar ve riskler</li>
+            <li>Yapay Zekâ ve Tıp Eğitimi: Müfredat nasıl entegre edilmeli?</li>
+            <li>Yapay zekâ okuryazarlığı: Tıp öğrencileri hangi yetkinlikleri kazanmalı?</li>
+            <li>Yapay zekâ destekli eğitim araçları: sanal hastalar, simülasyonlar, kişiselleştirilmiş öğrenme</li>
+            <li>Dijital Tıp ve Yapay Zekâ Anabilim Dalı: müfredat önerisi, kariyer yolları</li>
+          </ul>
+          <div class="session-speakers">
+            <span class="speaker-tag"><i class="bi bi-person-fill"></i> Tıp Bilişimi Uzmanı</span>
+            <span class="speaker-tag"><i class="bi bi-person-fill"></i> Radyolog</span>
+            <span class="speaker-tag"><i class="bi bi-person-fill"></i> Yapay Zekâ Mühendisi</span>
+            <span class="speaker-tag"><i class="bi bi-person-fill"></i> Sağlık Girişimcisi</span>
+            <span class="speaker-tag"><i class="bi bi-person-fill"></i> Tıp Eğitimi Uzmanı</span>
+            <span class="speaker-tag"><i class="bi bi-person-fill"></i> Tıp Öğrencisi Temsilcisi</span>
+            <span class="speaker-tag"><i class="bi bi-person-fill"></i> YÖK Temsilcisi (Davetli)</span>
+          </div>
+          <div class="session-highlight">
+            <i class="bi bi-stars"></i>
+            <span>Canlı Demo: Bir yapay zekâ modelinin akciğer grafisinde nodül tespiti yapması, ardından bir radyologla karşılaştırmalı değerlendirme</span>
+          </div>
+          <div class="session-highlight">
+            <i class="bi bi-bar-chart-fill"></i>
+            <span>Anlık anket: "Tıp eğitiminde zorunlu kodlama dersi olmalı mı?" — Sonuçlar panelde canlı tartışılacak</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="session">
+        <div class="session-time">12.45 – 14.00</div>
+        <div>
+          <span class="session-badge badge-lunch">Öğle Arası</span>
+          <div class="session-title">Öğle Yemeği & Poster Sunumları</div>
+          <ul class="session-bullets">
+            <li>Tıpta yapay zekâ konulu araştırma posterleri (öğrenci ve genç araştırmacılara açık çağrı)</li>
+            <li>Sağlık teknolojileri fuarcığı (start-up'ların ürünlerini sergilemesi)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="session">
+        <div class="session-time">14.00 – 17.00</div>
+        <div>
+          <span class="session-badge badge-workshop">Paralel Atölyeler</span>
+          <div class="session-title">Paralel Atölye Çalışmaları</div>
+          <div class="session-subtitle">Katılımcılar üç atölyeden birini seçer</div>
+          <div class="workshops-grid" style="margin-top:1.2rem;">
+            <div class="workshop-card">
+              <div class="workshop-num">01</div>
+              <div class="workshop-level">Temel Seviye</div>
+              <div class="workshop-title">Tıp Öğrencileri İçin Temel Kodlama: Python ile Tıbbi Veri Analizi</div>
+              <div class="workshop-desc">Python'a giriş, veri yapıları, basit istatistik. Gerçek bir tıbbi veri seti (diyabet verisi) üzerinde uygulama. Temel kodlama mantığını kavrama ve tıbbi veriyle ilk tanışma.</div>
+            </div>
+            <div class="workshop-card">
+              <div class="workshop-num">02</div>
+              <div class="workshop-level">İleri Seviye</div>
+              <div class="workshop-title">Klinik Karar Destek Sistemleri Geliştirme: Bir Vaka Çalışması</div>
+              <div class="workshop-desc">Makine öğrenmesi modelleri oluşturma (Python, scikit-learn). Gerçek bir klinik problem üzerinde ekip çalışması: Sepsis tahmini modeli geliştirilmesi. Veri bilimci ve klinisyen işbirliği.</div>
+            </div>
+            <div class="workshop-card">
+              <div class="workshop-num">03</div>
+              <div class="workshop-level">Etik Atölyesi</div>
+              <div class="workshop-title">Dijital Etik Vaka Çalışması: Yapay Zekâ Karar Verirken Kim Sorumlu?</div>
+              <div class="workshop-desc">Etik ikilem senaryoları: yapay zekânın hatalı teşhisi, veri gizliliği ihlali. Rol-play ile doktor, hasta, yazılımcı, hastane yöneticisi bakış açıları. Etik uzmanı ve hukukçu kolaylaştırıcı.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="session">
+        <div class="session-time">19.00 – 21.00</div>
+        <div>
+          <span class="session-badge badge-special">İsteğe Bağlı</span>
+          <div class="session-title">"Geleceğin Hekimi" Temalı Kısa Film Gösterimi ve Söyleşi</div>
+          <ul class="session-bullets">
+            <li>Yapay zekâ ve tıp temalı kısa filmler (öğrenciler tarafından çekilmiş olabilir)</li>
+            <li>Ardından yönetmen ve oyuncularla söyleşi</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- DAY 2 -->
+    <div class="day-content" id="day2">
+      <div class="day-header">
+        <h3>Mesleğin Geleceği, Etik ve Korunma</h3>
+      </div>
+
+      <div class="session">
+        <div class="session-time">09.00 – 09.30</div>
+        <div>
+          <span class="session-badge badge-opening">Güne Başlarken</span>
+          <div class="session-title">Önceki Günün Özeti ve Günün Hedefleri</div>
+          <div class="session-subtitle">İkinci güne açılış, değerlendirme ve hedef belirleme</div>
+        </div>
+      </div>
+
+      <div class="session">
+        <div class="session-time">09.30 – 11.00</div>
+        <div>
+          <span class="session-badge badge-panel">Panel</span>
+          <div class="session-title">Doktor 2.0: Teknisyen mi, Hekim mi?</div>
+          <div class="session-subtitle">Doktorluk Mesleği Ölüyor mu? Yoksa Dönüşüyor mu?</div>
+          <ul class="session-bullets">
+            <li>Sağlık sektörünün güncelinde gelişenler doktorları nasıl etkileyecek?</li>
+            <li>Doktor artık teknisyen gibi mi olacak?</li>
+            <li>Doktorluk diye bir meslek kalacak mı?</li>
+            <li>İnsan doktorun yapay zekâ karşısında artı değerleri: empati, etik karar verme, bütüncül bakış</li>
+            <li>Geleceğin doktoru: Hangi yetkinlikler öne çıkacak? (İletişim, veri yorumlama, teknoloji yönetimi)</li>
+            <li>Kendimizi nasıl bu konuda geliştirmeliyiz?</li>
+          </ul>
+          <div class="session-speakers">
+            <span class="speaker-tag"><i class="bi bi-person-fill"></i> Klinisyenler (Farklı Branş)</span>
+            <span class="speaker-tag"><i class="bi bi-person-fill"></i> Tıp Eğitimi Uzmanı</span>
+            <span class="speaker-tag"><i class="bi bi-person-fill"></i> Hasta Derneği Temsilcisi</span>
+            <span class="speaker-tag"><i class="bi bi-person-fill"></i> Yapay Zekâ Etik Uzmanı</span>
+          </div>
+          <div class="session-highlight">
+            <i class="bi bi-graph-up-arrow"></i>
+            <span>Anlık gelecek oylaması: "Yapay zekâ 20 yıl içinde doktorların %50'sinden fazlasının işini elinden alır mı?" — Sonuçlar canlı grafikleniyor</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="session">
+        <div class="session-time">11.00 – 11.15</div>
+        <div>
+          <span class="session-badge badge-lunch">Ara</span>
+          <div class="session-title">Kahve Arası</div>
+        </div>
+      </div>
+
+      <div class="session">
+        <div class="session-time">11.15 – 12.45</div>
+        <div>
+          <span class="session-badge badge-conference">Konferans</span>
+          <div class="session-title">Yapay Zekâyı Düşman Konumundan Dost Konumuna Almak: Çok Yönlü Hekimin Yol Haritası</div>
+          <div class="session-subtitle">İsviçre Çakısı Hekim</div>
+          <ul class="session-bullets">
+            <li>İsviçre çakısı metaforu: Tıp bilgisi, iletişim, veri okuryazarlığı, temel kodlama, yapay zekâ okuryazarlığı</li>
+            <li>Yapay zekâ araçlarını etkin kullanma stratejileri: klinikte, araştırmada, eğitimde</li>
+            <li>Yapay zekâ ile işbirliği yapmanın psikolojisi: Dirençten kabule, kabule işbirliğine</li>
+            <li>Kendi kendine öğrenme kaynakları, online kurslar, topluluklar</li>
+          </ul>
+          <div class="session-speakers">
+            <span class="speaker-tag"><i class="bi bi-person-fill"></i> Tıp Eğitimi Uzmanı</span>
+            <span class="speaker-tag"><i class="bi bi-person-fill"></i> Yapay Zekâyı Aktif Kullanan Genç Doktor</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="session">
+        <div class="session-time">12.45 – 14.00</div>
+        <div>
+          <span class="session-badge badge-lunch">Öğle Arası</span>
+          <div class="session-title">Öğle Yemeği & Networking</div>
+        </div>
+      </div>
+
+      <div class="session">
+        <div class="session-time">14.00 – 15.30</div>
+        <div>
+          <span class="session-badge badge-panel">Panel</span>
+          <div class="session-title">Gelişen Dünyada Etik ve Verilerimizin Gizliliği: Kime Güvenelim?</div>
+          <div class="session-subtitle">Dijital Etik ve Veri Gizliliği</div>
+          <ul class="session-bullets">
+            <li>Sağlık verilerinin toplanması, işlenmesi ve paylaşılmasında etik ilkeler</li>
+            <li>Yapay zekâ modellerinin eğitiminde kullanılan verilerin mahremiyeti (anonimleştirme yeterli mi?)</li>
+            <li>Hasta mahremiyeti ile tıbbi ilerleme arasındaki denge</li>
+            <li>Türkiye'de ve dünyada yasal düzenlemeler: KVKK, GDPR, HIPAA</li>
+            <li>Yapay zekâ kararlarının şeffaflığı ve açıklanabilirliği (black box sorunu)</li>
+          </ul>
+          <div class="session-speakers">
+            <span class="speaker-tag"><i class="bi bi-person-fill"></i> Hukukçu (Sağlık Hukuku)</span>
+            <span class="speaker-tag"><i class="bi bi-person-fill"></i> Etik Uzmanı</span>
+            <span class="speaker-tag"><i class="bi bi-person-fill"></i> Hasta Hakları Derneği</span>
+            <span class="speaker-tag"><i class="bi bi-person-fill"></i> Veri Güvenliği Uzmanı</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="session">
+        <div class="session-time">15.30 – 15.45</div>
+        <div>
+          <span class="session-badge badge-lunch">Ara</span>
+          <div class="session-title">Kahve Arası</div>
+        </div>
+      </div>
+
+      <div class="session">
+        <div class="session-time">15.45 – 17.15</div>
+        <div>
+          <span class="session-badge badge-interactive">İnteraktif Oturum</span>
+          <div class="session-title">Dijital Kale: Hekimler İçin Dijital Mahremiyet Stratejileri</div>
+          <div class="session-subtitle">Kendimizi ve Verilerimizi Nasıl Koruruz? — Oyunlaştırılmış Atölye</div>
+          <ul class="session-bullets">
+            <li>Katılımcılar küçük gruplara ayrılır, her gruba gerçekçi senaryo verilir</li>
+            <li>Senaryo örneği: "Hastanenizin veri tabanı hacklendi, hasta kayıtları sızdırıldı. Ne yapardınız?"</li>
+            <li>Senaryo örneği: "Bir yapay zekâ uygulamasına hasta verilerini yüklemek istiyorsunuz. Hangi güvenlik önlemlerini alırsınız?"</li>
+            <li>Gruplar çözümlerini geliştirir, tüm salonla paylaşır</li>
+            <li>Pratik ipuçları: Güçlü şifreler, iki faktörlü doğrulama, VPN, güvenilir yazılım sertifikaları</li>
+          </ul>
+          <div class="session-speakers">
+            <span class="speaker-tag"><i class="bi bi-person-fill"></i> Veri Güvenliği Uzmanı</span>
+            <span class="speaker-tag"><i class="bi bi-person-fill"></i> Etik Uzmanı</span>
+            <span class="speaker-tag"><i class="bi bi-person-fill"></i> Tıp Eğitimi Uzmanı</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="session">
+        <div class="session-time">17.15 – 18.00</div>
+        <div>
+          <span class="session-badge badge-close">Kapanış</span>
+          <div class="session-title">Geleceğin Tıbbını Birlikte Yazalım</div>
+          <div class="session-subtitle">Kapanış Oturumu: Ortak Akıl ve Sonuç Bildirgesi</div>
+          <ul class="session-bullets">
+            <li>İki günün özeti ve öne çıkan fikirler</li>
+            <li>Katılımcılardan gelen önerilerle "Tıp Eğitiminde Dijital Dönüşüm İçin 10 Madde" bildirgesinin oluşturulması</li>
+            <li>İnteraktif anlık oylama sistemi ile bildirge hazırlanması</li>
+            <li>Kapanış konuşması ve teşekkürler</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- INNOVATIONS -->
+<section id="innovations">
+  <div class="innovations-inner">
+    <p class="section-label reveal">Yenilikçi Yaklaşımlar</p>
+    <h2 class="section-title reveal">Bir <em>İlk</em> Yaratmak<br>İçin Tasarlandı</h2>
+
+    <div class="innovations-grid">
+      <div class="innovation-card reveal">
+        <div class="innovation-num">01</div>
+        <div class="innovation-icon"><i class="bi bi-robot"></i></div>
+        <div class="innovation-title">Canlı Yapay Zekâ – İnsan Karşılaştırması</div>
+        <div class="innovation-desc">Bir radyolog ile yapay zekânın aynı vakaları eş zamanlı yorumlaması; seyircinin de interaktif oylamayla sürece katılımı.</div>
+      </div>
+      <div class="innovation-card reveal">
+        <div class="innovation-num">02</div>
+        <div class="innovation-icon"><i class="bi bi-code-slash"></i></div>
+        <div class="innovation-title">Tıp Öğrencileri İçin Kodlama Atölyesi</div>
+        <div class="innovation-desc">Tıp fakültesi bünyesinde, doğrudan öğrencilere yönelik uygulamalı kodlama eğitimi veren ilk sempozyum atölyesi.</div>
+      </div>
+      <div class="innovation-card reveal">
+        <div class="innovation-num">03</div>
+        <div class="innovation-icon"><i class="bi bi-people"></i></div>
+        <div class="innovation-title">Etik Rol-Play Atölyesi</div>
+        <div class="innovation-desc">Katılımcıların aktif olarak etik ikilemleri canlandırdığı, tiyatral bir öğrenme deneyimi. Gerçek senaryolar, gerçek kararlar.</div>
+      </div>
+      <div class="innovation-card reveal">
+        <div class="innovation-num">04</div>
+        <div class="innovation-icon"><i class="bi bi-shield-lock"></i></div>
+        <div class="innovation-title">Dijital Mahremiyet Oyunu</div>
+        <div class="innovation-desc">Veri güvenliği konusunu sıkıcı slaytlar yerine eğlenceli senaryolarla öğreten interaktif oyunlaştırılmış oturum.</div>
+      </div>
+      <div class="innovation-card reveal">
+        <div class="innovation-num">05</div>
+        <div class="innovation-icon"><i class="bi bi-journal-text"></i></div>
+        <div class="innovation-title">Ortak Müfredat Tasarımı</div>
+        <div class="innovation-desc">Katılımcıların görüşleriyle şekillenen, somut bir çıktı üretilmesi: "Tıp Eğitiminde Dijital Dönüşüm İçin 10 Madde" bildirgesi.</div>
+      </div>
+      <div class="innovation-card reveal">
+        <div class="innovation-num">06</div>
+        <div class="innovation-icon"><i class="bi bi-mortarboard"></i></div>
+        <div class="innovation-title">Aktif Öğrenci Katılımı</div>
+        <div class="innovation-desc">Poster sunumları, kısa film yarışması ve hackathon gibi etkinliklerle öğrencilerin aktif rol alması ve üretkenliklerini sergilemesi.</div>
+      </div>
+      <div class="innovation-card reveal">
+        <div class="innovation-num">07</div>
+        <div class="innovation-icon"><i class="bi bi-diagram-3"></i></div>
+        <div class="innovation-title">Disiplinlerarası Konuşmacı Kadrosu</div>
+        <div class="innovation-desc">Tıp, mühendislik, hukuk, etik ve hasta temsiliyetini tek platformda buluşturan ilk kapsamlı sempozyum.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRACTICAL INFO -->
+<section id="info">
+  <div class="info-inner">
+    <p class="section-label">Pratik Bilgiler</p>
+    <h2 class="section-title reveal">Uygulama <em>Detayları</em></h2>
+
+    <div class="info-grid">
+      <div class="info-card reveal">
+        <div class="info-card-icon"><i class="bi bi-cash-coin"></i></div>
+        <div class="info-card-title">Kayıt Ücreti</div>
+        <div class="info-card-text">Öğrencilerden düşük, profesyonellerden makul bir ücret. Teknoloji firmaları ve ilaç şirketleri sponsorluğuyla desteklenebilir.</div>
+      </div>
+      <div class="info-card reveal">
+        <div class="info-card-icon"><i class="bi bi-camera-video"></i></div>
+        <div class="info-card-title">Çevrimiçi Katılım</div>
+        <div class="info-card-text">Hibrit model: Hem yüz yüze hem canlı yayın seçeneği. Daha geniş kitlelere ulaşmak için Türkçe ve eş zamanlı İngilizce tercüme.</div>
+      </div>
+      <div class="info-card reveal">
+        <div class="info-card-icon"><i class="bi bi-award"></i></div>
+        <div class="info-card-title">Sertifika</div>
+        <div class="info-card-text">Katılımcılara "Dijital Tıp ve Yapay Zekâ Farkındalık Sertifikası" verilecektir.</div>
+      </div>
+      <div class="info-card reveal">
+        <div class="info-card-icon"><i class="bi bi-book"></i></div>
+        <div class="info-card-title">Bildiri Kitabı</div>
+        <div class="info-card-text">Sunum özetleri ve poster bildirileri ISBN numaralı bir e-kitap olarak yayınlanacaktır.</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 4rem; padding: 2.5rem; border: 1px solid rgba(201,168,76,0.2); background: rgba(201,168,76,0.04);" class="reveal">
+      <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; justify-content: space-between;">
+        <div>
+          <p style="font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem;">Sosyal Medya</p>
+          <p style="font-size: 1.3rem; color: var(--cream); font-weight: 300;">Etkinlik öncesi ve sırasında bizimle paylaşın</p>
+        </div>
+        <div style="font-family: var(--mono); font-size: 1.5rem; font-weight: 700; color: var(--gold); letter-spacing: 0.05em;">#Hekim4point0</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTER -->
+<section id="register">
+  <div class="register-inner reveal">
+    <p class="section-label" style="justify-content:center;">Katılım</p>
+    <h2 class="register-title">Geleceğin Tıbbını<br><em>Birlikte</em> Şekillendirelim</h2>
+    <p class="register-desc">
+      Hekim 4.0 Sempozyumu, yapay zekâ çağında tıbbın geleceğini tartışmak, öğrenmek ve şekillendirmek için benzersiz bir fırsat sunmaktadır. Yerinizi ayırtın.
+    </p>
+    <a href="#" class="btn-primary" style="font-size:0.8rem; padding: 1.1rem 3rem;">
+      <i class="bi bi-calendar-check-fill"></i>&nbsp; Kayıt Formuna Git
+    </a>
+    <br>
+    <span class="hashtag">#Hekim4point0</span>
+
+    <div style="margin-top: 4rem; display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap;">
+      <div style="text-align: center;">
+        <div style="font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--gold);">2</div>
+        <div style="font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(26,26,46,0.4);">Gün</div>
+      </div>
+      <div style="text-align: center;">
+        <div style="font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--gold);">3</div>
+        <div style="font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(26,26,46,0.4);">Paralel Atölye</div>
+      </div>
+      <div style="text-align: center;">
+        <div style="font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--gold);">7+</div>
+        <div style="font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(26,26,46,0.4);">Disiplin</div>
+      </div>
+      <div style="text-align: center;">
+        <div style="font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--gold);">10</div>
+        <div style="font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(26,26,46,0.4);">Maddelik Bildirge</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">HEKİM 4.0</div>
+  <div class="footer-text">Yapay Zekâ Çağında Tıp Eğitimi ve Pratiği Sempozyumu</div>
+  <div class="footer-links">
+    <a href="#about">Hakkında</a>
+    <a href="#program">Program</a>
+    <a href="#innovations">Yenilikler</a>
+    <a href="#register">Kayıt</a>
+  </div>
+</footer>
+
+<script>
+// ─── THREE.JS BACKGROUND ───────────────────────────────────────────────────
+const canvas = document.getElementById('three-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(0x000000, 0);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 30;
+
+// Particle system — floating dots like cells / data points
+const particleCount = 280;
+const positions = new Float32Array(particleCount * 3);
+const sizes = new Float32Array(particleCount);
+
+for (let i = 0; i < particleCount; i++) {
+  positions[i * 3] = (Math.random() - 0.5) * 80;
+  positions[i * 3 + 1] = (Math.random() - 0.5) * 60;
+  positions[i * 3 + 2] = (Math.random() - 0.5) * 40;
+  sizes[i] = Math.random() * 1.5 + 0.3;
+}
+
+const particleGeo = new THREE.BufferGeometry();
+particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+particleGeo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+const particleMat = new THREE.PointsMaterial({
+  color: 0xC9A84C,
+  size: 0.12,
+  transparent: true,
+  opacity: 0.5,
+  sizeAttenuation: true
+});
+
+const particles = new THREE.Points(particleGeo, particleMat);
+scene.add(particles);
+
+// Wireframe sphere — DNA/molecule feel
+const sphereGeo = new THREE.IcosahedronGeometry(10, 2);
+const sphereMat = new THREE.MeshBasicMaterial({
+  color: 0xC9A84C,
+  wireframe: true,
+  transparent: true,
+  opacity: 0.06
+});
+const sphere = new THREE.Mesh(sphereGeo, sphereMat);
+sphere.position.set(8, 0, -10);
+scene.add(sphere);
+
+// Second sphere
+const sphere2 = new THREE.Mesh(
+  new THREE.IcosahedronGeometry(6, 1),
+  new THREE.MeshBasicMaterial({ color: 0x6DB6A0, wireframe: true, transparent: true, opacity: 0.04 })
+);
+sphere2.position.set(-12, 5, -5);
+scene.add(sphere2);
+
+let time = 0;
+
+function animateThree() {
+  requestAnimationFrame(animateThree);
+  time += 0.004;
+  particles.rotation.y = time * 0.05;
+  particles.rotation.x = time * 0.02;
+  sphere.rotation.y = time * 0.08;
+  sphere.rotation.x = time * 0.04;
+  sphere2.rotation.y = -time * 0.06;
+  sphere2.rotation.z = time * 0.03;
+  renderer.render(scene, camera);
+}
+animateThree();
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ─── ANIME.JS HERO ENTRANCE ─────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  anime.timeline({ easing: 'easeOutExpo' })
+    .add({ targets: '.hero-eyebrow', opacity: [0, 1], translateY: [20, 0], duration: 700 })
+    .add({ targets: '.hero-tag', opacity: [0, 1], translateY: [15, 0], duration: 600 }, '-=400')
+    .add({ targets: '.hero-title', opacity: [0, 1], translateY: [40, 0], duration: 900 }, '-=300')
+    .add({ targets: '.hero-subtitle', opacity: [0, 1], translateY: [25, 0], duration: 700 }, '-=500')
+    .add({ targets: '.hero-meta', opacity: [0, 1], translateY: [20, 0], duration: 600 }, '-=400')
+    .add({ targets: '.hero-cta-group', opacity: [0, 1], translateY: [15, 0], duration: 600 }, '-=300')
+    .add({ targets: '#heroDecoration', opacity: [0, 1], rotate: ['-5deg', '0deg'], duration: 1000 }, '-=800');
+});
+
+// ─── DAY SWITCHER ────────────────────────────────────────────────────────────
+function switchDay(day) {
+  document.querySelectorAll('.day-tab').forEach((t, i) => {
+    t.classList.toggle('active', i + 1 === day);
+  });
+  document.querySelectorAll('.day-content').forEach((c, i) => {
+    c.classList.toggle('active', i + 1 === day);
+  });
+
+  // Animate sessions in
+  anime({
+    targets: `#day${day} .session`,
+    opacity: [0, 1],
+    translateX: [-20, 0],
+    duration: 500,
+    delay: anime.stagger(60),
+    easing: 'easeOutQuart'
+  });
+}
+
+// ─── SCROLL REVEAL ───────────────────────────────────────────────────────────
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+// Stagger .reveal inside grids
+const gridObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const items = e.target.querySelectorAll('.innovation-card, .info-card');
+      anime({
+        targets: items,
+        opacity: [0, 1],
+        translateY: [30, 0],
+        duration: 700,
+        delay: anime.stagger(100),
+        easing: 'easeOutQuart'
+      });
+      gridObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.innovations-grid, .info-grid').forEach(g => gridObs.observe(g));
+
+// Initial day 1 sessions animate
+anime({
+  targets: '#day1 .session',
+  opacity: [0, 1],
+  translateX: [-20, 0],
+  duration: 500,
+  delay: anime.stagger(60),
+  easing: 'easeOutQuart'
+});
+</script>
+</body>
+</html>
