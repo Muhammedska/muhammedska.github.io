@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hekim 4.0: Yapay Zekâ Çağında Tıp Eğitimi</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#0f172a',
+                            light: '#f8fafc',
+                            accent: '#fbbf24', // Gold accent for classic touch
+                            tech: '#0ea5e9'    // Cyan for AI/Tech touch
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'], // Classic touch for headings
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Smooth scrolling */
+        html { scroll-behavior: smooth; }
+        
+        /* ThreeJS Canvas styling */
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            background: radial-gradient(circle at center, #1e293b 0%, #020617 100%);
+        }
+
+        /* Glassmorphism for cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-brand-light text-slate-800 font-sans antialiased overflow-x-hidden">
+
+    <section id="hero" class="relative w-full h-screen flex items-center justify-center overflow-hidden">
+        <div id="canvas-container"></div>
+        
+        <div class="relative z-10 text-center px-4 max-w-5xl mx-auto hero-content opacity-0 text-white">
+            <span class="text-brand-tech font-semibold tracking-widest uppercase text-sm mb-4 block">Dijital Çağın Eşiğinde</span>
+            <h1 class="font-serif text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                Hekim 4.0 <br>
+                <span class="text-brand-accent text-3xl md:text-5xl">Yapay Zekâ Çağında Tıp Eğitimi ve Pratiği</span>
+            </h1>
+            <p class="text-lg md:text-xl text-slate-300 mb-10 max-w-2xl mx-auto">
+                Tıbbın evrimindeki en büyük kırılma noktasına tanık olun. Doktorluk mesleği ölüyor mu, yoksa teknolojiyle yeniden mi doğuyor?
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#register" class="px-8 py-4 bg-brand-tech hover:bg-sky-400 text-white rounded-full font-semibold transition-all shadow-[0_0_20px_rgba(14,165,233,0.4)]">Hemen Kayıt Ol</a>
+                <a href="#program" class="px-8 py-4 bg-transparent border border-white hover:bg-white hover:text-brand-dark text-white rounded-full font-semibold transition-all">Programı İncele</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16 section-title opacity-0">
+                <h2 class="font-serif text-3xl md:text-4xl font-bold text-brand-dark mb-4">Sempozyumun Yenilikçi Yönleri</h2>
+                <div class="h-1 w-20 bg-brand-accent mx-auto"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="feature-card opacity-0 bg-slate-50 p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl transition-shadow">
+                    <i class="bi bi-cpu text-4xl text-brand-tech mb-4 block"></i>
+                    <h3 class="text-xl font-bold mb-3">Canlı YZ Karşılaştırması</h3>
+                    <p class="text-slate-600">Bir radyolog ile yapay zekânın aynı vakaları eş zamanlı yorumlaması ve interaktif oylama.</p>
+                </div>
+                <div class="feature-card opacity-0 bg-slate-50 p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl transition-shadow">
+                    <i class="bi bi-code-square text-4xl text-brand-tech mb-4 block"></i>
+                    <h3 class="text-xl font-bold mb-3">Kodlama Atölyesi</h3>
+                    <p class="text-slate-600">Tıp öğrencileri için özel hazırlanmış, tıbbi veri analizi odaklı uygulamalı Python eğitimi.</p>
+                </div>
+                <div class="feature-card opacity-0 bg-slate-50 p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl transition-shadow">
+                    <i class="bi bi-shield-lock text-4xl text-brand-tech mb-4 block"></i>
+                    <h3 class="text-xl font-bold mb-3">Dijital Etik Simülasyonu</h3>
+                    <p class="text-slate-600">Veri güvenliği ve etik ikilemleri rol-play atölyeleri ve oyunlaştırılmış senaryolarla deneyimleyin.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="program" class="py-20 bg-slate-50 border-t border-slate-200">
+        <div class="max-w-5xl mx-auto px-4">
+            <div class="text-center mb-16 section-title opacity-0">
+                <h2 class="font-serif text-3xl md:text-4xl font-bold text-brand-dark mb-4">Sempozyum Programı</h2>
+                <p class="text-slate-600">İki günlük yoğunlaştırılmış akademik ve pratik eğitim</p>
+            </div>
+
+            <div class="space-y-12 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
+                
+                <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-brand-dark text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 font-bold">1</div>
+                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded border border-slate-200 bg-white shadow-sm program-item opacity-0">
+                        <h3 class="font-bold text-lg text-brand-tech mb-1">GÜN 1: Geçmişten Geleceğe Tıbbın Dönüşümü</h3>
+                        <p class="text-sm text-slate-500 mb-3"><i class="bi bi-clock"></i> 08:30 - 21:00</p>
+                        <ul class="text-sm text-slate-700 space-y-2">
+                            <li><strong class="text-brand-dark">09:00</strong> Açılış: Hipokrat’tan Yapay Zekâya</li>
+                            <li><strong class="text-brand-dark">09:30</strong> Panel: Dijital Stetoskop (Canlı YZ Demosu)</li>
+                            <li><strong class="text-brand-dark">14:00</strong> Paralel Atölyeler (Kodlama, Karar Destek, Etik)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-brand-dark text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 font-bold">2</div>
+                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded border border-slate-200 bg-white shadow-sm program-item opacity-0">
+                        <h3 class="font-bold text-lg text-brand-tech mb-1">GÜN 2: Mesleğin Geleceği, Etik ve Korunma</h3>
+                        <p class="text-sm text-slate-500 mb-3"><i class="bi bi-clock"></i> 09:00 - 18:00</p>
+                        <ul class="text-sm text-slate-700 space-y-2">
+                            <li><strong class="text-brand-dark">09:30</strong> Panel: Doktor 2.0: Teknisyen mi, Hekim mi?</li>
+                            <li><strong class="text-brand-dark">11:15</strong> Konferans: İsviçre Çakısı Hekim</li>
+                            <li><strong class="text-brand-dark">15:45</strong> İnteraktif: Dijital Kale (Mahremiyet Stratejileri)</li>
+                            <li><strong class="text-brand-dark">17:15</strong> Kapanış: Tıp Eğitiminde Dijital Dönüşüm Bildirgesi</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer id="register" class="bg-brand-dark text-white py-16 border-t-[6px] border-brand-accent">
+        <div class="max-w-5xl mx-auto px-4 text-center">
+            <h2 class="font-serif text-3xl font-bold mb-6">Geleceğin Tıbbını Birlikte Yazalım</h2>
+            <p class="mb-8 text-slate-400">Öğrenciler, akademisyenler ve sağlık profesyonelleri için kayıtlarımız açıktır.</p>
+            <button class="px-10 py-4 bg-brand-accent text-brand-dark hover:bg-yellow-300 rounded-full font-bold text-lg transition-all shadow-lg">Kayıt Ekranına Git <i class="bi bi-arrow-right ml-2"></i></button>
+            
+            <div class="mt-16 pt-8 border-t border-slate-800 text-sm text-slate-500 flex flex-col md:flex-row justify-between items-center">
+                <p>&copy; 2026 Hekim 4.0 Sempozyumu. Tüm hakları saklıdır.</p>
+                <div class="flex space-x-4 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-white transition-colors"><i class="bi bi-twitter-x text-xl"></i></a>
+                    <a href="#" class="hover:text-white transition-colors"><i class="bi bi-linkedin text-xl"></i></a>
+                    <a href="#" class="hover:text-white transition-colors"><i class="bi bi-instagram text-xl"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+    <script>
+        // --- 1. THREE.JS BACKGROUND ANIMATION ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        // Create a particle system resembling a neural network / digital DNA
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 1500;
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for(let i = 0; i < particlesCount * 3; i++) {
+            // Distribute particles in a cylindrical/helix shape
+            posArray[i] = (Math.random() - 0.5) * 10;
+        }
+
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.02,
+            color: '#0ea5e9', // Tech cyan
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
+
+        const particleMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particleMesh);
+
+        camera.position.z = 3;
+
+        // Animation Loop for Three.js
+        let mouseX = 0;
+        let mouseY = 0;
+
+        document.addEventListener('mousemove', (event) => {
+            mouseX = event.clientX / window.innerWidth - 0.5;
+            mouseY = event.clientY / window.innerHeight - 0.5;
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+            // Slowly rotate the particle cloud
+            particleMesh.rotation.y += 0.001;
+            particleMesh.rotation.x += 0.0005;
+            
+            // Subtle mouse parallax
+            particleMesh.rotation.y += mouseX * 0.01;
+            particleMesh.rotation.x += mouseY * 0.01;
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // --- 2. ANIME.JS SCROLL REVEAL ANIMATIONS ---
+        
+        // Initial Hero Animation
+        anime({
+            targets: '.hero-content',
+            opacity: [0, 1],
+            translateY: [50, 0],
+            duration: 1500,
+            easing: 'easeOutExpo',
+            delay: 300
+        });
+
+        // Intersection Observer for Scroll Animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    
+                    // Animate Section Titles
+                    if(entry.target.classList.contains('section-title')) {
+                        anime({
+                            targets: entry.target,
+                            opacity: [0, 1],
+                            translateY: [30, 0],
+                            duration: 1000,
+                            easing: 'easeOutQuart'
+                        });
+                    }
+
+                    // Animate Feature Cards with stagger
+                    if(entry.target.classList.contains('feature-card')) {
+                        anime({
+                            targets: entry.target,
+                            opacity: [0, 1],
+                            translateY: [40, 0],
+                            duration: 800,
+                            delay: anime.stagger(150),
+                            easing: 'easeOutBack'
+                        });
+                    }
+
+                    // Animate Program Items with stagger
+                    if(entry.target.classList.contains('program-item')) {
+                        anime({
+                            targets: entry.target,
+                            opacity: [0, 1],
+                            translateX: entry.target.closest('.group').classList.contains('md:odd:flex-row-reverse') ? [-40, 0] : [40, 0], // Directional slide based on timeline side
+                            duration: 1000,
+                            easing: 'easeOutExpo'
+                        });
+                    }
+                    
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Attach observers
+        document.querySelectorAll('.section-title, .feature-card, .program-item').forEach((el) => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
