@@ -1,0 +1,421 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Tenses Chart</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f0f0f0;
+            padding: 40px 20px;
+            min-width: 1200px; /* Masaüstü odaklı */
+        }
+        .container {
+            width: 1100px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 40px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        
+        /* Header Section */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 36px;
+            color: #333;
+            letter-spacing: 1px;
+        }
+        .logo-placeholder {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            font-size: 24px;
+        }
+        .logo-placeholder span:first-child { color: #00a0e3; }
+        .logo-placeholder span:last-child { color: #333; }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        th, td {
+            border: 3px solid #ffffff; /* Hücreler arası beyaz boşluk */
+        }
+        
+        /* Column Headers */
+        .col-header {
+            color: white;
+            font-size: 20px;
+            padding: 12px 0;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        .bg-simple { background-color: #f28b32; }
+        .bg-continuous { background-color: #17a654; }
+        .bg-perfect { background-color: #0d9ee0; }
+        .bg-perfect-cont { background-color: #a448c2; }
+
+        /* Row Headers */
+        .row-header {
+            color: white;
+            font-size: 22px;
+            letter-spacing: 2px;
+            text-align: center;
+            width: 50px;
+        }
+        .row-header div {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            margin: auto;
+        }
+        .bg-present { background-color: #ad2e44; }
+        .bg-past { background-color: #922036; }
+        .bg-future { background-color: #c42442; }
+
+        /* Cell Backgrounds */
+        .cell-simple { background-color: #fae6d4; }
+        .cell-continuous { background-color: #def2e0; }
+        .cell-perfect { background-color: #e2f1fa; }
+        .cell-perfect-cont { background-color: #f1e2f4; }
+
+        /* Cell Content Layout */
+        td {
+            padding: 15px;
+            vertical-align: top;
+            font-size: 15px;
+            color: #000;
+        }
+        .rule {
+            font-weight: bold;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        .item {
+            display: flex;
+            margin-bottom: 12px;
+        }
+        .icon {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            margin-right: 8px;
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+        .icon-plus { background-color: #1f8b3c; }
+        .icon-minus { background-color: #b01a3d; }
+        .icon-question { background-color: #1c5ba8; }
+        
+        .text {
+            flex-grow: 1;
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+        }
+        .footer-logo {
+            font-size: 20px;
+        }
+        .footer-logo span:first-child { color: #00a651; }
+        .footer-logo span:last-child { color: #333; }
+        .footer-logo span:nth-child(2) { color: #00aeef; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- Header -->
+    <div class="header">
+        <h1>ENGLISH TENSES CHART</h1>
+        <div class="logo-placeholder">
+            <span>TEFL</span>
+            <span>LESSONS</span>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <table>
+        <!-- Table Header -->
+        <tr>
+            <th style="border: none; width: 50px;"></th>
+            <th class="col-header bg-simple">SIMPLE</th>
+            <th class="col-header bg-continuous">CONTINUOUS</th>
+            <th class="col-header bg-perfect">PERFECT</th>
+            <th class="col-header bg-perfect-cont">PERFECT CONTINUOUS</th>
+        </tr>
+
+        <!-- PRESENT Row -->
+        <tr>
+            <th class="row-header bg-present"><div>PRESENT</div></th>
+            
+            <td class="cell-simple">
+                <div class="rule">subject +<br>base verb</div>
+                <div class="item">
+                    <div class="icon icon-plus">+</div>
+                    <div class="text">
+                        <i>I</i> walk.<br>You walk.<br>He walks.<br>She walks.<br>It walks.<br>We walk.<br>You walk.<br>They walk.
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="icon icon-minus">-</div>
+                    <div class="text"><i>I</i> don't walk. /<br>He doesn't walk.</div>
+                </div>
+                <div class="item">
+                    <div class="icon icon-question">?</div>
+                    <div class="text">Do you walk? /<br>Does he walk?</div>
+                </div>
+            </td>
+
+            <td class="cell-continuous">
+                <div class="rule">subject + be (present) +<br>present participle</div>
+                <div class="item">
+                    <div class="icon icon-plus">+</div>
+                    <div class="text">
+                        <i>I</i> am walking.<br>You are walking.<br>He is walking.<br>She is walking.<br>It is walking.<br>We are walking.<br>You are walking.<br>They are walking.
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="icon icon-minus">-</div>
+                    <div class="text"><i>I</i> am not walking. /<br>You are not walking. /<br>He isn't walking.</div>
+                </div>
+                <div class="item">
+                    <div class="icon icon-question">?</div>
+                    <div class="text">Are you walking? /<br>Is he walking?</div>
+                </div>
+            </td>
+
+            <td class="cell-perfect">
+                <div class="rule">subject + have/has +<br>past participle</div>
+                <div class="item">
+                    <div class="icon icon-plus">+</div>
+                    <div class="text">
+                        <i>I</i> have walked.<br>You have walked.<br>He has walked.<br>She has walked.<br>It has walked.<br>We have walked.<br>You have walked.<br>They have walked.
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="icon icon-minus">-</div>
+                    <div class="text">You haven't walked. /<br>He hasn't walked.</div>
+                </div>
+                <div class="item">
+                    <div class="icon icon-question">?</div>
+                    <div class="text">Have you walked? /<br>Has he walked?</div>
+                </div>
+            </td>
+
+            <td class="cell-perfect-cont">
+                <div class="rule">subject + have/has + been +<br>present participle</div>
+                <div class="item">
+                    <div class="icon icon-plus">+</div>
+                    <div class="text">
+                        <i>I</i> have been walking.<br>You have been walking.<br>He has been walking.<br>She has been walking.<br>It has been walking.<br>We have been walking.<br>You have been walking.<br>They have been walking.
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="icon icon-minus">-</div>
+                    <div class="text"><i>I</i> haven't been walking. /<br>He hasn't been walking.</div>
+                </div>
+                <div class="item">
+                    <div class="icon icon-question">?</div>
+                    <div class="text">Have you been walking?<br>/ Has he been walking?</div>
+                </div>
+            </td>
+        </tr>
+
+        <!-- PAST Row -->
+        <tr>
+            <th class="row-header bg-past"><div>PAST</div></th>
+            
+            <td class="cell-simple">
+                <div class="rule">subject +<br>past tense verb</div>
+                <div class="item">
+                    <div class="icon icon-plus">+</div>
+                    <div class="text">
+                        <i>I</i> walked.<br>You walked.<br>He walked.<br>She walked.<br>It walked.<br>We walked.<br>You walked.<br>They walked.
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="icon icon-minus">-</div>
+                    <div class="text"><i>I</i> didn't walk.</div>
+                </div>
+                <div class="item">
+                    <div class="icon icon-question">?</div>
+                    <div class="text">Did you walk?</div>
+                </div>
+            </td>
+
+            <td class="cell-continuous">
+                <div class="rule">subject + be (past) +<br>present participle</div>
+                <div class="item">
+                    <div class="icon icon-plus">+</div>
+                    <div class="text">
+                        <i>I</i> was walking.<br>You were walking.<br>He was walking.<br>She was walking.<br>It was walking.<br>We were walking.<br>You were walking.<br>They were walking.
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="icon icon-minus">-</div>
+                    <div class="text"><i>I</i> wasn't walking. /<br>You weren't walking. /<br>He wasn't walking.</div>
+                </div>
+                <div class="item">
+                    <div class="icon icon-question">?</div>
+                    <div class="text">Were you walking? /<br>Was he walking?</div>
+                </div>
+            </td>
+
+            <td class="cell-perfect">
+                <div class="rule">subject + had +<br>past participle</div>
+                <div class="item">
+                    <div class="icon icon-plus">+</div>
+                    <div class="text">
+                        <i>I</i> had walked.<br>You had walked.<br>He had walked.<br>She had walked.<br>It had walked.<br>We had walked.<br>You had walked.<br>They had walked.
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="icon icon-minus">-</div>
+                    <div class="text"><i>I</i> hadn't walked.</div>
+                </div>
+                <div class="item">
+                    <div class="icon icon-question">?</div>
+                    <div class="text">Had you walked?</div>
+                </div>
+            </td>
+
+            <td class="cell-perfect-cont">
+                <div class="rule">subject + had + been +<br>present participle</div>
+                <div class="item">
+                    <div class="icon icon-plus">+</div>
+                    <div class="text">
+                        <i>I</i> had been walking.<br>You had been walking.<br>He had been walking.<br>She had been walking.<br>It had been walking.<br>We had been walking.<br>You had been walking.<br>They had been walking.
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="icon icon-minus">-</div>
+                    <div class="text"><i>I</i> hadn't been walking.</div>
+                </div>
+                <div class="item">
+                    <div class="icon icon-question">?</div>
+                    <div class="text">Had you been walking?</div>
+                </div>
+            </td>
+        </tr>
+
+        <!-- FUTURE Row -->
+        <tr>
+            <th class="row-header bg-future"><div>FUTURE</div></th>
+            
+            <td class="cell-simple">
+                <div class="rule">subject + will +<br>base verb</div>
+                <div class="item">
+                    <div class="icon icon-plus">+</div>
+                    <div class="text">
+                        <i>I</i> will walk.<br>You will walk.<br>He will walk.<br>She will walk.<br>It will walk.<br>We will walk.<br>You will walk.<br>They will walk.
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="icon icon-minus">-</div>
+                    <div class="text"><i>I</i> won't walk.</div>
+                </div>
+                <div class="item">
+                    <div class="icon icon-question">?</div>
+                    <div class="text">Will you walk?</div>
+                </div>
+            </td>
+
+            <td class="cell-continuous">
+                <div class="rule">subject + will + be +<br>present participle</div>
+                <div class="item">
+                    <div class="icon icon-plus">+</div>
+                    <div class="text">
+                        <i>I</i> will be walking.<br>You will be walking.<br>He will be walking.<br>She will be walking.<br>It will be walking.<br>We will be walking.<br>You will be walking.<br>They will be walking.
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="icon icon-minus">-</div>
+                    <div class="text"><i>I</i> won't be walking.</div>
+                </div>
+                <div class="item">
+                    <div class="icon icon-question">?</div>
+                    <div class="text">Will you be walking?</div>
+                </div>
+            </td>
+
+            <td class="cell-perfect">
+                <div class="rule">subject + will + have +<br>past participle</div>
+                <div class="item">
+                    <div class="icon icon-plus">+</div>
+                    <div class="text">
+                        <i>I</i> will have walked.<br>You will have walked.<br>He will have walked.<br>She will have walked.<br>It will have walked.<br>We will have walked.<br>You will have walked.<br>They will have walked.
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="icon icon-minus">-</div>
+                    <div class="text"><i>I</i> won't have walked.</div>
+                </div>
+                <div class="item">
+                    <div class="icon icon-question">?</div>
+                    <div class="text">Will you have walked?</div>
+                </div>
+            </td>
+
+            <td class="cell-perfect-cont">
+                <div class="rule">subject + will + have + been +<br>present participle</div>
+                <div class="item">
+                    <div class="icon icon-plus">+</div>
+                    <div class="text">
+                        <i>I</i> will have been walking.<br>You will have been walking.<br>He will have been walking.<br>She will have been walking.<br>It will have been walking.<br>We will have been walking.<br>You will have been walking.<br>They will have been walking.
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="icon icon-minus">-</div>
+                    <div class="text"><i>I</i> won't have been walking.</div>
+                </div>
+                <div class="item">
+                    <div class="icon icon-question">?</div>
+                    <div class="text">Will you have been walking?</div>
+                </div>
+            </td>
+        </tr>
+
+    </table>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div>&copy; 2022 TEFLLessons.com. All Rights Reserved.</div>
+        <div class="footer-logo">
+            <span>TEFL</span><span>lessons.com</span>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
