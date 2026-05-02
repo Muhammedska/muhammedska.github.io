@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -19,7 +18,7 @@
 
         body {
             font-family: 'Work Sans', sans-serif;
-            background-color: #60a5fa; /* Dış arka plan (mavi) */
+            background-color: #60a5fa;
             background-image: 
                 linear-gradient(45deg, #fbcfe8 25%, transparent 25%), 
                 linear-gradient(-45deg, #fbcfe8 25%, transparent 25%), 
@@ -28,11 +27,15 @@
             background-size: 100vw 100vh;
             background-attachment: fixed;
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        @media (min-width: 768px) {
+            body { padding: 20px; }
         }
 
         .font-mono-heading {
@@ -68,7 +71,7 @@
 
         /* Scrollbar styling */
         ::-webkit-scrollbar {
-            width: 12px;
+            width: 10px;
         }
         ::-webkit-scrollbar-track {
             background: #f1f1f1; 
@@ -82,25 +85,29 @@
             background: #eab308; 
         }
 
-        /* Expand animation */
-        .examples-container {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
+        /* Optimize Edilmiş Accordion Animasyonu (CSS Grid ile) */
+        .examples-wrapper {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.3s ease-out, border-top-width 0.3s;
+            border-top: 0px solid var(--brutal-black);
         }
-        .examples-container.expanded {
-            max-height: 1000px; /* Arbitrary large number */
+        .examples-wrapper.expanded {
+            grid-template-rows: 1fr;
             border-top: 3px solid var(--brutal-black);
+        }
+        .examples-inner {
+            overflow: hidden;
         }
     </style>
 </head>
 <body class="antialiased text-gray-900">
 
     <!-- Ana Uygulama Penceresi -->
-    <div class="w-full max-w-6xl h-[90vh] bg-[#c7e8d5] brutal-border brutal-shadow flex flex-col md:flex-row overflow-hidden relative">
+    <div class="w-full max-w-6xl min-h-[90vh] md:h-[90vh] bg-[#c7e8d5] brutal-border brutal-shadow flex flex-col md:flex-row overflow-hidden relative">
         
         <!-- Sol Menü (Sidebar) -->
-        <div class="w-full md:w-64 border-b-3 md:border-b-0 md:border-r-3 border-black p-6 flex flex-col justify-between shrink-0 brutal-border bg-[#c7e8d5] z-10 hidden md:flex">
+        <div class="w-full md:w-64 border-b-3 md:border-b-0 md:border-r-3 border-black p-6 flex-col justify-between shrink-0 brutal-border bg-[#c7e8d5] z-10 hidden md:flex">
             <div>
                 <div class="flex items-center gap-3 mb-10 brutal-border p-2 bg-white w-max brutal-shadow-sm">
                     <i class="fa-solid fa-code"></i>
@@ -108,22 +115,22 @@
                 </div>
 
                 <nav class="space-y-2">
-                    <a href="#" class="flex items-center gap-3 p-3 text-lg font-bold hover:bg-white brutal-border brutal-shadow-sm bg-white border-black mb-4">
+                    <a href="#" class="flex items-center gap-3 p-3 text-lg font-bold hover:bg-white brutal-border brutal-shadow-sm bg-white border-black mb-4 outline-none focus:ring-4 focus:ring-yellow-400">
                         <i class="fa-solid fa-book"></i> Verbs Library
                     </a>
-                    <a href="#" class="flex items-center gap-3 p-3 text-lg font-semibold hover:bg-white hover:brutal-border rounded-none transition-all">
+                    <a href="#" class="flex items-center gap-3 p-3 text-lg font-semibold hover:bg-white hover:brutal-border rounded-none transition-all outline-none focus:ring-4 focus:ring-yellow-400">
                         <i class="fa-solid fa-clock"></i> Schedule
                     </a>
-                    <a href="#" class="flex items-center gap-3 p-3 text-lg font-semibold hover:bg-white hover:brutal-border rounded-none transition-all">
+                    <a href="#" class="flex items-center gap-3 p-3 text-lg font-semibold hover:bg-white hover:brutal-border rounded-none transition-all outline-none focus:ring-4 focus:ring-yellow-400">
                         <i class="fa-solid fa-graduation-cap"></i> Trainers
                     </a>
-                    <a href="#" class="flex items-center gap-3 p-3 text-lg font-semibold hover:bg-white hover:brutal-border rounded-none transition-all">
+                    <a href="#" class="flex items-center gap-3 p-3 text-lg font-semibold hover:bg-white hover:brutal-border rounded-none transition-all outline-none focus:ring-4 focus:ring-yellow-400">
                         <i class="fa-solid fa-shield-halved"></i> Policy
                     </a>
                 </nav>
             </div>
             
-            <div class="space-y-2">
+            <div class="space-y-2 mt-10 md:mt-0">
                 <a href="#" class="flex items-center gap-3 p-3 text-lg font-semibold hover:bg-white hover:brutal-border rounded-none transition-all">
                     <i class="fa-solid fa-gear"></i> Preferences
                 </a>
@@ -134,12 +141,12 @@
         </div>
 
         <!-- Ana İçerik Alanı -->
-        <div class="flex-1 flex flex-col h-full bg-[#f8f9fa] relative">
+        <div class="flex-1 flex flex-col h-full bg-[#f8f9fa] relative overflow-hidden">
             
             <!-- Üst Bar (Arama ve Profil) -->
-            <div class="p-6 border-b-[3px] border-black bg-white flex flex-col sm:flex-row justify-between items-center gap-4 sticky top-0 z-20">
+            <div class="p-4 sm:p-6 border-b-[3px] border-black bg-white flex flex-col sm:flex-row justify-between items-center gap-4 z-20 shrink-0">
                 <div class="flex items-center gap-4 w-full sm:w-auto">
-                    <button class="w-10 h-10 brutal-border flex items-center justify-center bg-white brutal-shadow-hover hover:bg-gray-100">
+                    <button aria-label="Go Back" class="w-10 h-10 brutal-border flex items-center justify-center bg-white brutal-shadow-hover hover:bg-gray-100 outline-none focus:bg-yellow-200 shrink-0">
                         <i class="fa-solid fa-arrow-left"></i>
                     </button>
                     <h2 class="font-mono-heading text-2xl font-bold uppercase hidden sm:block">Dictionary</h2>
@@ -147,15 +154,16 @@
 
                 <div class="flex items-center gap-4 w-full sm:w-auto">
                     <!-- Arama Çubuğu -->
-                    <div class="relative w-full sm:w-80">
+                    <div class="relative w-full sm:w-80 flex items-center">
+                        <label for="searchInput" class="sr-only">Search verbs</label>
                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                             <i class="fa-solid fa-magnifying-glass text-black"></i>
                         </div>
-                        <input type="text" id="searchInput" class="bg-white brutal-border brutal-shadow-sm text-black text-sm font-semibold rounded-none block w-full pl-10 p-2.5 outline-none focus:bg-yellow-100 transition-colors" placeholder="Find verbs, translations...">
+                        <input type="text" id="searchInput" autocomplete="off" class="bg-white brutal-border brutal-shadow-sm text-black text-sm font-semibold rounded-none block w-full pl-10 p-2.5 outline-none focus:bg-yellow-100 transition-colors placeholder-gray-500" placeholder="Find verbs, translations...">
                     </div>
                     
-                    <div class="flex gap-2 hidden sm:flex">
-                        <button class="w-10 h-10 brutal-border bg-white flex items-center justify-center brutal-shadow-hover">
+                    <div class="flex gap-2 hidden sm:flex shrink-0">
+                        <button aria-label="Notifications" class="w-10 h-10 brutal-border bg-white flex items-center justify-center brutal-shadow-hover">
                             <i class="fa-regular fa-bell"></i>
                         </button>
                         <div class="w-10 h-10 brutal-border bg-yellow-300 flex items-center justify-center overflow-hidden brutal-shadow-sm">
@@ -166,15 +174,15 @@
             </div>
 
             <!-- Kaydırılabilir İçerik Alanı -->
-            <div class="p-6 overflow-y-auto flex-1 pb-20">
+            <div class="p-4 sm:p-6 overflow-y-auto flex-1 pb-20">
                 
-                <div class="flex justify-between items-end mb-6">
-                    <h2 class="font-mono-heading text-4xl sm:text-5xl font-bold uppercase tracking-tighter">Irregular Verbs</h2>
-                    <span id="verbCount" class="font-bold text-xl bg-[#fbcfe8] brutal-border px-3 py-1 brutal-shadow-sm">83 words</span>
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-3 mb-6">
+                    <h2 class="font-mono-heading text-3xl sm:text-5xl font-bold uppercase tracking-tighter">Irregular Verbs</h2>
+                    <span id="verbCount" class="font-bold text-lg sm:text-xl bg-[#fbcfe8] brutal-border px-3 py-1 brutal-shadow-sm inline-block w-max">83 words</span>
                 </div>
 
                 <!-- Grid Konteyneri -->
-                <div id="verbsContainer" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div id="verbsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- JS ile doldurulacak -->
                 </div>
 
@@ -183,7 +191,7 @@
     </div>
 
     <script>
-        // Veri Seti (Görseldeki tüm kelimeler ve örnekleri)
+        // Optimize Edilmiş Veri Seti (Sadece görseldeki tüm kelimeler)
         const verbsData = [
             { v1: "am, is, are", v2: "was, were", v3: "been", tr: "olmak", examples: [{ t: "V1", en: "I am a student at the university.", tr: "Ben üniversitede bir öğrenciyim." }, { t: "V2", en: "She was very tired yesterday.", tr: "O dün çok yorgundu." }, { t: "V3", en: "They have been friends for ten years.", tr: "Onlar on yıldır arkadaştırlar." }] },
             { v1: "become", v2: "became", v3: "become", tr: "olmak, haline gelmek", examples: [{ t: "V1", en: "Caterpillars become butterflies.", tr: "Tırtıllar kelebek olur." }, { t: "V2", en: "He became a doctor in 2020.", tr: "O, 2020'de doktor oldu." }, { t: "V3", en: "The weather has become very cold.", tr: "Hava çok soğuk hale geldi." }] },
@@ -235,7 +243,7 @@
             { v1: "lie", v2: "lay", v3: "lain", tr: "uzanmak", examples: [{ t: "V1", en: "I lie on the sofa to rest.", tr: "Dinlenmek için kanepeye uzanırım." }, { t: "V2", en: "She lay on the beach all day.", tr: "Tüm gün plajda uzandı." }, { t: "V3", en: "He had lain there for hours.", tr: "Saatlerce orada uzanmıştı." }] },
             { v1: "lose", v2: "lost", v3: "lost", tr: "kaybetmek", examples: [{ t: "V1", en: "I often lose my keys.", tr: "Sık sık anahtarlarımı kaybederim." }, { t: "V2", en: "We lost the match.", tr: "Maçı kaybettik." }, { t: "V3", en: "He has lost his job.", tr: "O işini kaybetti." }] },
             { v1: "make", v2: "made", v3: "made", tr: "yapmak", examples: [{ t: "V1", en: "Bees make honey.", tr: "Arılar bal yapar." }, { t: "V2", en: "I made a cake for you.", tr: "Senin için kek yaptım." }, { t: "V3", en: "This phone is made in China.", tr: "Bu telefon Çin'de yapılmıştır." }] },
-            { v1: "mean", v2: "meant", v3: "meant", tr: "demek istemek", examples: [{ t: "V1", en: "What does this word mean?", tr: "Bu kelime ne anlama geliyor?" }, { t: "V2", en: "I didn't mean to hurt you.", tr: "Seni incitmek istememiştim." }, { t: "V3", en: "It was meant to be a surprise.", tr: "Bunun bir sürpriz olması amaçlanmıştı." }] },
+            { v1: "mean", v2: "meant", v3: "meant", tr: "demek", examples: [{ t: "V1", en: "What does this word mean?", tr: "Bu kelime ne anlama geliyor?" }, { t: "V2", en: "I didn't mean to hurt you.", tr: "Seni incitmek istememiştim." }, { t: "V3", en: "It was meant to be a surprise.", tr: "Bunun bir sürpriz olması amaçlanmıştı." }] },
             { v1: "meet", v2: "met", v3: "met", tr: "buluşmak", examples: [{ t: "V1", en: "We meet at the cafe every Friday.", tr: "Her Cuma kafede buluşuruz." }, { t: "V2", en: "I met my wife in 2010.", tr: "Karım ile 2010'da tanıştım." }, { t: "V3", en: "Have you ever met a celebrity?", tr: "Hiç bir ünlüyle tanıştın mı?" }] },
             { v1: "pay", v2: "paid", v3: "paid", tr: "ödemek", examples: [{ t: "V1", en: "I pay my bills online.", tr: "Faturalarımı internetten öderim." }, { t: "V2", en: "He paid for the dinner.", tr: "Akşam yemeğini o ödedi." }, { t: "V3", en: "The debt has been paid.", tr: "Borç ödendi." }] },
             { v1: "put", v2: "put", v3: "put", tr: "koymak", examples: [{ t: "V1", en: "Please put the book on the table.", tr: "Lütfen kitabı masaya koy." }, { t: "V2", en: "She put her keys in her pocket.", tr: "Anahtarlarını cebine koydu." }, { t: "V3", en: "Where have you put my shoes?", tr: "Ayakkabılarımı nereye koydun?" }] },
@@ -274,12 +282,10 @@
         const searchInput = document.getElementById('searchInput');
         const countDisplay = document.getElementById('verbCount');
 
-        // Renk paleti (Kartların farklı renklerde gelmesi için)
         const bgColors = ['bg-[#fde047]', 'bg-white', 'bg-[#c7e8d5]', 'bg-[#fbcfe8]'];
 
+        // Performans Optimizasyonu 1: Tek Seferde DOM Enjeksiyonu
         function renderVerbs(filterTerm = '') {
-            container.innerHTML = ''; // Temizle
-            
             const lowerTerm = filterTerm.toLowerCase().trim();
             const filtered = verbsData.filter(v => 
                 v.v1.toLowerCase().includes(lowerTerm) || 
@@ -300,25 +306,24 @@
                 return;
             }
 
-            filtered.forEach((verb, index) => {
+            // HTML Katarları ile tek seferde oluşturma (Reflow engelleme)
+            const htmlString = filtered.map((verb, index) => {
                 const colorClass = bgColors[index % bgColors.length];
                 
-                // Kart HTML Yapısı
-                const card = document.createElement('div');
-                card.className = `brutal-border ${colorClass} brutal-shadow brutal-shadow-hover flex flex-col cursor-pointer transition-all`;
-                card.innerHTML = `
-                    <div class="p-5 flex flex-col h-full card-header">
-                        <div class="flex justify-between items-start mb-4">
+                return `
+                <div class="verb-card brutal-border ${colorClass} brutal-shadow brutal-shadow-hover flex flex-col transition-all">
+                    <button type="button" aria-expanded="false" class="card-header p-5 flex flex-col h-full w-full text-left outline-none focus:ring-4 focus:ring-yellow-500 cursor-pointer">
+                        <div class="flex w-full justify-between items-start mb-4">
                             <div>
                                 <h3 class="text-2xl font-bold font-mono-heading">${verb.v1}</h3>
                                 <p class="text-sm font-bold uppercase tracking-wider mt-1 opacity-75">${verb.tr}</p>
                             </div>
-                            <div class="w-8 h-8 brutal-border bg-white flex items-center justify-center shrink-0">
+                            <div class="w-8 h-8 brutal-border bg-white flex items-center justify-center shrink-0" aria-hidden="true">
                                 <i class="fa-solid fa-plus expand-icon transition-transform"></i>
                             </div>
                         </div>
 
-                        <div class="flex gap-2 mt-auto">
+                        <div class="flex gap-2 mt-auto w-full">
                             <div class="flex-1 bg-white brutal-border p-2 text-center brutal-shadow-sm">
                                 <span class="text-[10px] font-bold uppercase block mb-1">V2 (Past)</span>
                                 <span class="font-bold">${verb.v2}</span>
@@ -328,57 +333,75 @@
                                 <span class="font-bold">${verb.v3}</span>
                             </div>
                         </div>
-                    </div>
+                    </button>
 
-                    <div class="examples-container bg-white">
-                        <div class="p-5 space-y-4">
-                            ${verb.examples.map(ex => `
-                                <div class="p-3 border-l-4 border-black bg-gray-50 relative">
-                                    <span class="absolute -top-3 left-2 bg-[#fde047] brutal-border px-2 py-0.5 text-[10px] font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                                        ${ex.t} Example
-                                    </span>
-                                    <p class="font-bold text-[15px] mt-1 text-gray-900">${ex.en}</p>
-                                    <p class="text-sm italic text-gray-600 mt-1">${ex.tr}</p>
-                                </div>
-                            `).join('')}
+                    <div class="examples-wrapper bg-white">
+                        <div class="examples-inner">
+                            <div class="p-5 space-y-4">
+                                ${verb.examples.map(ex => `
+                                    <div class="p-3 border-l-4 border-black bg-gray-50 relative">
+                                        <span class="absolute -top-3 left-2 bg-[#fde047] brutal-border px-2 py-0.5 text-[10px] font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                            ${ex.t} Example
+                                        </span>
+                                        <p class="font-bold text-[15px] mt-1 text-gray-900">${ex.en}</p>
+                                        <p class="text-sm italic text-gray-600 mt-1">${ex.tr}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
                         </div>
                     </div>
-                `;
+                </div>`;
+            }).join('');
 
-                // Accordion Click Olayı
-                const header = card.querySelector('.card-header');
-                const examplesBox = card.querySelector('.examples-container');
-                const icon = card.querySelector('.expand-icon');
-
-                header.addEventListener('click', () => {
-                    const isExpanded = examplesBox.classList.contains('expanded');
-                    
-                    // Diğer tüm açık olanları kapat (Opsiyonel, daha temiz UX için)
-                    document.querySelectorAll('.examples-container.expanded').forEach(el => {
-                        if(el !== examplesBox) {
-                            el.classList.remove('expanded');
-                            el.parentElement.querySelector('.expand-icon').classList.replace('fa-minus', 'fa-plus');
-                        }
-                    });
-
-                    // Tıklananı aç/kapat
-                    if (isExpanded) {
-                        examplesBox.classList.remove('expanded');
-                        icon.classList.replace('fa-minus', 'fa-plus');
-                    } else {
-                        examplesBox.classList.add('expanded');
-                        icon.classList.replace('fa-plus', 'fa-minus');
-                    }
-                });
-
-                container.appendChild(card);
-            });
+            container.innerHTML = htmlString;
         }
 
-        // Arama Event Listener
-        searchInput.addEventListener('input', (e) => {
-            renderVerbs(e.target.value);
+        // Performans Optimizasyonu 2: Event Delegation (Olay Temsili)
+        container.addEventListener('click', (e) => {
+            const header = e.target.closest('.card-header');
+            if (!header) return;
+
+            const card = header.closest('.verb-card');
+            const wrapper = card.querySelector('.examples-wrapper');
+            const icon = header.querySelector('.expand-icon');
+            const isExpanded = wrapper.classList.contains('expanded');
+
+            // Diğer açık olanları kapat
+            document.querySelectorAll('.examples-wrapper.expanded').forEach(el => {
+                if (el !== wrapper) {
+                    el.classList.remove('expanded');
+                    const otherHeader = el.closest('.verb-card').querySelector('.card-header');
+                    otherHeader.setAttribute('aria-expanded', 'false');
+                    otherHeader.querySelector('.expand-icon').classList.replace('fa-minus', 'fa-plus');
+                }
+            });
+
+            // Tıklananı tersine çevir
+            if (isExpanded) {
+                wrapper.classList.remove('expanded');
+                header.setAttribute('aria-expanded', 'false');
+                icon.classList.replace('fa-minus', 'fa-plus');
+            } else {
+                wrapper.classList.add('expanded');
+                header.setAttribute('aria-expanded', 'true');
+                icon.classList.replace('fa-plus', 'fa-minus');
+            }
         });
+
+        // Performans Optimizasyonu 3: Debounce (Hızlı yazımlarda tarayıcıyı yormamak için)
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+        const handleSearch = debounce((e) => {
+            renderVerbs(e.target.value);
+        }, 200); // 200ms bekleme süresi
+
+        searchInput.addEventListener('input', handleSearch);
 
         // İlk Yükleme
         renderVerbs();
