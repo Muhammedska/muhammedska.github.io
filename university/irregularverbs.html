@@ -1,0 +1,388 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEDI - Irregular Verbs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Work+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-mint: #c7e8d5;
+            --bg-yellow: #fde047;
+            --bg-pink: #fbcfe8;
+            --brutal-black: #111827;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background-color: #60a5fa; /* Dış arka plan (mavi) */
+            background-image: 
+                linear-gradient(45deg, #fbcfe8 25%, transparent 25%), 
+                linear-gradient(-45deg, #fbcfe8 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #fde047 75%), 
+                linear-gradient(-45deg, transparent 75%, #fde047 75%);
+            background-size: 100vw 100vh;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .font-mono-heading {
+            font-family: 'Space Mono', monospace;
+        }
+
+        /* Neo-brutalism sınıfları */
+        .brutal-border {
+            border: 3px solid var(--brutal-black);
+        }
+
+        .brutal-shadow {
+            box-shadow: 6px 6px 0px 0px var(--brutal-black);
+        }
+
+        .brutal-shadow-sm {
+            box-shadow: 3px 3px 0px 0px var(--brutal-black);
+        }
+
+        .brutal-shadow-hover {
+            transition: all 0.2s ease;
+        }
+
+        .brutal-shadow-hover:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 4px 4px 0px 0px var(--brutal-black);
+        }
+        
+        .brutal-shadow-hover:active {
+            transform: translate(6px, 6px);
+            box-shadow: 0px 0px 0px 0px var(--brutal-black);
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-left: 3px solid var(--brutal-black);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-yellow); 
+            border: 3px solid var(--brutal-black);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #eab308; 
+        }
+
+        /* Expand animation */
+        .examples-container {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .examples-container.expanded {
+            max-height: 1000px; /* Arbitrary large number */
+            border-top: 3px solid var(--brutal-black);
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-900">
+
+    <!-- Ana Uygulama Penceresi -->
+    <div class="w-full max-w-6xl h-[90vh] bg-[#c7e8d5] brutal-border brutal-shadow flex flex-col md:flex-row overflow-hidden relative">
+        
+        <!-- Sol Menü (Sidebar) -->
+        <div class="w-full md:w-64 border-b-3 md:border-b-0 md:border-r-3 border-black p-6 flex flex-col justify-between shrink-0 brutal-border bg-[#c7e8d5] z-10 hidden md:flex">
+            <div>
+                <div class="flex items-center gap-3 mb-10 brutal-border p-2 bg-white w-max brutal-shadow-sm">
+                    <i class="fa-solid fa-code"></i>
+                    <h1 class="font-mono-heading font-bold text-xl tracking-wider uppercase">JEDI</h1>
+                </div>
+
+                <nav class="space-y-2">
+                    <a href="#" class="flex items-center gap-3 p-3 text-lg font-bold hover:bg-white brutal-border brutal-shadow-sm bg-white border-black mb-4">
+                        <i class="fa-solid fa-book"></i> Verbs Library
+                    </a>
+                    <a href="#" class="flex items-center gap-3 p-3 text-lg font-semibold hover:bg-white hover:brutal-border rounded-none transition-all">
+                        <i class="fa-solid fa-clock"></i> Schedule
+                    </a>
+                    <a href="#" class="flex items-center gap-3 p-3 text-lg font-semibold hover:bg-white hover:brutal-border rounded-none transition-all">
+                        <i class="fa-solid fa-graduation-cap"></i> Trainers
+                    </a>
+                    <a href="#" class="flex items-center gap-3 p-3 text-lg font-semibold hover:bg-white hover:brutal-border rounded-none transition-all">
+                        <i class="fa-solid fa-shield-halved"></i> Policy
+                    </a>
+                </nav>
+            </div>
+            
+            <div class="space-y-2">
+                <a href="#" class="flex items-center gap-3 p-3 text-lg font-semibold hover:bg-white hover:brutal-border rounded-none transition-all">
+                    <i class="fa-solid fa-gear"></i> Preferences
+                </a>
+                <a href="#" class="flex items-center gap-3 p-3 text-lg font-semibold hover:bg-white hover:brutal-border rounded-none transition-all">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Log out
+                </a>
+            </div>
+        </div>
+
+        <!-- Ana İçerik Alanı -->
+        <div class="flex-1 flex flex-col h-full bg-[#f8f9fa] relative">
+            
+            <!-- Üst Bar (Arama ve Profil) -->
+            <div class="p-6 border-b-[3px] border-black bg-white flex flex-col sm:flex-row justify-between items-center gap-4 sticky top-0 z-20">
+                <div class="flex items-center gap-4 w-full sm:w-auto">
+                    <button class="w-10 h-10 brutal-border flex items-center justify-center bg-white brutal-shadow-hover hover:bg-gray-100">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <h2 class="font-mono-heading text-2xl font-bold uppercase hidden sm:block">Dictionary</h2>
+                </div>
+
+                <div class="flex items-center gap-4 w-full sm:w-auto">
+                    <!-- Arama Çubuğu -->
+                    <div class="relative w-full sm:w-80">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <i class="fa-solid fa-magnifying-glass text-black"></i>
+                        </div>
+                        <input type="text" id="searchInput" class="bg-white brutal-border brutal-shadow-sm text-black text-sm font-semibold rounded-none block w-full pl-10 p-2.5 outline-none focus:bg-yellow-100 transition-colors" placeholder="Find verbs, translations...">
+                    </div>
+                    
+                    <div class="flex gap-2 hidden sm:flex">
+                        <button class="w-10 h-10 brutal-border bg-white flex items-center justify-center brutal-shadow-hover">
+                            <i class="fa-regular fa-bell"></i>
+                        </button>
+                        <div class="w-10 h-10 brutal-border bg-yellow-300 flex items-center justify-center overflow-hidden brutal-shadow-sm">
+                            <i class="fa-solid fa-user-astronaut"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kaydırılabilir İçerik Alanı -->
+            <div class="p-6 overflow-y-auto flex-1 pb-20">
+                
+                <div class="flex justify-between items-end mb-6">
+                    <h2 class="font-mono-heading text-4xl sm:text-5xl font-bold uppercase tracking-tighter">Irregular Verbs</h2>
+                    <span id="verbCount" class="font-bold text-xl bg-[#fbcfe8] brutal-border px-3 py-1 brutal-shadow-sm">83 words</span>
+                </div>
+
+                <!-- Grid Konteyneri -->
+                <div id="verbsContainer" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <!-- JS ile doldurulacak -->
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Veri Seti (Görseldeki tüm kelimeler ve örnekleri)
+        const verbsData = [
+            { v1: "am, is, are", v2: "was, were", v3: "been", tr: "olmak", examples: [{ t: "V1", en: "I am a student at the university.", tr: "Ben üniversitede bir öğrenciyim." }, { t: "V2", en: "She was very tired yesterday.", tr: "O dün çok yorgundu." }, { t: "V3", en: "They have been friends for ten years.", tr: "Onlar on yıldır arkadaştırlar." }] },
+            { v1: "become", v2: "became", v3: "become", tr: "olmak, haline gelmek", examples: [{ t: "V1", en: "Caterpillars become butterflies.", tr: "Tırtıllar kelebek olur." }, { t: "V2", en: "He became a doctor in 2020.", tr: "O, 2020'de doktor oldu." }, { t: "V3", en: "The weather has become very cold.", tr: "Hava çok soğuk hale geldi." }] },
+            { v1: "begin", v2: "began", v3: "begun", tr: "başlamak", examples: [{ t: "V1", en: "The movie begins at 8 PM.", tr: "Film akşam 8'de başlıyor." }, { t: "V2", en: "It began to rain heavily.", tr: "Şiddetli yağmur yağmaya başladı." }, { t: "V3", en: "The meeting has already begun.", tr: "Toplantı çoktan başladı." }] },
+            { v1: "bite", v2: "bit", v3: "bitten", tr: "ısırmak", examples: [{ t: "V1", en: "Does your dog bite?", tr: "Köpeğiniz ısırır mı?" }, { t: "V2", en: "A mosquito bit me last night.", tr: "Dün gece beni sivrisinek ısırdı." }, { t: "V3", en: "I have been bitten by a spider.", tr: "Bir örümcek tarafından ısırıldım." }] },
+            { v1: "blow", v2: "blew", v3: "blown", tr: "üflemek, esmek", examples: [{ t: "V1", en: "The wind blows from the north.", tr: "Rüzgar kuzeyden eser." }, { t: "V2", en: "He blew out the candles.", tr: "Mumları üfleyip söndürdü." }, { t: "V3", en: "The storm has blown the roof off.", tr: "Fırtına çatıyı uçurdu." }] },
+            { v1: "break", v2: "broke", v3: "broken", tr: "kırmak", examples: [{ t: "V1", en: "Glass breaks easily.", tr: "Cam kolayca kırılır." }, { t: "V2", en: "She broke her favorite vase.", tr: "En sevdiği vazosunu kırdı." }, { t: "V3", en: "My phone is broken.", tr: "Telefonum kırıldı." }] },
+            { v1: "bring", v2: "brought", v3: "brought", tr: "getirmek", examples: [{ t: "V1", en: "Please bring me a glass of water.", tr: "Lütfen bana bir bardak su getir." }, { t: "V2", en: "He brought his guitar to the party.", tr: "Partiye gitarını getirdi." }, { t: "V3", en: "Have you brought the documents?", tr: "Belgeleri getirdin mi?" }] },
+            { v1: "broadcast", v2: "broadcast", v3: "broadcast", tr: "yayınlamak", examples: [{ t: "V1", en: "They broadcast the news live.", tr: "Haberleri canlı yayınlarlar." }, { t: "V2", en: "The channel broadcast a documentary yesterday.", tr: "Kanal dün bir belgesel yayınladı." }, { t: "V3", en: "The speech has been broadcast globally.", tr: "Konuşma küresel olarak yayınlandı." }] },
+            { v1: "build", v2: "built", v3: "built", tr: "inşa etmek", examples: [{ t: "V1", en: "They build new houses every year.", tr: "Her yıl yeni evler inşa ederler." }, { t: "V2", en: "The Romans built this bridge.", tr: "Bu köprüyü Romalılar inşa etti." }, { t: "V3", en: "A new hospital has been built.", tr: "Yeni bir hastane inşa edildi." }] },
+            { v1: "burn", v2: "burned/burnt", v3: "burned/burnt", tr: "yanmak", examples: [{ t: "V1", en: "Paper burns very quickly.", tr: "Kağıt çok hızlı yanar." }, { t: "V2", en: "I burned the dinner last night.", tr: "Dün gece akşam yemeğini yaktım." }, { t: "V3", en: "The forest has burned down.", tr: "Orman yanıp kül oldu." }] },
+            { v1: "buy", v2: "bought", v3: "bought", tr: "satın almak", examples: [{ t: "V1", en: "I buy fresh bread every morning.", tr: "Her sabah taze ekmek satın alırım." }, { t: "V2", en: "She bought a new car yesterday.", tr: "O dün yeni bir araba satın aldı." }, { t: "V3", en: "We have just bought a house.", tr: "Biz henüz bir ev satın aldık." }] },
+            { v1: "catch", v2: "caught", v3: "caught", tr: "yakalamak", examples: [{ t: "V1", en: "Cats catch mice.", tr: "Kediler fareleri yakalar." }, { t: "V2", en: "He caught the ball with one hand.", tr: "Topu tek eliyle yakaladı." }, { t: "V3", en: "The thief has been caught.", tr: "Hırsız yakalandı." }] },
+            { v1: "choose", v2: "chose", v3: "chosen", tr: "seçmek", examples: [{ t: "V1", en: "You can choose any color you like.", tr: "İstediğin rengi seçebilirsin." }, { t: "V2", en: "She chose the red dress.", tr: "Kırmızı elbiseyi seçti." }, { t: "V3", en: "They have chosen the new captain.", tr: "Yeni kaptanı seçtiler." }] },
+            { v1: "come", v2: "came", v3: "come", tr: "gelmek", examples: [{ t: "V1", en: "Please come here.", tr: "Lütfen buraya gel." }, { t: "V2", en: "He came late to the meeting.", tr: "Toplantıya geç geldi." }, { t: "V3", en: "My parents have just come home.", tr: "Ailem eve henüz geldi." }] },
+            { v1: "cost", v2: "cost", v3: "cost", tr: "mal olmak", examples: [{ t: "V1", en: "This phone costs $500.", tr: "Bu telefon 500 dolara mal oluyor." }, { t: "V2", en: "The repair cost me a lot.", tr: "Tamirat bana çok mal oldu." }, { t: "V3", en: "It has cost them everything.", tr: "Bu onlara her şeye mal oldu." }] },
+            { v1: "cut", v2: "cut", v3: "cut", tr: "kesmek", examples: [{ t: "V1", en: "I cut the grass every week.", tr: "Çimleri her hafta keserim." }, { t: "V2", en: "She cut her finger yesterday.", tr: "Dün parmağını kesti." }, { t: "V3", en: "The tree has been cut down.", tr: "Ağaç kesildi." }] },
+            { v1: "dig", v2: "dug", v3: "dug", tr: "kazmak", examples: [{ t: "V1", en: "Dogs like to dig holes.", tr: "Köpekler çukur kazmayı sever." }, { t: "V2", en: "They dug a deep well.", tr: "Derin bir kuyu kazdılar." }, { t: "V3", en: "We have dug up some old coins.", tr: "Bazı eski madeni paralar kazıp çıkardık." }] },
+            { v1: "do", v2: "did", v3: "done", tr: "yapmak", examples: [{ t: "V1", en: "I do my homework every evening.", tr: "Ödevimi her akşam yaparım." }, { t: "V2", en: "He did a great job.", tr: "Harika bir iş çıkardı (yaptı)." }, { t: "V3", en: "Have you done the dishes?", tr: "Bulaşıkları yıkadın (yaptın) mı?" }] },
+            { v1: "draw", v2: "drew", v3: "drawn", tr: "çizmek", examples: [{ t: "V1", en: "She draws beautiful portraits.", tr: "O güzel portreler çizer." }, { t: "V2", en: "I drew a map for him.", tr: "Onun için bir harita çizdim." }, { t: "V3", en: "The picture was drawn by a child.", tr: "Resim bir çocuk tarafından çizilmiş." }] },
+            { v1: "dream", v2: "dreamed/dreamt", v3: "dreamed/dreamt", tr: "hayal kurmak", examples: [{ t: "V1", en: "I dream of traveling the world.", tr: "Dünyayı gezmeyi hayal ediyorum." }, { t: "V2", en: "She dreamt about flying last night.", tr: "Dün gece uçtuğunu rüya gördü." }, { t: "V3", en: "He has always dreamed of being a pilot.", tr: "Her zaman pilot olmayı hayal etmiştir." }] },
+            { v1: "drive", v2: "drove", v3: "driven", tr: "sürmek", examples: [{ t: "V1", en: "I drive to work every day.", tr: "Her gün işe arabayla giderim." }, { t: "V2", en: "He drove 500 miles yesterday.", tr: "Dün 500 mil araba sürdü." }, { t: "V3", en: "I have never driven a truck.", tr: "Hiç kamyon sürmedim." }] },
+            { v1: "drink", v2: "drank", v3: "drunk", tr: "içmek", examples: [{ t: "V1", en: "I drink coffee in the morning.", tr: "Sabahları kahve içerim." }, { t: "V2", en: "She drank all the milk.", tr: "Bütün sütü içti." }, { t: "V3", en: "He has drunk three cups of tea.", tr: "Üç fincan çay içti." }] },
+            { v1: "eat", v2: "ate", v3: "eaten", tr: "yemek", examples: [{ t: "V1", en: "We eat dinner at 7 PM.", tr: "Akşam yemeğini 7'de yeriz." }, { t: "V2", en: "I ate pizza for lunch.", tr: "Öğle yemeğinde pizza yedim." }, { t: "V3", en: "Have you eaten yet?", tr: "Henüz yemek yedin mi?" }] },
+            { v1: "fall", v2: "fell", v3: "fallen", tr: "düşmek", examples: [{ t: "V1", en: "Leaves fall in autumn.", tr: "Sonbaharda yapraklar düşer." }, { t: "V2", en: "He fell off his bike.", tr: "Bisikletinden düştü." }, { t: "V3", en: "The apple has fallen from the tree.", tr: "Elma ağaçtan düştü." }] },
+            { v1: "feel", v2: "felt", v3: "felt", tr: "hissetmek", examples: [{ t: "V1", en: "I feel great today.", tr: "Bugün harika hissediyorum." }, { t: "V2", en: "She felt sick yesterday.", tr: "Dün hasta hissetti." }, { t: "V3", en: "I have never felt so happy.", tr: "Hiç bu kadar mutlu hissetmemiştim." }] },
+            { v1: "fight", v2: "fought", v3: "fought", tr: "dövüşmek", examples: [{ t: "V1", en: "Soldiers fight for their country.", tr: "Askerler ülkeleri için savaşır." }, { t: "V2", en: "They fought over a toy.", tr: "Bir oyuncak yüzünden kavga ettiler." }, { t: "V3", en: "He has fought many battles.", tr: "O birçok savaşa katıldı." }] },
+            { v1: "find", v2: "found", v3: "found", tr: "bulmak", examples: [{ t: "V1", en: "I usually find my keys easily.", tr: "Genelde anahtarlarımı kolayca bulurum." }, { t: "V2", en: "She found a lost wallet.", tr: "Kayıp bir cüzdan buldu." }, { t: "V3", en: "We have finally found a solution.", tr: "Sonunda bir çözüm bulduk." }] },
+            { v1: "fly", v2: "flew", v3: "flown", tr: "uçmak", examples: [{ t: "V1", en: "Birds fly south in winter.", tr: "Kuşlar kışın güneye uçar." }, { t: "V2", en: "We flew to Paris last year.", tr: "Geçen yıl Paris'e uçtuk." }, { t: "V3", en: "Have you ever flown in a helicopter?", tr: "Hiç helikopterde uçtun mu?" }] },
+            { v1: "forget", v2: "forgot", v3: "forgotten", tr: "unutmak", examples: [{ t: "V1", en: "I sometimes forget my password.", tr: "Bazen şifremi unutuyorum." }, { t: "V2", en: "He forgot to call me.", tr: "Beni aramayı unuttu." }, { t: "V3", en: "I have completely forgotten his name.", tr: "Onun adını tamamen unuttum." }] },
+            { v1: "forgive", v2: "forgave", v3: "forgiven", tr: "affetmek", examples: [{ t: "V1", en: "I forgive you.", tr: "Seni affediyorum." }, { t: "V2", en: "She forgave him for his mistake.", tr: "Hatası için onu affetti." }, { t: "V3", en: "He has been forgiven by everyone.", tr: "O herkes tarafından affedildi." }] },
+            { v1: "freeze", v2: "froze", v3: "frozen", tr: "donmak", examples: [{ t: "V1", en: "Water freezes at zero degrees.", tr: "Su sıfır derecede donar." }, { t: "V2", en: "The lake froze last night.", tr: "Göl dün gece dondu." }, { t: "V3", en: "My hands are frozen.", tr: "Ellerim dondu." }] },
+            { v1: "get", v2: "got", v3: "got/gotten", tr: "almak", examples: [{ t: "V1", en: "I get a lot of emails daily.", tr: "Günlük çok e-posta alırım." }, { t: "V2", en: "She got a new job.", tr: "Yeni bir iş aldı." }, { t: "V3", en: "He has gotten much better.", tr: "O çok daha iyi oldu." }] },
+            { v1: "give", v2: "gave", v3: "given", tr: "vermek", examples: [{ t: "V1", en: "Cows give milk.", tr: "İnekler süt verir." }, { t: "V2", en: "He gave me a nice gift.", tr: "Bana güzel bir hediye verdi." }, { t: "V3", en: "They have given up.", tr: "Onlar pes ettiler." }] },
+            { v1: "go", v2: "went", v3: "gone", tr: "gitmek", examples: [{ t: "V1", en: "I go to the gym on Mondays.", tr: "Pazartesileri spora giderim." }, { t: "V2", en: "We went to the cinema.", tr: "Sinemaya gittik." }, { t: "V3", en: "He has gone to the store.", tr: "O mağazaya gitti." }] },
+            { v1: "grow", v2: "grew", v3: "grown", tr: "yetişmek", examples: [{ t: "V1", en: "Apples grow on trees.", tr: "Elmalar ağaçta yetişir." }, { t: "V2", en: "She grew up in London.", tr: "Londra'da büyüdü." }, { t: "V3", en: "The business has grown rapidly.", tr: "İşletme hızla büyüdü." }] },
+            { v1: "have", v2: "had", v3: "had", tr: "sahip olmak", examples: [{ t: "V1", en: "I have two sisters.", tr: "İki kız kardeşime sahibim." }, { t: "V2", en: "We had a great time.", tr: "Harika zaman geçirdik." }, { t: "V3", en: "She has had a busy day.", tr: "O yoğun bir gün geçirdi." }] },
+            { v1: "hear", v2: "heard", v3: "heard", tr: "duymak", examples: [{ t: "V1", en: "I hear a strange noise.", tr: "Garip bir ses duyuyorum." }, { t: "V2", en: "She heard the news on the radio.", tr: "Haberi radyoda duydu." }, { t: "V3", en: "Have you heard from him?", tr: "Ondan haber aldın mı?" }] },
+            { v1: "hide", v2: "hid", v3: "hidden", tr: "saklanmak", examples: [{ t: "V1", en: "Cats hide when they are scared.", tr: "Kediler korktuklarında saklanırlar." }, { t: "V2", en: "He hid the keys under the mat.", tr: "Anahtarları paspasın altına sakladı." }, { t: "V3", en: "The treasure has been hidden.", tr: "Hazine saklanmış." }] },
+            { v1: "hit", v2: "hit", v3: "hit", tr: "vurmak", examples: [{ t: "V1", en: "Don't hit your brother.", tr: "Kardeşine vurma." }, { t: "V2", en: "The car hit a tree.", tr: "Araba bir ağaca çarptı." }, { t: "V3", en: "He was hit by a ball.", tr: "Ona bir top çarptı." }] },
+            { v1: "hold", v2: "held", v3: "held", tr: "tutmak", examples: [{ t: "V1", en: "Please hold my bag.", tr: "Lütfen çantamı tut." }, { t: "V2", en: "She held the baby gently.", tr: "Bebeği nazikçe tuttu." }, { t: "V3", en: "The event will be held tomorrow.", tr: "Etkinlik yarın düzenlenecek." }] },
+            { v1: "hurt", v2: "hurt", v3: "hurt", tr: "incitmek", examples: [{ t: "V1", en: "My back hurts.", tr: "Sırtım acıyor." }, { t: "V2", en: "He hurt his knee playing football.", tr: "Futbol oynarken dizini incitti." }, { t: "V3", en: "I have never hurt anyone.", tr: "Hiç kimseyi incitmedim." }] },
+            { v1: "keep", v2: "kept", v3: "kept", tr: "saklamak", examples: [{ t: "V1", en: "I keep a diary.", tr: "Günlük tutarım." }, { t: "V2", en: "She kept the secret.", tr: "Sırrı sakladı." }, { t: "V3", en: "We have kept your room clean.", tr: "Odanı temiz tuttuk." }] },
+            { v1: "know", v2: "knew", v3: "known", tr: "bilmek", examples: [{ t: "V1", en: "I know the answer.", tr: "Cevabı biliyorum." }, { t: "V2", en: "He knew about the surprise.", tr: "Sürprizi biliyordu." }, { t: "V3", en: "I have known her for years.", tr: "Onu yıllardır tanırım." }] },
+            { v1: "learn", v2: "learned", v3: "learned", tr: "öğrenmek", examples: [{ t: "V1", en: "Children learn quickly.", tr: "Çocuklar hızlı öğrenir." }, { t: "V2", en: "I learned Spanish in Spain.", tr: "İspanyolcayı İspanya'da öğrendim." }, { t: "V3", en: "He has learnt his lesson.", tr: "O dersini aldı." }] },
+            { v1: "leave", v2: "left", v3: "left", tr: "ayrılmak", examples: [{ t: "V1", en: "Trains leave every hour.", tr: "Trenler her saat başı kalkar." }, { t: "V2", en: "She left the house early.", tr: "Evden erken ayrıldı." }, { t: "V3", en: "They have already left.", tr: "Onlar çoktan ayrıldılar." }] },
+            { v1: "lend", v2: "lent", v3: "lent", tr: "ödünç vermek", examples: [{ t: "V1", en: "Banks lend money.", tr: "Bankalar borç para verir." }, { t: "V2", en: "I lent him my book.", tr: "Ona kitabımı ödünç verdim." }, { t: "V3", en: "Have you lent your car to him?", tr: "Arabanı ona ödünç mü verdin?" }] },
+            { v1: "let", v2: "let", v3: "let", tr: "izin vermek", examples: [{ t: "V1", en: "Let me help you.", tr: "Sana yardım etmeme izin ver." }, { t: "V2", en: "My parents let me go to the party.", tr: "Ailem partiye gitmeme izin verdi." }, { t: "V3", en: "They have let the dogs out.", tr: "Köpekleri dışarı saldılar." }] },
+            { v1: "lie", v2: "lay", v3: "lain", tr: "uzanmak", examples: [{ t: "V1", en: "I lie on the sofa to rest.", tr: "Dinlenmek için kanepeye uzanırım." }, { t: "V2", en: "She lay on the beach all day.", tr: "Tüm gün plajda uzandı." }, { t: "V3", en: "He had lain there for hours.", tr: "Saatlerce orada uzanmıştı." }] },
+            { v1: "lose", v2: "lost", v3: "lost", tr: "kaybetmek", examples: [{ t: "V1", en: "I often lose my keys.", tr: "Sık sık anahtarlarımı kaybederim." }, { t: "V2", en: "We lost the match.", tr: "Maçı kaybettik." }, { t: "V3", en: "He has lost his job.", tr: "O işini kaybetti." }] },
+            { v1: "make", v2: "made", v3: "made", tr: "yapmak", examples: [{ t: "V1", en: "Bees make honey.", tr: "Arılar bal yapar." }, { t: "V2", en: "I made a cake for you.", tr: "Senin için kek yaptım." }, { t: "V3", en: "This phone is made in China.", tr: "Bu telefon Çin'de yapılmıştır." }] },
+            { v1: "mean", v2: "meant", v3: "meant", tr: "demek istemek", examples: [{ t: "V1", en: "What does this word mean?", tr: "Bu kelime ne anlama geliyor?" }, { t: "V2", en: "I didn't mean to hurt you.", tr: "Seni incitmek istememiştim." }, { t: "V3", en: "It was meant to be a surprise.", tr: "Bunun bir sürpriz olması amaçlanmıştı." }] },
+            { v1: "meet", v2: "met", v3: "met", tr: "buluşmak", examples: [{ t: "V1", en: "We meet at the cafe every Friday.", tr: "Her Cuma kafede buluşuruz." }, { t: "V2", en: "I met my wife in 2010.", tr: "Karım ile 2010'da tanıştım." }, { t: "V3", en: "Have you ever met a celebrity?", tr: "Hiç bir ünlüyle tanıştın mı?" }] },
+            { v1: "pay", v2: "paid", v3: "paid", tr: "ödemek", examples: [{ t: "V1", en: "I pay my bills online.", tr: "Faturalarımı internetten öderim." }, { t: "V2", en: "He paid for the dinner.", tr: "Akşam yemeğini o ödedi." }, { t: "V3", en: "The debt has been paid.", tr: "Borç ödendi." }] },
+            { v1: "put", v2: "put", v3: "put", tr: "koymak", examples: [{ t: "V1", en: "Please put the book on the table.", tr: "Lütfen kitabı masaya koy." }, { t: "V2", en: "She put her keys in her pocket.", tr: "Anahtarlarını cebine koydu." }, { t: "V3", en: "Where have you put my shoes?", tr: "Ayakkabılarımı nereye koydun?" }] },
+            { v1: "read", v2: "read", v3: "read", tr: "okumak", examples: [{ t: "V1", en: "I read a book before bed.", tr: "Yatmadan önce kitap okurum." }, { t: "V2", en: "He read the entire article yesterday.", tr: "Dün tüm makaleyi okudu." }, { t: "V3", en: "I have already read this novel.", tr: "Bu romanı çoktan okudum." }] },
+            { v1: "ride", v2: "rode", v3: "ridden", tr: "sürmek", examples: [{ t: "V1", en: "I ride my bike to school.", tr: "Okula bisikletimle giderim." }, { t: "V2", en: "We rode horses on the farm.", tr: "Çiftlikte atlara bindik." }, { t: "V3", en: "She has never ridden a motorcycle.", tr: "O hiç motosiklete binmedi." }] },
+            { v1: "ring", v2: "rang", v3: "rung", tr: "çalmak", examples: [{ t: "V1", en: "The church bells ring on Sundays.", tr: "Kilise çanları pazarları çalar." }, { t: "V2", en: "The phone rang during the meeting.", tr: "Toplantı sırasında telefon çaldı." }, { t: "V3", en: "Someone has rung the doorbell.", tr: "Birisi kapı zilini çaldı." }] },
+            { v1: "rise", v2: "rose", v3: "risen", tr: "yükselmek", examples: [{ t: "V1", en: "The sun rises in the east.", tr: "Güneş doğudan yükselir." }, { t: "V2", en: "Smoke rose from the chimney.", tr: "Bacadan duman yükseldi." }, { t: "V3", en: "Prices have risen again.", tr: "Fiyatlar yine arttı." }] },
+            { v1: "run", v2: "ran", v3: "run", tr: "koşmak", examples: [{ t: "V1", en: "I run in the park every morning.", tr: "Her sabah parkta koşarım." }, { t: "V2", en: "He ran away from the dog.", tr: "Köpekten kaçtı." }, { t: "V3", en: "I have run 5 kilometers today.", tr: "Bugün 5 kilometre koştum." }] },
+            { v1: "say", v2: "said", v3: "said", tr: "söylemek", examples: [{ t: "V1", en: "They say it will rain.", tr: "Yağmur yağacağını söylüyorlar." }, { t: "V2", en: "She said goodbye and left.", tr: "Hoşça kal dedi ve ayrıldı." }, { t: "V3", en: "Everything has been said.", tr: "Her şey söylendi." }] },
+            { v1: "see", v2: "saw", v3: "seen", tr: "görmek", examples: [{ t: "V1", en: "I see a bird in the tree.", tr: "Ağaçta bir kuş görüyorum." }, { t: "V2", en: "We saw a great movie.", tr: "Harika bir film izledik." }, { t: "V3", en: "I have never seen such a thing.", tr: "Hiç böyle bir şey görmedim." }] },
+            { v1: "sell", v2: "sold", v3: "sold", tr: "satmak", examples: [{ t: "V1", en: "They sell fresh fruit here.", tr: "Burada taze meyve satarlar." }, { t: "V2", en: "He sold his car to a friend.", tr: "Arabasını bir arkadaşına sattı." }, { t: "V3", en: "All the tickets are sold out.", tr: "Tüm biletler satıldı." }] },
+            { v1: "send", v2: "sent", v3: "sent", tr: "yollamak", examples: [{ t: "V1", en: "I send emails to my clients.", tr: "Müşterilerime e-posta gönderirim." }, { t: "V2", en: "She sent a letter to her mother.", tr: "Annesine bir mektup yolladı." }, { t: "V3", en: "The package has been sent.", tr: "Paket gönderildi." }] },
+            { v1: "show", v2: "showed", v3: "shown", tr: "göstermek", examples: [{ t: "V1", en: "Can you show me the way?", tr: "Bana yolu gösterebilir misiniz?" }, { t: "V2", en: "He showed us his new watch.", tr: "Bize yeni saatini gösterdi." }, { t: "V3", en: "I was shown around the factory.", tr: "Bana fabrika gezdirildi." }] },
+            { v1: "shut", v2: "shut", v3: "shut", tr: "kapamak", examples: [{ t: "V1", en: "Please shut the door.", tr: "Lütfen kapıyı kapat." }, { t: "V2", en: "He shut his computer and left.", tr: "Bilgisayarını kapattı ve çıktı." }, { t: "V3", en: "The windows are tightly shut.", tr: "Pencereler sıkıca kapatılmış." }] },
+            { v1: "sing", v2: "sang", v3: "sung", tr: "şarkı söylemek", examples: [{ t: "V1", en: "Birds sing in the morning.", tr: "Kuşlar sabahları şarkı söyler." }, { t: "V2", en: "She sang beautifully at the concert.", tr: "Konserde çok güzel şarkı söyledi." }, { t: "V3", en: "That song has been sung by many.", tr: "O şarkı birçok kişi tarafından söylendi." }] },
+            { v1: "sit", v2: "sat", v3: "sat", tr: "oturmak", examples: [{ t: "V1", en: "I usually sit in the front row.", tr: "Genellikle ön sırada otururum." }, { t: "V2", en: "We sat on the bench for hours.", tr: "Saatlerce bankta oturduk." }, { t: "V3", en: "He has sat in that chair all day.", tr: "Bütün gün o sandalyede oturdu." }] },
+            { v1: "sleep", v2: "slept", v3: "slept", tr: "uyumak", examples: [{ t: "V1", en: "Babies sleep a lot.", tr: "Bebekler çok uyur." }, { t: "V2", en: "I slept poorly last night.", tr: "Dün gece kötü uyudum." }, { t: "V3", en: "She has slept for ten hours.", tr: "O on saattir uyuyor." }] },
+            { v1: "speak", v2: "spoke", v3: "spoken", tr: "konuşmak", examples: [{ t: "V1", en: "I speak three languages.", tr: "Üç dil konuşurum." }, { t: "V2", en: "He spoke softly to the child.", tr: "Çocuğa yumuşakça konuştu." }, { t: "V3", en: "English is spoken all over the world.", tr: "İngilizce tüm dünyada konuşulur." }] },
+            { v1: "spend", v2: "spent", v3: "spent", tr: "harcamak", examples: [{ t: "V1", en: "I spend too much money on clothes.", tr: "Kıyafetlere çok para harcarım." }, { t: "V2", en: "We spent the weekend in Rome.", tr: "Hafta sonunu Roma'da geçirdik." }, { t: "V3", en: "All the budget has been spent.", tr: "Tüm bütçe harcandı." }] },
+            { v1: "stand", v2: "stood", v3: "stood", tr: "ayakta durmak", examples: [{ t: "V1", en: "Please stand behind the line.", tr: "Lütfen çizginin arkasında durun." }, { t: "V2", en: "He stood up when she entered.", tr: "O içeri girdiğinde ayağa kalktı." }, { t: "V3", en: "The old building has stood for centuries.", tr: "Eski bina yüzyıllardır ayakta duruyor." }] },
+            { v1: "swim", v2: "swam", v3: "swum", tr: "yüzmek", examples: [{ t: "V1", en: "I swim in the pool every Sunday.", tr: "Her Pazar havuzda yüzerim." }, { t: "V2", en: "We swam across the river.", tr: "Nehri yüzerek geçtik." }, { t: "V3", en: "She has swum in the ocean many times.", tr: "Okyanusta birçok kez yüzdü." }] },
+            { v1: "take", v2: "took", v3: "taken", tr: "almak", examples: [{ t: "V1", en: "Take an umbrella with you.", tr: "Yanına bir şemsiye al." }, { t: "V2", en: "He took my advice.", tr: "Benim tavsiyemi aldı." }, { t: "V3", en: "The photos were taken by a professional.", tr: "Fotoğraflar bir profesyonel tarafından çekildi." }] },
+            { v1: "teach", v2: "taught", v3: "taught", tr: "öğretmek", examples: [{ t: "V1", en: "She teaches math at a high school.", tr: "O bir lisede matematik öğretir." }, { t: "V2", en: "My father taught me how to drive.", tr: "Babama nasıl araba sürüleceğini o öğretti." }, { t: "V3", en: "He has taught English for 20 years.", tr: "20 yıldır İngilizce öğretmektedir." }] },
+            { v1: "tear", v2: "tore", v3: "torn", tr: "yırtmak", examples: [{ t: "V1", en: "Paper tears easily.", tr: "Kağıt kolayca yırtılır." }, { t: "V2", en: "He tore the letter in half.", tr: "Mektubu ikiye yırttı." }, { t: "V3", en: "My jeans are torn.", tr: "Kot pantolonum yırtılmış." }] },
+            { v1: "tell", v2: "told", v3: "told", tr: "anlatmak", examples: [{ t: "V1", en: "Always tell the truth.", tr: "Her zaman doğruyu söyle." }, { t: "V2", en: "She told me a secret.", tr: "Bana bir sır anlattı." }, { t: "V3", en: "I have already told him.", tr: "Ona çoktan anlattım." }] },
+            { v1: "think", v2: "thought", v3: "thought", tr: "düşünmek", examples: [{ t: "V1", en: "I think it is a good idea.", tr: "Bence bu iyi bir fikir." }, { t: "V2", en: "We thought you were asleep.", tr: "Senin uyuduğunu sandık." }, { t: "V3", en: "Have you thought about my offer?", tr: "Teklifimi düşündün mü?" }] },
+            { v1: "throw", v2: "threw", v3: "thrown", tr: "fırlatmak", examples: [{ t: "V1", en: "Don't throw rubbish on the floor.", tr: "Yere çöp atmayın." }, { t: "V2", en: "He threw the ball to me.", tr: "Topu bana fırlattı." }, { t: "V3", en: "The stone was thrown by a child.", tr: "Taş bir çocuk tarafından fırlatılmış." }] },
+            { v1: "understand", v2: "understood", v3: "understood", tr: "anlamak", examples: [{ t: "V1", en: "I don't understand this problem.", tr: "Bu problemi anlamıyorum." }, { t: "V2", en: "She understood the instructions.", tr: "Talimatları anladı." }, { t: "V3", en: "The concept has been fully understood.", tr: "Kavram tamamen anlaşıldı." }] },
+            { v1: "wake", v2: "woke", v3: "woken", tr: "uyanmak", examples: [{ t: "V1", en: "I wake up at 7 AM.", tr: "Sabah 7'de uyanırım." }, { t: "V2", en: "A loud noise woke me up.", tr: "Yüksek bir ses beni uyandırdı." }, { t: "V3", en: "I have just woken up.", tr: "Henüz uyandım." }] },
+            { v1: "wear", v2: "wore", v3: "worn", tr: "giymek", examples: [{ t: "V1", en: "She wears a uniform to school.", tr: "Okula üniforma giyer." }, { t: "V2", en: "He wore a black suit yesterday.", tr: "Dün siyah bir takım elbise giydi." }, { t: "V3", en: "These shoes are completely worn out.", tr: "Bu ayakkabılar tamamen giyilip eskimiş." }] },
+            { v1: "win", v2: "won", v3: "won", tr: "kazanmak", examples: [{ t: "V1", en: "Good teams win games.", tr: "İyi takımlar maçları kazanır." }, { t: "V2", en: "We won the championship last year.", tr: "Geçen yıl şampiyonluğu kazandık." }, { t: "V3", en: "He has won three gold medals.", tr: "Üç altın madalya kazandı." }] },
+            { v1: "write", v2: "wrote", v3: "written", tr: "yazmak", examples: [{ t: "V1", en: "I write a letter every month.", tr: "Her ay bir mektup yazarım." }, { t: "V2", en: "Shakespeare wrote Romeo and Juliet.", tr: "Romeo ve Juliet'i Shakespeare yazdı." }, { t: "V3", en: "The report has been written.", tr: "Rapor yazıldı." }] }
+        ];
+
+        const container = document.getElementById('verbsContainer');
+        const searchInput = document.getElementById('searchInput');
+        const countDisplay = document.getElementById('verbCount');
+
+        // Renk paleti (Kartların farklı renklerde gelmesi için)
+        const bgColors = ['bg-[#fde047]', 'bg-white', 'bg-[#c7e8d5]', 'bg-[#fbcfe8]'];
+
+        function renderVerbs(filterTerm = '') {
+            container.innerHTML = ''; // Temizle
+            
+            const lowerTerm = filterTerm.toLowerCase().trim();
+            const filtered = verbsData.filter(v => 
+                v.v1.toLowerCase().includes(lowerTerm) || 
+                v.v2.toLowerCase().includes(lowerTerm) || 
+                v.v3.toLowerCase().includes(lowerTerm) || 
+                v.tr.toLowerCase().includes(lowerTerm)
+            );
+
+            countDisplay.innerText = `${filtered.length} words`;
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full p-10 bg-white brutal-border brutal-shadow text-center">
+                        <i class="fa-solid fa-face-frown text-4xl mb-4"></i>
+                        <h3 class="text-2xl font-bold font-mono-heading">No results found!</h3>
+                        <p class="text-gray-600">Try searching for something else.</p>
+                    </div>`;
+                return;
+            }
+
+            filtered.forEach((verb, index) => {
+                const colorClass = bgColors[index % bgColors.length];
+                
+                // Kart HTML Yapısı
+                const card = document.createElement('div');
+                card.className = `brutal-border ${colorClass} brutal-shadow brutal-shadow-hover flex flex-col cursor-pointer transition-all`;
+                card.innerHTML = `
+                    <div class="p-5 flex flex-col h-full card-header">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-2xl font-bold font-mono-heading">${verb.v1}</h3>
+                                <p class="text-sm font-bold uppercase tracking-wider mt-1 opacity-75">${verb.tr}</p>
+                            </div>
+                            <div class="w-8 h-8 brutal-border bg-white flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-plus expand-icon transition-transform"></i>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-2 mt-auto">
+                            <div class="flex-1 bg-white brutal-border p-2 text-center brutal-shadow-sm">
+                                <span class="text-[10px] font-bold uppercase block mb-1">V2 (Past)</span>
+                                <span class="font-bold">${verb.v2}</span>
+                            </div>
+                            <div class="flex-1 bg-white brutal-border p-2 text-center brutal-shadow-sm">
+                                <span class="text-[10px] font-bold uppercase block mb-1">V3 (Participle)</span>
+                                <span class="font-bold">${verb.v3}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="examples-container bg-white">
+                        <div class="p-5 space-y-4">
+                            ${verb.examples.map(ex => `
+                                <div class="p-3 border-l-4 border-black bg-gray-50 relative">
+                                    <span class="absolute -top-3 left-2 bg-[#fde047] brutal-border px-2 py-0.5 text-[10px] font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                        ${ex.t} Example
+                                    </span>
+                                    <p class="font-bold text-[15px] mt-1 text-gray-900">${ex.en}</p>
+                                    <p class="text-sm italic text-gray-600 mt-1">${ex.tr}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+
+                // Accordion Click Olayı
+                const header = card.querySelector('.card-header');
+                const examplesBox = card.querySelector('.examples-container');
+                const icon = card.querySelector('.expand-icon');
+
+                header.addEventListener('click', () => {
+                    const isExpanded = examplesBox.classList.contains('expanded');
+                    
+                    // Diğer tüm açık olanları kapat (Opsiyonel, daha temiz UX için)
+                    document.querySelectorAll('.examples-container.expanded').forEach(el => {
+                        if(el !== examplesBox) {
+                            el.classList.remove('expanded');
+                            el.parentElement.querySelector('.expand-icon').classList.replace('fa-minus', 'fa-plus');
+                        }
+                    });
+
+                    // Tıklananı aç/kapat
+                    if (isExpanded) {
+                        examplesBox.classList.remove('expanded');
+                        icon.classList.replace('fa-minus', 'fa-plus');
+                    } else {
+                        examplesBox.classList.add('expanded');
+                        icon.classList.replace('fa-plus', 'fa-minus');
+                    }
+                });
+
+                container.appendChild(card);
+            });
+        }
+
+        // Arama Event Listener
+        searchInput.addEventListener('input', (e) => {
+            renderVerbs(e.target.value);
+        });
+
+        // İlk Yükleme
+        renderVerbs();
+
+    </script>
+</body>
+</html>
